@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
-import { TrendingDown, Users, BarChart3, Clock3, CheckCircle2, ShieldCheck } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { TrendingDown, Users, Clock3, CheckCircle2, Lock, LogOut } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { AREAS, useAgendamentos } from "@/lib/city-store";
 
@@ -10,16 +10,126 @@ export const Route = createFileRoute("/gestao")({
       { title: "Painel de Gestão — QI Cidadão" },
       {
         name: "description",
-        content: "Painel da Prefeitura de Quedas do Iguaçu com demanda por área, fila de atendimentos e indicadores em tempo real.",
+        content: "Painel restrito da Prefeitura de Quedas do Iguaçu: demanda por área e fila de atendimentos.",
       },
       { property: "og:title", content: "Painel de Gestão — QI Cidadão" },
-      { property: "og:description", content: "Gestão por dados: demanda, tempo de espera e produtividade das equipes." },
+      { property: "og:description", content: "Acesso restrito da equipe da Prefeitura para gestão dos atendimentos." },
     ],
   }),
   component: Gestao,
 });
 
+const CHAVE = "qi-gestao-sessao";
+const USUARIO = "prefeitura";
+const SENHA = "quedas2026";
+
 function Gestao() {
+  const [logado, setLogado] = useState(false);
+  const [pronto, setPronto] = useState(false);
+
+  useEffect(() => {
+    setLogado(sessionStorage.getItem(CHAVE) === "1");
+    setPronto(true);
+  }, []);
+
+  if (!pronto) {
+    return (
+      <AppShell>
+        <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito" />
+      </AppShell>
+    );
+  }
+
+  if (!logado) {
+    return (
+      <Login
+        onEntrar={() => {
+          sessionStorage.setItem(CHAVE, "1");
+          setLogado(true);
+        }}
+      />
+    );
+  }
+
+  return (
+    <Painel
+      onSair={() => {
+        sessionStorage.removeItem(CHAVE);
+        setLogado(false);
+      }}
+    />
+  );
+}
+
+function Login({ onEntrar }: { onEntrar: () => void }) {
+  const [usuario, setUsuario] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (usuario.trim().toLowerCase() === USUARIO && senha === SENHA) {
+      setErro("");
+      onEntrar();
+    } else {
+      setErro("Usuário ou senha inválidos.");
+    }
+  }
+
+  return (
+    <AppShell librasMensagem="Área restrita da prefeitura. Faça login para ver o painel de gestão.">
+      <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito da equipe da Prefeitura" />
+      <div className="-mt-5 px-4">
+        <form onSubmit={submit} className="rounded-3xl border border-border bg-card p-5 shadow-card">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-primary-soft">
+            <Lock className="size-5 text-primary" />
+          </div>
+          <h2 className="mt-3 text-base font-bold">Entrar no painel</h2>
+          <p className="text-xs text-muted-foreground">Use as credenciais fornecidas pela Prefeitura.</p>
+
+          <label className="mt-4 block text-xs font-semibold" htmlFor="usuario">
+            Usuário
+          </label>
+          <input
+            id="usuario"
+            value={usuario}
+            onChange={(e) => setUsuario(e.target.value)}
+            autoComplete="username"
+            className="mt-1 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+            placeholder="prefeitura"
+          />
+
+          <label className="mt-3 block text-xs font-semibold" htmlFor="senha">
+            Senha
+          </label>
+          <input
+            id="senha"
+            type="password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            autoComplete="current-password"
+            className="mt-1 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+            placeholder="••••••••"
+          />
+
+          {erro && <p className="mt-2 text-xs font-medium text-destructive">{erro}</p>}
+
+          <button
+            type="submit"
+            className="mt-4 w-full rounded-2xl bg-primary py-3 text-sm font-bold text-primary-foreground"
+          >
+            Entrar
+          </button>
+          <p className="mt-3 text-center text-[11px] text-muted-foreground">
+            Demonstração: prefeitura / quedas2026
+          </p>
+        </form>
+      </div>
+    </AppShell>
+  );
+}
+
+function Painel({ onSair }: { onSair: () => void }) {
   const { agendamentos } = useAgendamentos();
 
   const porArea = useMemo(() => {
@@ -33,53 +143,34 @@ function Gestao() {
   }, [agendamentos]);
 
   const kpis = [
-    { icon: TrendingDown, label: "Tempo de espera", valor: "−70%", nota: "vs. atendimento presencial" },
-    { icon: Users, label: "Atendimentos no app", valor: String(agendamentos.length), nota: "agendamentos ativos" },
-    { icon: Clock3, label: "Disponibilidade", valor: "24/7", nota: "canal digital sempre aberto" },
-    { icon: BarChart3, label: "Gestão por dados", valor: "100%", nota: "relatórios automáticos" },
+    { icon: Users, label: "Atendimentos", valor: String(agendamentos.length), nota: "na fila" },
+    { icon: TrendingDown, label: "Espera", valor: "−70%", nota: "vs. presencial" },
+    { icon: Clock3, label: "Canal", valor: "24/7", nota: "sempre aberto" },
   ];
 
   return (
     <AppShell librasMensagem="Painel de gestão da prefeitura, com indicadores e fila de atendimentos.">
-      <TopBar titulo="Painel de Gestão" subtitulo="Uso interno da Prefeitura · dados em tempo real" />
+      <TopBar titulo="Painel de Gestão" subtitulo="Uso interno da Prefeitura" />
 
-      <div className="-mt-5 space-y-6 px-4">
-        <section className="grid grid-cols-2 gap-3">
+      <div className="-mt-5 space-y-5 px-4">
+        <div className="flex justify-end">
+          <button
+            onClick={onSair}
+            className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold"
+          >
+            <LogOut className="size-3.5" /> Sair
+          </button>
+        </div>
+
+        <section className="grid grid-cols-3 gap-3">
           {kpis.map(({ icon: Icon, label, valor, nota }) => (
-            <div key={label} className="rounded-3xl border border-border bg-card p-4 shadow-card">
-              <Icon className="size-5 text-primary" />
-              <p className="mt-2 font-display text-2xl font-bold">{valor}</p>
-              <p className="text-xs font-semibold">{label}</p>
-              <p className="text-[11px] text-muted-foreground">{nota}</p>
+            <div key={label} className="rounded-3xl border border-border bg-card p-3 shadow-card">
+              <Icon className="size-4 text-primary" />
+              <p className="mt-1.5 font-display text-xl font-bold">{valor}</p>
+              <p className="text-[11px] font-semibold leading-tight">{label}</p>
+              <p className="text-[10px] text-muted-foreground">{nota}</p>
             </div>
           ))}
-        </section>
-
-        <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
-          <div className="flex items-start gap-3">
-            <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
-            <div>
-              <h2 className="text-sm font-bold">Responsabilidade da Prefeitura</h2>
-              <p className="mt-1 text-xs text-muted-foreground">
-                A Prefeitura de Quedas do Iguaçu é responsável pela manutenção e pela organização
-                deste site: atualização de serviços e unidades, gestão da agenda e dos horários,
-                acompanhamento da fila de atendimentos e publicação de informações oficiais.
-              </p>
-              <ul className="mt-3 space-y-1.5 text-xs">
-                {[
-                  "Manutenção técnica e disponibilidade 24/7 do canal",
-                  "Organização dos conteúdos, serviços e unidades",
-                  "Atendimento e resposta às solicitações dos cidadãos",
-                  "Proteção dos dados e transparência das informações",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2">
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-success" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </section>
 
         <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
@@ -105,7 +196,7 @@ function Gestao() {
           </h2>
           {agendamentos.length === 0 ? (
             <p className="rounded-3xl bg-secondary p-4 text-xs text-muted-foreground">
-              Nenhum agendamento na fila. Novos pedidos aparecem aqui automaticamente.
+              Nenhum agendamento na fila.
             </p>
           ) : (
             <ul className="space-y-2">
