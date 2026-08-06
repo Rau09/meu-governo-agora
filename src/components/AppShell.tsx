@@ -1,0 +1,68 @@
+import type { ReactNode } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { Home, CalendarDays, LayoutGrid, MessageCircle, Building2 } from "lucide-react";
+import { LibrasAvatar } from "./LibrasAvatar";
+
+const nav = [
+  { to: "/", label: "Início", icon: Home },
+  { to: "/servicos", label: "Serviços", icon: LayoutGrid },
+  { to: "/agendamento", label: "Agendar", icon: CalendarDays },
+  { to: "/atendimento", label: "Atendimento", icon: MessageCircle },
+  { to: "/gestao", label: "Gestão", icon: Building2 },
+] as const;
+
+export function AppShell({
+  children,
+  librasMensagem,
+}: {
+  children: ReactNode;
+  librasMensagem?: string;
+}) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  return (
+    <div className="min-h-dvh bg-secondary/40">
+      <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float">
+        <main className="pb-28">{children}</main>
+
+        <nav
+          aria-label="Navegação principal"
+          className="fixed bottom-0 left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2 border-t border-border bg-card/95 backdrop-blur"
+        >
+          <ul className="grid grid-cols-5 px-1 pb-[env(safe-area-inset-bottom)] pt-1.5">
+            {nav.map(({ to, label, icon: Icon }) => {
+              const ativo = to === "/" ? pathname === "/" : pathname.startsWith(to);
+              return (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl text-[10px] font-semibold transition-colors ${
+                      ativo ? "bg-primary-soft text-primary" : "text-muted-foreground"
+                    }`}
+                  >
+                    <Icon className="size-5" />
+                    {label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <LibrasAvatar mensagem={librasMensagem} />
+      </div>
+    </div>
+  );
+}
+
+export function TopBar({ titulo, subtitulo }: { titulo: string; subtitulo?: string }) {
+  return (
+    <header className="bg-hero px-5 pb-8 pt-10 text-primary-foreground">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
+        Quedas do Iguaçu · PR
+      </p>
+      <h1 className="mt-1 text-2xl font-bold">{titulo}</h1>
+      {subtitulo && <p className="mt-1 text-sm opacity-90">{subtitulo}</p>}
+    </header>
+  );
+}
