@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { TrendingDown, Users, BarChart3, Clock3, CheckCircle2 } from "lucide-react";
+import { TrendingDown, Users, BarChart3, Clock3, CheckCircle2, ShieldCheck } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { AREAS, useAgendamentos } from "@/lib/city-store";
 
@@ -53,6 +53,33 @@ function Gestao() {
               <p className="text-[11px] text-muted-foreground">{nota}</p>
             </div>
           ))}
+        </section>
+
+        <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
+          <div className="flex items-start gap-3">
+            <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
+            <div>
+              <h2 className="text-sm font-bold">Responsabilidade da Prefeitura</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                A Prefeitura de Quedas do Iguaçu é responsável pela manutenção e pela organização
+                deste site: atualização de serviços e unidades, gestão da agenda e dos horários,
+                acompanhamento da fila de atendimentos e publicação de informações oficiais.
+              </p>
+              <ul className="mt-3 space-y-1.5 text-xs">
+                {[
+                  "Manutenção técnica e disponibilidade 24/7 do canal",
+                  "Organização dos conteúdos, serviços e unidades",
+                  "Atendimento e resposta às solicitações dos cidadãos",
+                  "Proteção dos dados e transparência das informações",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-success" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </section>
 
         <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
