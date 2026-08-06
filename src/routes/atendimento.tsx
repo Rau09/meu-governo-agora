@@ -139,7 +139,7 @@ function Atendimento() {
         </Link>
       </div>
 
-      <div className="mt-5 space-y-3 px-4 pb-4">
+      <div className="mt-5 space-y-3 px-4 pb-44">
         {msgs.map((m, i) => (
           <div key={i} className={`flex gap-2 ${m.de === "eu" ? "justify-end" : "justify-start"}`}>
             {m.de === "bot" && (
