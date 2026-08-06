@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+
 
 export const Route = createFileRoute("/atendimento")({
   head: () => ({
