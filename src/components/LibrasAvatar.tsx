@@ -5,7 +5,7 @@ import { Hand, X, Volume2 } from "lucide-react";
  * Avatar de Libras: assistente de acessibilidade para pessoas surdas.
  * Fica flutuando sobre a interface e "sinaliza" o conteúdo da tela.
  */
-export function LibrasAvatar({ mensagem }: { mensagem?: string }) {
+export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
   const [aberto, setAberto] = useState(false);
 
   return (

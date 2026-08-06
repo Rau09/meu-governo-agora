@@ -16,7 +16,7 @@ export const Route = createFileRoute("/gestao")({
       { property: "og:description", content: "Gestão por dados: demanda, tempo de espera e produtividade das equipes." },
     ],
   }),
-  component: Gestao;
+  component: Gestao,
 });
 
 function Gestao() {
