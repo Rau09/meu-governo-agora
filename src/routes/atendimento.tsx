@@ -58,7 +58,15 @@ function responder(pergunta: string) {
   );
 }
 
-const sugestoes = ["Como agendar consulta?", "Segunda via do IPTU", "Tem buraco na minha rua", "Vaga em creche"];
+const sugestoes = ["Como agendar consulta?", "Segunda via do IPTU", "Tem buraco na minha rua", "Vaga em creche", "Horário de atendimento", "Vacinação"];
+
+const atalhos = [
+  { icon: CalendarPlus, titulo: "Agendar", texto: "Como agendar consulta?" },
+  { icon: FileText, titulo: "IPTU", texto: "Segunda via do IPTU" },
+  { icon: Construction, titulo: "Rua/Lixo", texto: "Tem buraco na minha rua" },
+  { icon: GraduationCap, titulo: "Escola", texto: "Vaga em creche" },
+];
+
 
 function Atendimento() {
   const [msgs, setMsgs] = useState<Msg[]>([
