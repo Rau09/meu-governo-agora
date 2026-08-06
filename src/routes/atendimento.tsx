@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+
 
 export const Route = createFileRoute("/atendimento")({
   head: () => ({
@@ -57,7 +58,15 @@ function responder(pergunta: string) {
   );
 }
 
-const sugestoes = ["Como agendar consulta?", "Segunda via do IPTU", "Tem buraco na minha rua", "Vaga em creche"];
+const sugestoes = ["Como agendar consulta?", "Segunda via do IPTU", "Tem buraco na minha rua", "Vaga em creche", "Horário de atendimento", "Vacinação"];
+
+const atalhos = [
+  { icon: CalendarPlus, titulo: "Agendar", texto: "Como agendar consulta?" },
+  { icon: FileText, titulo: "IPTU", texto: "Segunda via do IPTU" },
+  { icon: Construction, titulo: "Rua/Lixo", texto: "Tem buraco na minha rua" },
+  { icon: GraduationCap, titulo: "Escola", texto: "Vaga em creche" },
+];
+
 
 function Atendimento() {
   const [msgs, setMsgs] = useState<Msg[]>([
@@ -86,24 +95,51 @@ function Atendimento() {
     <AppShell librasMensagem="Atendimento 24 horas. Escreva sua dúvida e a assistente responde na hora.">
       <TopBar titulo="Atendimento 24/7" subtitulo="Assistente virtual sempre disponível" />
 
-      <div className="-mt-5 px-4">
-        <div className="flex gap-2">
+      <div className="-mt-5 space-y-3 px-4">
+        <div className="grid grid-cols-3 gap-2">
           <a
             href="https://wa.me/554635320000"
-            className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-success text-xs font-bold text-success-foreground shadow-card"
+            className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl bg-success text-[11px] font-bold text-success-foreground shadow-card"
           >
-            <MessageCircle className="size-4" /> WhatsApp
+            <MessageCircle className="size-5" /> WhatsApp
           </a>
           <a
             href="tel:+554635320000"
-            className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-card text-xs font-bold shadow-card"
+            className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl bg-card text-[11px] font-bold shadow-card"
           >
-            <Phone className="size-4" /> Ligar
+            <Phone className="size-5" /> Ligar
+          </a>
+          <a
+            href="tel:192"
+            className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl bg-destructive text-[11px] font-bold text-destructive-foreground shadow-card"
+          >
+            <Ambulance className="size-5" /> SAMU 192
           </a>
         </div>
+
+        <div className="grid grid-cols-4 gap-2">
+          {atalhos.map(({ icon: Icon, titulo, texto }) => (
+            <button
+              key={titulo}
+              type="button"
+              onClick={() => enviar(texto)}
+              className="flex min-h-16 flex-col items-center justify-center gap-1 rounded-2xl border border-border bg-card text-[11px] font-semibold shadow-card"
+            >
+              <Icon className="size-5 text-primary" />
+              {titulo}
+            </button>
+          ))}
+        </div>
+
+        <Link
+          to="/agendamento"
+          className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card"
+        >
+          <CalendarPlus className="size-4" /> Agendar atendimento
+        </Link>
       </div>
 
-      <div className="mt-5 space-y-3 px-4">
+      <div className="mt-5 space-y-3 px-4 pb-44">
         {msgs.map((m, i) => (
           <div key={i} className={`flex gap-2 ${m.de === "eu" ? "justify-end" : "justify-start"}`}>
             {m.de === "bot" && (
@@ -112,7 +148,7 @@ function Atendimento() {
               </span>
             )}
             <p
-              className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-snug shadow-card ${
+              className={`max-w-[78%] rounded-2xl px-4 py-3 text-[15px] leading-snug shadow-card ${
                 m.de === "eu"
                   ? "rounded-br-sm bg-primary text-primary-foreground"
                   : "rounded-bl-sm bg-card text-card-foreground"
@@ -125,18 +161,21 @@ function Atendimento() {
         <div ref={fim} />
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2 px-4">
-        {sugestoes.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => enviar(s)}
-            className="min-h-11 rounded-full bg-secondary px-4 text-xs font-semibold text-secondary-foreground"
-          >
-            {s}
-          </button>
-        ))}
+      <div className="fixed bottom-[8.5rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 overflow-x-auto px-4 pb-2 [scrollbar-width:none]">
+        <div className="flex w-max gap-2">
+          {sugestoes.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => enviar(s)}
+              className="min-h-10 whitespace-nowrap rounded-full border border-border bg-card px-4 text-xs font-semibold shadow-card"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
       </div>
+
 
       <form
         onSubmit={(e) => {
