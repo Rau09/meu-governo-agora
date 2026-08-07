@@ -17,10 +17,16 @@ export type Cidadao = {
   cpf: string;
   telefone: string;
   bairro: string;
+  /** Hash SHA-256 do PIN + salt. O PIN nunca é guardado em texto puro. */
+  pinHash?: string;
+  salt?: string;
+  consentimentoEm?: string;
 };
 
 const KEY_USER = "qi.cidadao";
 const KEY_AGENDA = "qi.agendamentos";
+const KEY_SESSAO = "qi.sessao";
+const KEY_TENTATIVAS = "qi.tentativas";
 
 function read<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -38,21 +44,123 @@ function write(key: string, value: unknown) {
   window.dispatchEvent(new Event("qi-store"));
 }
 
+/* ---------- Segurança ---------- */
+
+export function validarCpf(valor: string) {
+  const cpf = valor.replace(/\D/g, "");
+  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+  const digito = (base: number) => {
+    let soma = 0;
+    for (let i = 0; i < base; i++) soma += Number(cpf[i]) * (base + 1 - i);
+    const resto = (soma * 10) % 11;
+    return resto === 10 ? 0 : resto;
+  };
+  return digito(9) === Number(cpf[9]) && digito(10) === Number(cpf[10]);
+}
+
+export function validarTelefone(valor: string) {
+  const d = valor.replace(/\D/g, "");
+  return d.length >= 10 && d.length <= 11 && !/^(\d)\1+$/.test(d);
+}
+
+export function forcaPin(pin: string) {
+  const d = pin.replace(/\D/g, "");
+  if (d.length !== 6) return "O PIN precisa ter 6 dígitos.";
+  if (/^(\d)\1{5}$/.test(d)) return "Evite PIN com todos os dígitos iguais.";
+  const seq = "0123456789";
+  const inv = "9876543210";
+  if (seq.includes(d) || inv.includes(d)) return "Evite sequências como 123456.";
+  return null;
+}
+
+export function gerarSalt() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+export async function hashPin(pin: string, salt: string) {
+  const dados = new TextEncoder().encode(`qi:${salt}:${pin}`);
+  const buf = await crypto.subtle.digest("SHA-256", dados);
+  return Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Mostra apenas os dígitos finais: ***.***.789-01 */
+export function ocultarCpf(cpf: string) {
+  const d = cpf.replace(/\D/g, "");
+  if (d.length !== 11) return "•••";
+  return `•••.•••.${d.slice(6, 9)}-${d.slice(9)}`;
+}
+
+export function ocultarTelefone(tel: string) {
+  const d = tel.replace(/\D/g, "");
+  if (d.length < 10) return "•••";
+  return `(${d.slice(0, 2)}) ••••-${d.slice(-4)}`;
+}
+
+type Tentativas = { erros: number; bloqueadoAte: number };
+
+export function lerTentativas(): Tentativas {
+  return read<Tentativas>(KEY_TENTATIVAS, { erros: 0, bloqueadoAte: 0 });
+}
+
+export function registrarErroPin() {
+  const t = lerTentativas();
+  const erros = t.erros + 1;
+  const bloqueadoAte = erros >= 5 ? Date.now() + 5 * 60 * 1000 : 0;
+  write(KEY_TENTATIVAS, { erros: erros >= 5 ? 0 : erros, bloqueadoAte });
+  return { erros, bloqueadoAte };
+}
+
+export function limparTentativas() {
+  write(KEY_TENTATIVAS, { erros: 0, bloqueadoAte: 0 });
+}
+
 export function useCidadao() {
   const [cidadao, setCidadao] = useState<Cidadao | null>(null);
+  const [desbloqueado, setDesbloqueado] = useState(false);
 
   useEffect(() => {
-    const sync = () => setCidadao(read<Cidadao | null>(KEY_USER, null));
+    const sync = () => {
+      setCidadao(read<Cidadao | null>(KEY_USER, null));
+      setDesbloqueado(window.sessionStorage.getItem(KEY_SESSAO) === "1");
+    };
     sync();
     window.addEventListener("qi-store", sync);
     return () => window.removeEventListener("qi-store", sync);
   }, []);
 
-  const salvar = useCallback((c: Cidadao) => write(KEY_USER, c), []);
-  const sair = useCallback(() => write(KEY_USER, null), []);
+  const salvar = useCallback((c: Cidadao) => {
+    window.sessionStorage.setItem(KEY_SESSAO, "1");
+    write(KEY_USER, c);
+  }, []);
 
-  return { cidadao, salvar, sair };
+  const desbloquear = useCallback(async (pin: string) => {
+    const atual = read<Cidadao | null>(KEY_USER, null);
+    if (!atual?.pinHash || !atual.salt) return false;
+    const ok = (await hashPin(pin, atual.salt)) === atual.pinHash;
+    if (ok) {
+      window.sessionStorage.setItem(KEY_SESSAO, "1");
+      limparTentativas();
+      window.dispatchEvent(new Event("qi-store"));
+    }
+    return ok;
+  }, []);
+
+  const bloquear = useCallback(() => {
+    window.sessionStorage.removeItem(KEY_SESSAO);
+    window.dispatchEvent(new Event("qi-store"));
+  }, []);
+
+  const sair = useCallback(() => {
+    window.sessionStorage.removeItem(KEY_SESSAO);
+    limparTentativas();
+    write(KEY_USER, null);
+  }, []);
+
+  return { cidadao, desbloqueado, salvar, sair, desbloquear, bloquear };
 }
+
 
 export function useAgendamentos() {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
