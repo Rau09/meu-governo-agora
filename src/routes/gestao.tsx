@@ -119,7 +119,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
           <button
             type="submit"
-            className="mt-4 w-full rounded-2xl bg-primary py-3 text-sm font-bold text-primary-foreground"
+            className="mt-4 w-full rounded-2xl bg-primary py-3 text-sm font-bold text-primary-foreground transition-all duration-200 hover:shadow-float active:scale-[0.98]"
           >
             Entrar
           </button>
