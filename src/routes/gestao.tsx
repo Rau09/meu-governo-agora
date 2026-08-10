@@ -131,6 +131,13 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
 function Painel({ onSair }: { onSair: () => void }) {
   const { agendamentos } = useAgendamentos();
+  const [filtro, setFiltro] = useState<string>("todas");
+  const [animar, setAnimar] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setAnimar(true), 60);
+    return () => clearTimeout(t);
+  }, []);
 
   const porArea = useMemo(() => {
     const base = AREAS.map((a) => ({ nome: a.nome, total: 0 }));
@@ -141,6 +148,11 @@ function Painel({ onSair }: { onSair: () => void }) {
     const max = Math.max(1, ...base.map((b) => b.total));
     return base.map((b) => ({ ...b, pct: Math.round((b.total / max) * 100) }));
   }, [agendamentos]);
+
+  const lista = useMemo(
+    () => (filtro === "todas" ? agendamentos : agendamentos.filter((a) => a.area === filtro)),
+    [agendamentos, filtro],
+  );
 
   const kpis = [
     { icon: Users, label: "Atendimentos", valor: String(agendamentos.length), nota: "na fila" },
@@ -156,15 +168,21 @@ function Painel({ onSair }: { onSair: () => void }) {
         <div className="flex justify-end">
           <button
             onClick={onSair}
-            className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold"
+            className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold transition-all duration-200 hover:bg-primary-soft hover:text-primary active:scale-95"
           >
             <LogOut className="size-3.5" /> Sair
           </button>
         </div>
 
         <section className="grid grid-cols-3 gap-3">
-          {kpis.map(({ icon: Icon, label, valor, nota }) => (
-            <div key={label} className="rounded-3xl border border-border bg-card p-3 shadow-card">
+          {kpis.map(({ icon: Icon, label, valor, nota }, i) => (
+            <div
+              key={label}
+              style={{ transitionDelay: `${i * 70}ms` }}
+              className={`rounded-3xl border border-border bg-card p-3 shadow-card transition-all duration-500 ease-out hover:-translate-y-0.5 hover:shadow-float ${
+                animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+              }`}
+            >
               <Icon className="size-4 text-primary" />
               <p className="mt-1.5 font-display text-xl font-bold">{valor}</p>
               <p className="text-[11px] font-semibold leading-tight">{label}</p>
@@ -173,17 +191,25 @@ function Painel({ onSair }: { onSair: () => void }) {
           ))}
         </section>
 
-        <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
+        <section
+          style={{ transitionDelay: "220ms" }}
+          className={`rounded-3xl border border-border bg-card p-4 shadow-card transition-all duration-500 ease-out ${
+            animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+          }`}
+        >
           <h2 className="text-sm font-bold">Demanda por área</h2>
           <ul className="mt-3 space-y-3">
-            {porArea.map((a) => (
+            {porArea.map((a, i) => (
               <li key={a.nome}>
                 <div className="flex justify-between text-xs font-medium">
                   <span>{a.nome}</span>
                   <span className="text-muted-foreground">{a.total}</span>
                 </div>
-                <div className="mt-1 h-2 rounded-full bg-secondary">
-                  <div className="h-2 rounded-full bg-primary" style={{ width: `${a.pct}%` }} />
+                <div className="mt-1 h-2 overflow-hidden rounded-full bg-secondary">
+                  <div
+                    className="h-2 rounded-full bg-primary transition-[width] duration-700 ease-out"
+                    style={{ width: animar ? `${a.pct}%` : "0%", transitionDelay: `${300 + i * 90}ms` }}
+                  />
                 </div>
               </li>
             ))}
@@ -191,19 +217,40 @@ function Painel({ onSair }: { onSair: () => void }) {
         </section>
 
         <section>
-          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
-            Fila de atendimentos
-          </h2>
-          {agendamentos.length === 0 ? (
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
+              Fila de atendimentos
+            </h2>
+            <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold">{lista.length}</span>
+          </div>
+
+          <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {[{ id: "todas", nome: "Todas" }, ...AREAS.map((a) => ({ id: a.nome, nome: a.nome }))].map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setFiltro(f.id)}
+                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
+                  filtro === f.id
+                    ? "bg-primary text-primary-foreground shadow-card"
+                    : "bg-secondary text-secondary-foreground"
+                }`}
+              >
+                {f.nome}
+              </button>
+            ))}
+          </div>
+
+          {lista.length === 0 ? (
             <p className="rounded-3xl bg-secondary p-4 text-xs text-muted-foreground">
-              Nenhum agendamento na fila.
+              Nenhum agendamento nesta fila.
             </p>
           ) : (
             <ul className="space-y-2">
-              {agendamentos.map((a) => (
+              {lista.map((a, i) => (
                 <li
                   key={a.id}
-                  className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-card"
+                  style={{ animationDelay: `${i * 45}ms` }}
+                  className="flex animate-in items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-card fade-in slide-in-from-bottom-2 duration-500 transition-transform hover:-translate-y-0.5"
                 >
                   <CheckCircle2 className="size-5 text-success" />
                   <div className="flex-1">
@@ -224,3 +271,4 @@ function Painel({ onSair }: { onSair: () => void }) {
     </AppShell>
   );
 }
+
