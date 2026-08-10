@@ -80,7 +80,10 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
     <AppShell librasMensagem="Área restrita da prefeitura. Faça login para ver o painel de gestão.">
       <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito da equipe da Prefeitura" />
       <div className="-mt-5 px-4">
-        <form onSubmit={submit} className="rounded-3xl border border-border bg-card p-5 shadow-card">
+        <form
+          onSubmit={submit}
+          className="animate-in rounded-3xl border border-border bg-card p-5 shadow-card fade-in slide-in-from-bottom-3 duration-500"
+        >
           <div className="flex size-11 items-center justify-center rounded-2xl bg-primary-soft">
             <Lock className="size-5 text-primary" />
           </div>
