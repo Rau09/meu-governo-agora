@@ -140,7 +140,6 @@ function SignerFigure({ pose }: { pose: Pose }) {
         <Braco
           x={84}
           y={90}
-          lado={1}
           rotacao={pose.bracoEsq}
           cotovelo={pose.coveloEsq}
           config={pose.maoEsq}
@@ -149,7 +148,6 @@ function SignerFigure({ pose }: { pose: Pose }) {
         <Braco
           x={36}
           y={90}
-          lado={-1}
           rotacao={pose.bracoDir}
           cotovelo={pose.coveloDir}
           config={pose.maoDir}
@@ -162,23 +160,25 @@ function SignerFigure({ pose }: { pose: Pose }) {
 function Braco({
   x,
   y,
-  lado,
   rotacao,
   cotovelo,
   config,
 }: {
   x: number;
   y: number;
-  lado: 1 | -1;
   rotacao: number;
   cotovelo: number;
   config: Configuracao;
 }) {
+  // O braço em repouso aponta para baixo; ampliamos o ângulo para que os sinais
+  // aconteçam na altura do peito e do rosto, como na sinalização real.
+  const ombro = rotacao * 1.9;
+  const flexao = cotovelo * 1.1;
   const transicao = "transform 320ms cubic-bezier(0.4, 0.1, 0.2, 1)";
   return (
     <g
       style={{
-        transform: `translate(${x}px, ${y}px) rotate(${rotacao * lado}deg)`,
+        transform: `translate(${x}px, ${y}px) rotate(${ombro}deg)`,
         transition: transicao,
       }}
     >
@@ -186,7 +186,7 @@ function Braco({
       <rect x={-5} y={-4} width={10} height={26} rx={5} className="fill-accent-soft" />
       <g
         style={{
-          transform: `translate(0px, 22px) rotate(${cotovelo * lado}deg)`,
+          transform: `translate(0px, 22px) rotate(${flexao}deg)`,
           transition: transicao,
         }}
       >
