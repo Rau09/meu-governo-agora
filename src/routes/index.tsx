@@ -10,6 +10,8 @@ import {
   Clock,
   ArrowRight,
   UserRound,
+  Pill,
+  Camera,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useAgendamentos, useCidadao } from "@/lib/city-store";
@@ -36,6 +38,8 @@ export const Route = createFileRoute("/")({
 const atalhos = [
   { to: "/agendamento", label: "Agendar consulta", icon: CalendarPlus, tone: "bg-primary text-primary-foreground" },
   { to: "/atendimento", label: "Atendimento 24/7", icon: MessageCircle, tone: "bg-accent-gradient text-accent-foreground" },
+  { to: "/medicamentos", label: "Medicamentos", icon: Pill, tone: "bg-card text-foreground" },
+  { to: "/ocorrencia", label: "Comunicar problema", icon: Camera, tone: "bg-card text-foreground" },
   { to: "/servicos", label: "Serviços da cidade", icon: Truck, tone: "bg-card text-foreground" },
   { to: "/registro", label: "Meu cadastro", icon: UserRound, tone: "bg-card text-foreground" },
 ] as const;

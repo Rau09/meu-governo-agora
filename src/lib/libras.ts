@@ -204,7 +204,7 @@ const SINONIMOS: Record<string, string> = {
   medicamentos: "remedio",
   farmacia: "remedio",
   agendar: "agendar",
-  agendamento: "agendamento" in SINAIS ? "agendamento" : "agendar",
+  agendamento: "agendar",
   marcar: "agendar",
   horario: "agendar",
   problema: "problema",
