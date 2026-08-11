@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgendamentoRouteImport } from './routes/agendamento'
 import { Route as AtendimentoRouteImport } from './routes/atendimento'
 import { Route as GestaoRouteImport } from './routes/gestao'
+import { Route as MedicamentosRouteImport } from './routes/medicamentos'
 import { Route as RegistroRouteImport } from './routes/registro'
 import { Route as ServicosRouteImport } from './routes/servicos'
 
@@ -36,6 +37,11 @@ const GestaoRoute = GestaoRouteImport.update({
   path: '/gestao',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MedicamentosRoute = MedicamentosRouteImport.update({
+  id: '/medicamentos',
+  path: '/medicamentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegistroRoute = RegistroRouteImport.update({
   id: '/registro',
   path: '/registro',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/gestao': typeof GestaoRoute
+  '/medicamentos': typeof MedicamentosRoute
   '/registro': typeof RegistroRoute
   '/servicos': typeof ServicosRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/gestao': typeof GestaoRoute
+  '/medicamentos': typeof MedicamentosRoute
   '/registro': typeof RegistroRoute
   '/servicos': typeof ServicosRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/gestao': typeof GestaoRoute
+  '/medicamentos': typeof MedicamentosRoute
   '/registro': typeof RegistroRoute
   '/servicos': typeof ServicosRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/agendamento'
     | '/atendimento'
     | '/gestao'
+    | '/medicamentos'
     | '/registro'
     | '/servicos'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/agendamento'
     | '/atendimento'
     | '/gestao'
+    | '/medicamentos'
     | '/registro'
     | '/servicos'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/agendamento'
     | '/atendimento'
     | '/gestao'
+    | '/medicamentos'
     | '/registro'
     | '/servicos'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   AgendamentoRoute: typeof AgendamentoRoute
   AtendimentoRoute: typeof AtendimentoRoute
   GestaoRoute: typeof GestaoRoute
+  MedicamentosRoute: typeof MedicamentosRoute
   RegistroRoute: typeof RegistroRoute
   ServicosRoute: typeof ServicosRoute
 }
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GestaoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/medicamentos': {
+      id: '/medicamentos'
+      path: '/medicamentos'
+      fullPath: '/medicamentos'
+      preLoaderRoute: typeof MedicamentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/registro': {
       id: '/registro'
       path: '/registro'
@@ -160,19 +180,10 @@ const rootRouteChildren: RootRouteChildren = {
   AgendamentoRoute: AgendamentoRoute,
   AtendimentoRoute: AtendimentoRoute,
   GestaoRoute: GestaoRoute,
+  MedicamentosRoute: MedicamentosRoute,
   RegistroRoute: RegistroRoute,
   ServicosRoute: ServicosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
