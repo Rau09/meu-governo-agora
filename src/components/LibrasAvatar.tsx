@@ -138,16 +138,16 @@ function SignerFigure({ pose }: { pose: Pose }) {
 
         {/* braço esquerdo (à direita na tela) */}
         <Braco
-          x={84}
-          y={90}
+          x={78}
+          y={88}
           rotacao={pose.bracoEsq}
           cotovelo={pose.coveloEsq}
           config={pose.maoEsq}
         />
         {/* braço direito (à esquerda na tela) */}
         <Braco
-          x={36}
-          y={90}
+          x={42}
+          y={88}
           rotacao={pose.bracoDir}
           cotovelo={pose.coveloDir}
           config={pose.maoDir}
