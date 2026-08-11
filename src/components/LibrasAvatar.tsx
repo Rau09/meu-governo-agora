@@ -140,7 +140,7 @@ function SignerFigure({ pose }: { pose: Pose }) {
         <Braco
           x={84}
           y={90}
-          lado={-1}
+          lado={1}
           rotacao={pose.bracoEsq}
           cotovelo={pose.coveloEsq}
           config={pose.maoEsq}
@@ -149,7 +149,7 @@ function SignerFigure({ pose }: { pose: Pose }) {
         <Braco
           x={36}
           y={90}
-          lado={1}
+          lado={-1}
           rotacao={pose.bracoDir}
           cotovelo={pose.coveloDir}
           config={pose.maoDir}
