@@ -258,3 +258,117 @@ export const HORARIOS = [
   "15:40",
   "16:20",
 ];
+
+/* ---------- Medicamentos (dados simulados) ---------- */
+
+export type Medicamento = {
+  nome: string;
+  unidade: string;
+  quantidade: number;
+};
+
+export function statusMedicamento(qtd: number) {
+  if (qtd <= 0) return { id: "indisponivel", rotulo: "Indisponível", emoji: "🔴" } as const;
+  if (qtd <= 30) return { id: "baixo", rotulo: "Estoque baixo", emoji: "🟡" } as const;
+  return { id: "disponivel", rotulo: "Disponível", emoji: "🟢" } as const;
+}
+
+export const MEDICAMENTOS: Medicamento[] = [
+  { nome: "Dipirona 500mg", unidade: "UBS Central", quantidade: 420 },
+  { nome: "Dipirona 500mg", unidade: "UBS Bela Vista", quantidade: 18 },
+  { nome: "Paracetamol 750mg", unidade: "UBS Central", quantidade: 260 },
+  { nome: "Paracetamol 750mg", unidade: "UBS São Francisco", quantidade: 0 },
+  { nome: "Amoxicilina 500mg", unidade: "UBS Central", quantidade: 75 },
+  { nome: "Amoxicilina 500mg", unidade: "UBS Bela Vista", quantidade: 12 },
+  { nome: "Ibuprofeno 600mg", unidade: "UBS São Francisco", quantidade: 145 },
+  { nome: "Omeprazol 20mg", unidade: "UBS Central", quantidade: 310 },
+  { nome: "Omeprazol 20mg", unidade: "UBS Bela Vista", quantidade: 0 },
+  { nome: "Losartana 50mg", unidade: "UBS Central", quantidade: 520 },
+  { nome: "Losartana 50mg", unidade: "UBS São Francisco", quantidade: 24 },
+  { nome: "Metformina 850mg", unidade: "UBS Bela Vista", quantidade: 180 },
+  { nome: "Captopril 25mg", unidade: "UBS São Francisco", quantidade: 96 },
+  { nome: "Insulina NPH", unidade: "UBS Central", quantidade: 28 },
+  { nome: "Salbutamol spray", unidade: "UBS Bela Vista", quantidade: 0 },
+  { nome: "Soro fisiológico", unidade: "UBS Central", quantidade: 640 },
+  { nome: "Anticoncepcional oral", unidade: "UBS São Francisco", quantidade: 210 },
+  { nome: "Ácido fólico", unidade: "UBS Central", quantidade: 22 },
+  { nome: "Sinvastatina 20mg", unidade: "UBS Bela Vista", quantidade: 155 },
+  { nome: "Prednisona 20mg", unidade: "UBS São Francisco", quantidade: 8 },
+];
+
+/* ---------- Comunicar problema (ocorrências) ---------- */
+
+export const CATEGORIAS_OCORRENCIA = [
+  "Buraco na rua",
+  "Poste/lâmpada com defeito",
+  "Árvore caída",
+  "Lixo/entulho",
+  "Problema na via",
+  "Vazamento",
+  "Outro",
+] as const;
+
+export type StatusOcorrencia = "pendente" | "analise" | "execucao" | "resolvido";
+
+export const STATUS_OCORRENCIA: {
+  id: StatusOcorrencia;
+  rotulo: string;
+  emoji: string;
+  classe: string;
+}[] = [
+  { id: "pendente", rotulo: "Pendente", emoji: "🔴", classe: "bg-destructive/10 text-destructive" },
+  { id: "analise", rotulo: "Em análise", emoji: "🟡", classe: "bg-accent-soft text-accent-foreground" },
+  { id: "execucao", rotulo: "Em execução", emoji: "🔵", classe: "bg-primary-soft text-primary" },
+  { id: "resolvido", rotulo: "Resolvido", emoji: "🟢", classe: "bg-success/15 text-success" },
+];
+
+export type Ocorrencia = {
+  protocolo: string;
+  categoria: string;
+  descricao: string;
+  foto?: string;
+  local?: { lat: number; lng: number } | undefined;
+  endereco?: string;
+  criadoEm: string;
+  status: StatusOcorrencia;
+};
+
+const KEY_OCOR = "qi.ocorrencias";
+
+export function useOcorrencias() {
+  const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
+
+  useEffect(() => {
+    const sync = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
+    sync();
+    window.addEventListener("qi-store", sync);
+    return () => window.removeEventListener("qi-store", sync);
+  }, []);
+
+  const criar = useCallback((o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {
+    const atual = read<Ocorrencia[]>(KEY_OCOR, []);
+    const ano = new Date().getFullYear();
+    const nova: Ocorrencia = {
+      ...o,
+      protocolo: `QI-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+      criadoEm: new Date().toISOString(),
+      status: "pendente",
+    };
+    write(KEY_OCOR, [nova, ...atual]);
+    return nova;
+  }, []);
+
+  const atualizarStatus = useCallback((protocolo: string, status: StatusOcorrencia) => {
+    const atual = read<Ocorrencia[]>(KEY_OCOR, []);
+    write(
+      KEY_OCOR,
+      atual.map((o) => (o.protocolo === protocolo ? { ...o, status } : o)),
+    );
+  }, []);
+
+  return { ocorrencias, criar, atualizarStatus };
+}
+
+export function lerOcorrencias(): Ocorrencia[] {
+  return read<Ocorrencia[]>(KEY_OCOR, []);
+}

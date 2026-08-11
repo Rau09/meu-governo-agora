@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, ArrowRight } from "lucide-react";
+import { Search, ArrowRight, Pill, Camera } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { AREAS } from "@/lib/city-store";
 
@@ -41,6 +41,23 @@ function Servicos() {
             className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
         </label>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-3 px-4">
+        <Link
+          to="/medicamentos"
+          className="flex min-h-20 flex-col justify-between rounded-3xl bg-primary p-3 text-primary-foreground shadow-card transition-transform active:scale-[0.97]"
+        >
+          <Pill className="size-5" />
+          <span className="text-sm font-semibold leading-tight">Medicamentos disponíveis</span>
+        </Link>
+        <Link
+          to="/ocorrencia"
+          className="flex min-h-20 flex-col justify-between rounded-3xl bg-accent-gradient p-3 text-accent-foreground shadow-card transition-transform active:scale-[0.97]"
+        >
+          <Camera className="size-5" />
+          <span className="text-sm font-semibold leading-tight">Comunicar problema</span>
+        </Link>
       </div>
 
       <div className="mt-6 space-y-6 px-4">

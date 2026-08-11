@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgendamentoRouteImport } from './routes/agendamento'
 import { Route as AtendimentoRouteImport } from './routes/atendimento'
 import { Route as GestaoRouteImport } from './routes/gestao'
+import { Route as MedicamentosRouteImport } from './routes/medicamentos'
+import { Route as OcorrenciaRouteImport } from './routes/ocorrencia'
 import { Route as RegistroRouteImport } from './routes/registro'
 import { Route as ServicosRouteImport } from './routes/servicos'
 
@@ -36,6 +38,16 @@ const GestaoRoute = GestaoRouteImport.update({
   path: '/gestao',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MedicamentosRoute = MedicamentosRouteImport.update({
+  id: '/medicamentos',
+  path: '/medicamentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OcorrenciaRoute = OcorrenciaRouteImport.update({
+  id: '/ocorrencia',
+  path: '/ocorrencia',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegistroRoute = RegistroRouteImport.update({
   id: '/registro',
   path: '/registro',
@@ -52,6 +64,8 @@ export interface FileRoutesByFullPath {
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/gestao': typeof GestaoRoute
+  '/medicamentos': typeof MedicamentosRoute
+  '/ocorrencia': typeof OcorrenciaRoute
   '/registro': typeof RegistroRoute
   '/servicos': typeof ServicosRoute
 }
@@ -60,6 +74,8 @@ export interface FileRoutesByTo {
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/gestao': typeof GestaoRoute
+  '/medicamentos': typeof MedicamentosRoute
+  '/ocorrencia': typeof OcorrenciaRoute
   '/registro': typeof RegistroRoute
   '/servicos': typeof ServicosRoute
 }
@@ -69,6 +85,8 @@ export interface FileRoutesById {
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/gestao': typeof GestaoRoute
+  '/medicamentos': typeof MedicamentosRoute
+  '/ocorrencia': typeof OcorrenciaRoute
   '/registro': typeof RegistroRoute
   '/servicos': typeof ServicosRoute
 }
@@ -79,6 +97,8 @@ export interface FileRouteTypes {
     | '/agendamento'
     | '/atendimento'
     | '/gestao'
+    | '/medicamentos'
+    | '/ocorrencia'
     | '/registro'
     | '/servicos'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +107,8 @@ export interface FileRouteTypes {
     | '/agendamento'
     | '/atendimento'
     | '/gestao'
+    | '/medicamentos'
+    | '/ocorrencia'
     | '/registro'
     | '/servicos'
   id:
@@ -95,6 +117,8 @@ export interface FileRouteTypes {
     | '/agendamento'
     | '/atendimento'
     | '/gestao'
+    | '/medicamentos'
+    | '/ocorrencia'
     | '/registro'
     | '/servicos'
   fileRoutesById: FileRoutesById
@@ -104,6 +128,8 @@ export interface RootRouteChildren {
   AgendamentoRoute: typeof AgendamentoRoute
   AtendimentoRoute: typeof AtendimentoRoute
   GestaoRoute: typeof GestaoRoute
+  MedicamentosRoute: typeof MedicamentosRoute
+  OcorrenciaRoute: typeof OcorrenciaRoute
   RegistroRoute: typeof RegistroRoute
   ServicosRoute: typeof ServicosRoute
 }
@@ -138,6 +164,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GestaoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/medicamentos': {
+      id: '/medicamentos'
+      path: '/medicamentos'
+      fullPath: '/medicamentos'
+      preLoaderRoute: typeof MedicamentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ocorrencia': {
+      id: '/ocorrencia'
+      path: '/ocorrencia'
+      fullPath: '/ocorrencia'
+      preLoaderRoute: typeof OcorrenciaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/registro': {
       id: '/registro'
       path: '/registro'
@@ -160,6 +200,8 @@ const rootRouteChildren: RootRouteChildren = {
   AgendamentoRoute: AgendamentoRoute,
   AtendimentoRoute: AtendimentoRoute,
   GestaoRoute: GestaoRoute,
+  MedicamentosRoute: MedicamentosRoute,
+  OcorrenciaRoute: OcorrenciaRoute,
   RegistroRoute: RegistroRoute,
   ServicosRoute: ServicosRoute,
 }

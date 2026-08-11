@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+import { responder } from "@/lib/assistente";
 
 
 export const Route = createFileRoute("/atendimento")({
@@ -19,51 +20,23 @@ export const Route = createFileRoute("/atendimento")({
   component: Atendimento,
 });
 
-type Msg = { de: "bot" | "eu"; texto: string };
+type Msg = { de: "bot" | "eu"; texto: string; acao?: { rotulo: string; para: string } };
 
-const RESPOSTAS: { chaves: string[]; texto: string }[] = [
-  {
-    chaves: ["consulta", "medico", "médico", "saude", "saúde", "ubs"],
-    texto:
-      "Para consultas, use a aba Agendar > Saúde. Você escolhe a UBS e o horário. Casos de urgência: procure o Pronto Atendimento ou ligue 192.",
-  },
-  {
-    chaves: ["vacina", "vacinação"],
-    texto: "A vacinação é por ordem de chegada nas UBS das 08h às 16h, e você também pode agendar horário no app.",
-  },
-  {
-    chaves: ["iptu", "imposto", "boleto"],
-    texto: "A segunda via do IPTU pode ser emitida em Serviços > Cidadania e Tributos, com o número do cadastro do imóvel.",
-  },
-  {
-    chaves: ["matricula", "matrícula", "escola", "creche"],
-    texto: "Matrículas e vagas em creche ficam em Serviços > Educação. Leve RG, CPF e comprovante de residência no dia.",
-  },
-  {
-    chaves: ["buraco", "lixo", "entulho", "luz", "iluminação", "poda"],
-    texto: "Solicitações urbanas (tapa-buraco, coleta, iluminação e poda) são abertas em Serviços > Serviços Urbanos e viram protocolo na hora.",
-  },
-  {
-    chaves: ["horario", "horário", "funcionamento", "aberto"],
-    texto: "O app funciona 24 horas por dia. O atendimento presencial no Paço Municipal é das 08h às 17h.",
-  },
+const sugestoes = [
+  "Como agendar consulta?",
+  "Tem dipirona na UBS?",
+  "Tem buraco na minha rua",
+  "Segunda via do IPTU",
+  "Andamento do meu protocolo",
+  "Vaga em creche",
+  "Horário de atendimento",
 ];
-
-function responder(pergunta: string) {
-  const p = pergunta.toLowerCase();
-  const achou = RESPOSTAS.find((r) => r.chaves.some((c) => p.includes(c)));
-  return (
-    achou?.texto ??
-    "Anotei sua solicitação e ela foi encaminhada para o setor responsável. Você também pode abrir um protocolo em Serviços ou agendar um atendimento presencial."
-  );
-}
-
-const sugestoes = ["Como agendar consulta?", "Segunda via do IPTU", "Tem buraco na minha rua", "Vaga em creche", "Horário de atendimento", "Vacinação"];
 
 const atalhos = [
   { icon: CalendarPlus, titulo: "Agendar", texto: "Como agendar consulta?" },
   { icon: FileText, titulo: "IPTU", texto: "Segunda via do IPTU" },
   { icon: Construction, titulo: "Rua/Lixo", texto: "Tem buraco na minha rua" },
+  { icon: Pill, titulo: "Remédio", texto: "Quero saber sobre medicamentos" },
   { icon: GraduationCap, titulo: "Escola", texto: "Vaga em creche" },
 ];
 
@@ -88,7 +61,10 @@ function Atendimento() {
     if (!pergunta) return;
     setMsgs((m) => [...m, { de: "eu", texto: pergunta }]);
     setTexto("");
-    setTimeout(() => setMsgs((m) => [...m, { de: "bot", texto: responder(pergunta) }]), 450);
+    setTimeout(() => {
+      const r = responder(pergunta);
+      setMsgs((m) => [...m, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
+    }, 450);
   }
 
   return (
@@ -117,7 +93,7 @@ function Atendimento() {
           </a>
         </div>
 
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-5 gap-2">
           {atalhos.map(({ icon: Icon, titulo, texto }) => (
             <button
               key={titulo}
@@ -131,12 +107,20 @@ function Atendimento() {
           ))}
         </div>
 
-        <Link
-          to="/agendamento"
-          className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card"
-        >
-          <CalendarPlus className="size-4" /> Agendar atendimento
-        </Link>
+        <div className="grid grid-cols-2 gap-2">
+          <Link
+            to="/agendamento"
+            className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card"
+          >
+            <CalendarPlus className="size-4" /> Agendar
+          </Link>
+          <Link
+            to="/ocorrencia"
+            className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-accent-gradient text-sm font-bold text-accent-foreground shadow-card"
+          >
+            <Camera className="size-4" /> Comunicar
+          </Link>
+        </div>
       </div>
 
       <div className="mt-5 space-y-3 px-4 pb-44">
@@ -147,15 +131,25 @@ function Atendimento() {
                 <Bot className="size-4" />
               </span>
             )}
-            <p
-              className={`max-w-[78%] rounded-2xl px-4 py-3 text-[15px] leading-snug shadow-card ${
-                m.de === "eu"
-                  ? "rounded-br-sm bg-primary text-primary-foreground"
-                  : "rounded-bl-sm bg-card text-card-foreground"
-              }`}
-            >
-              {m.texto}
-            </p>
+            <div className="max-w-[78%] space-y-2">
+              <p
+                className={`whitespace-pre-line rounded-2xl px-4 py-3 text-[15px] leading-snug shadow-card ${
+                  m.de === "eu"
+                    ? "rounded-br-sm bg-primary text-primary-foreground"
+                    : "rounded-bl-sm bg-card text-card-foreground"
+                }`}
+              >
+                {m.texto}
+              </p>
+              {m.acao && (
+                <Link
+                  to={m.acao.para}
+                  className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-primary-soft px-4 text-xs font-bold text-primary"
+                >
+                  {m.acao.rotulo} <ArrowRight className="size-3.5" />
+                </Link>
+              )}
+            </div>
           </div>
         ))}
         <div ref={fim} />

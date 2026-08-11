@@ -1,8 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { TrendingDown, Users, Clock3, CheckCircle2, Lock, LogOut } from "lucide-react";
+import { TrendingDown, Users, Clock3, CheckCircle2, Lock, LogOut, MapPin, AlertTriangle } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { AREAS, useAgendamentos } from "@/lib/city-store";
+import {
+  AREAS,
+  STATUS_OCORRENCIA,
+  useAgendamentos,
+  useOcorrencias,
+  type Ocorrencia,
+  type StatusOcorrencia,
+} from "@/lib/city-store";
 
 export const Route = createFileRoute("/gestao")({
   head: () => ({
@@ -134,6 +141,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
 function Painel({ onSair }: { onSair: () => void }) {
   const { agendamentos } = useAgendamentos();
+  const { ocorrencias, atualizarStatus } = useOcorrencias();
   const [filtro, setFiltro] = useState<string>("todas");
   const [animar, setAnimar] = useState(false);
 
@@ -160,7 +168,12 @@ function Painel({ onSair }: { onSair: () => void }) {
   const kpis = [
     { icon: Users, label: "Atendimentos", valor: String(agendamentos.length), nota: "na fila" },
     { icon: TrendingDown, label: "Espera", valor: "−70%", nota: "vs. presencial" },
-    { icon: Clock3, label: "Canal", valor: "24/7", nota: "sempre aberto" },
+    {
+      icon: AlertTriangle,
+      label: "Solicitações",
+      valor: String(ocorrencias.filter((o) => o.status !== "resolvido").length),
+      nota: "em aberto",
+    },
   ];
 
   return (
@@ -222,6 +235,29 @@ function Painel({ onSair }: { onSair: () => void }) {
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
+              Solicitações dos cidadãos
+            </h2>
+            <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold">
+              {ocorrencias.length}
+            </span>
+          </div>
+
+          {ocorrencias.length === 0 ? (
+            <p className="rounded-3xl bg-secondary p-4 text-xs text-muted-foreground">
+              Nenhum problema comunicado até o momento.
+            </p>
+          ) : (
+            <ul className="space-y-3">
+              {ocorrencias.map((o, i) => (
+                <CardOcorrencia key={o.protocolo} ocorrencia={o} indice={i} onStatus={atualizarStatus} />
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section>
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
               Fila de atendimentos
             </h2>
             <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold">{lista.length}</span>
@@ -275,3 +311,82 @@ function Painel({ onSair }: { onSair: () => void }) {
   );
 }
 
+
+function CardOcorrencia({
+  ocorrencia,
+  indice,
+  onStatus,
+}: {
+  ocorrencia: Ocorrencia;
+  indice: number;
+  onStatus: (protocolo: string, status: StatusOcorrencia) => void;
+}) {
+  const atual = STATUS_OCORRENCIA.find((s) => s.id === ocorrencia.status)!;
+
+  return (
+    <li
+      style={{ animationDelay: `${indice * 45}ms` }}
+      className="animate-in rounded-3xl border border-border bg-card p-3 shadow-card fade-in slide-in-from-bottom-2 duration-500"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-sm font-semibold leading-tight">{ocorrencia.categoria}</p>
+          <p className="text-[11px] text-muted-foreground">
+            {new Date(ocorrencia.criadoEm).toLocaleString("pt-BR", {
+              dateStyle: "short",
+              timeStyle: "short",
+            })}
+          </p>
+        </div>
+        <span className="shrink-0 rounded-full bg-primary-soft px-2 py-1 text-[10px] font-bold text-primary">
+          {ocorrencia.protocolo}
+        </span>
+      </div>
+
+      {ocorrencia.foto && (
+        <img
+          src={ocorrencia.foto}
+          alt={`Foto enviada na solicitação ${ocorrencia.protocolo}`}
+          className="mt-2 h-36 w-full rounded-2xl object-cover"
+        />
+      )}
+
+      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{ocorrencia.descricao}</p>
+
+      {ocorrencia.local && (
+        <a
+          href={`https://www.google.com/maps?q=${ocorrencia.local.lat},${ocorrencia.local.lng}`}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-primary"
+        >
+          <MapPin className="size-3.5" />
+          {ocorrencia.local.lat.toFixed(5)}, {ocorrencia.local.lng.toFixed(5)}
+        </a>
+      )}
+
+      <div className="mt-3 flex items-center justify-between gap-2">
+        <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${atual.classe}`}>
+          {atual.emoji} {atual.rotulo}
+        </span>
+      </div>
+
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {STATUS_OCORRENCIA.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => onStatus(ocorrencia.protocolo, s.id)}
+            className={`rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-all duration-200 active:scale-95 ${
+              s.id === ocorrencia.status
+                ? "bg-primary text-primary-foreground shadow-card"
+                : "bg-secondary text-secondary-foreground"
+            }`}
+          >
+            {s.emoji} {s.rotulo}
+          </button>
+        ))}
+      </div>
+    </li>
+  );
+}
