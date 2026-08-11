@@ -1,12 +1,39 @@
-import { useState } from "react";
-import { Hand, X, Volume2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Hand, X, Play, Pause, RotateCcw } from "lucide-react";
+import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } from "@/lib/libras";
 
 /**
  * Avatar de Libras: assistente de acessibilidade para pessoas surdas.
- * Fica flutuando sobre a interface e "sinaliza" o conteúdo da tela.
+ * Fica flutuando sobre a interface e sinaliza o conteúdo da tela, seguindo
+ * a sequência de sinais/datilologia montada em `src/lib/libras.ts`.
  */
 export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
   const [aberto, setAberto] = useState(false);
+  const texto = mensagem ?? "Estou traduzindo esta tela em Libras para você.";
+  const passos = useMemo(() => montarSequencia(texto), [texto]);
+
+  const [indice, setIndice] = useState(0);
+  const [tocando, setTocando] = useState(true);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setIndice(0);
+    setTocando(true);
+  }, [texto, aberto]);
+
+  useEffect(() => {
+    if (!aberto || !tocando || passos.length === 0) return;
+    const atual = passos[indice] ?? passos[0]!;
+    timer.current = setTimeout(() => {
+      setIndice((i) => (i + 1) % passos.length);
+    }, atual.duracao);
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
+  }, [aberto, tocando, indice, passos]);
+
+  const passo = passos[indice];
+  const pose = passo?.pose ?? POSE_REPOUSO;
 
   return (
     <>
@@ -25,15 +52,54 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             <span className="text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
               Intérprete de Libras
             </span>
-            <Volume2 className="size-4 text-muted-foreground" />
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setTocando((v) => !v)}
+                aria-label={tocando ? "Pausar sinalização" : "Continuar sinalização"}
+                className="flex size-7 items-center justify-center rounded-full bg-card/70 text-secondary-foreground"
+              >
+                {tocando ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIndice(0);
+                  setTocando(true);
+                }}
+                aria-label="Repetir do início"
+                className="flex size-7 items-center justify-center rounded-full bg-card/70 text-secondary-foreground"
+              >
+                <RotateCcw className="size-3.5" />
+              </button>
+            </div>
           </div>
 
           <div className="flex justify-center bg-secondary/60 py-4">
-            <SignerFigure />
+            <SignerFigure pose={pose} />
           </div>
 
+          {passo && (
+            <div className="border-t border-border px-4 py-2 text-center">
+              <p className="font-display text-base font-bold leading-none text-primary">{passo.glosa}</p>
+              <p className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+                {passo.datilologia ? `soletrando “${passo.palavra}”` : `sinal de “${passo.palavra}”`}
+              </p>
+            </div>
+          )}
+
           <p className="px-4 py-3 text-sm leading-snug text-muted-foreground">
-            {mensagem ?? "Estou traduzindo esta tela em Libras para você."}
+            {texto.split(/\s+/).map((p, i) => {
+              const ativo = passo ? p.replace(/[^\p{L}\p{N}]/gu, "") === passo.palavra : false;
+              return (
+                <span
+                  key={`${p}-${i}`}
+                  className={ativo ? "rounded bg-primary-soft px-1 font-semibold text-primary" : undefined}
+                >
+                  {p}{" "}
+                </span>
+              );
+            })}
           </p>
         </div>
       )}
@@ -41,31 +107,145 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
   );
 }
 
-function SignerFigure() {
+function SignerFigure({ pose }: { pose: Pose }) {
   return (
-    <svg viewBox="0 0 120 140" className="h-32 w-28" role="img" aria-label="Avatar sinalizando em Libras">
-      <ellipse cx="60" cy="132" rx="30" ry="5" fill="currentColor" className="text-muted-foreground/25" />
-      {/* corpo */}
-      <path
-        d="M35 128 Q35 78 60 78 Q85 78 85 128 Z"
-        className="fill-primary"
-      />
-      <path d="M46 78h28v10a14 14 0 0 1-28 0z" className="fill-primary/70" />
-      {/* cabeça */}
-      <circle cx="60" cy="48" r="24" className="fill-accent-soft" />
-      <path d="M36 44a24 24 0 0 1 48 0c0-16-10-24-24-24S36 28 36 44z" className="fill-foreground/80" />
-      <circle cx="51" cy="49" r="3" className="fill-foreground" />
-      <circle cx="69" cy="49" r="3" className="fill-foreground" />
-      <path d="M53 59q7 5 14 0" className="stroke-foreground" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      {/* braços sinalizando */}
-      <g className="animate-sign-left">
-        <rect x="26" y="82" width="11" height="34" rx="5.5" className="fill-accent-soft" />
-        <circle cx="31.5" cy="118" r="8" className="fill-accent-soft" />
-      </g>
-      <g className="animate-sign-right">
-        <rect x="83" y="82" width="11" height="34" rx="5.5" className="fill-accent-soft" />
-        <circle cx="88.5" cy="118" r="8" className="fill-accent-soft" />
+    <svg
+      viewBox="0 0 120 150"
+      className="h-36 w-32"
+      role="img"
+      aria-label="Avatar sinalizando em Libras"
+    >
+      <ellipse cx="60" cy="142" rx="30" ry="5" fill="currentColor" className="text-muted-foreground/25" />
+
+      <g
+        style={{
+          transform: `rotate(${pose.tronco ?? 0}deg)`,
+          transformOrigin: "60px 120px",
+          transition: "transform 320ms ease-in-out",
+        }}
+      >
+        {/* corpo */}
+        <path d="M36 138 Q36 84 60 84 Q84 84 84 138 Z" className="fill-primary" />
+        <path d="M47 84h26v9a13 13 0 0 1-26 0z" className="fill-primary/70" />
+
+        {/* pescoço e cabeça */}
+        <rect x="55" y="70" width="10" height="12" rx="5" className="fill-accent-soft" />
+        <circle cx="60" cy="48" r="23" className="fill-accent-soft" />
+        <path d="M37 45a23 23 0 0 1 46 0c0-15-9-23-23-23S37 30 37 45z" className="fill-foreground/80" />
+        <circle cx="52" cy="48" r="2.6" className="fill-foreground" />
+        <circle cx="68" cy="48" r="2.6" className="fill-foreground" />
+        <path d="M54 58q6 4.5 12 0" className="stroke-foreground" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+
+        {/* braço esquerdo (à direita na tela) */}
+        <Braco
+          x={84}
+          y={90}
+          lado={-1}
+          rotacao={pose.bracoEsq}
+          cotovelo={pose.coveloEsq}
+          config={pose.maoEsq}
+        />
+        {/* braço direito (à esquerda na tela) */}
+        <Braco
+          x={36}
+          y={90}
+          lado={1}
+          rotacao={pose.bracoDir}
+          cotovelo={pose.coveloDir}
+          config={pose.maoDir}
+        />
       </g>
     </svg>
+  );
+}
+
+function Braco({
+  x,
+  y,
+  lado,
+  rotacao,
+  cotovelo,
+  config,
+}: {
+  x: number;
+  y: number;
+  lado: 1 | -1;
+  rotacao: number;
+  cotovelo: number;
+  config: Configuracao;
+}) {
+  const transicao = "transform 320ms cubic-bezier(0.4, 0.1, 0.2, 1)";
+  return (
+    <g
+      style={{
+        transform: `translate(${x}px, ${y}px) rotate(${rotacao * lado}deg)`,
+        transition: transicao,
+      }}
+    >
+      {/* ombro → cotovelo */}
+      <rect x={-5} y={-4} width={10} height={26} rx={5} className="fill-accent-soft" />
+      <g
+        style={{
+          transform: `translate(0px, 22px) rotate(${cotovelo * lado}deg)`,
+          transition: transicao,
+        }}
+      >
+        {/* antebraço */}
+        <rect x={-4.5} y={-3} width={9} height={22} rx={4.5} className="fill-accent-soft" />
+        <g style={{ transform: "translate(0px, 20px)" }}>
+          <Mao config={config} />
+        </g>
+      </g>
+    </g>
+  );
+}
+
+/** Mão com palma e cinco dedos que abrem/fecham conforme a configuração. */
+function Mao({ config }: { config: Configuracao }) {
+  const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
+  const transicao = "transform 300ms ease-in-out, height 300ms ease-in-out";
+
+  const dedos: { dx: number; ext: number; alturaMax: number }[] = [
+    { dx: -3.6, ext: indicador, alturaMax: 9 },
+    { dx: -1.2, ext: medio, alturaMax: 10 },
+    { dx: 1.2, ext: anelar, alturaMax: 9 },
+    { dx: 3.6, ext: minimo, alturaMax: 7.5 },
+  ];
+
+  return (
+    <g>
+      {/* palma */}
+      <rect x={-5} y={-2} width={10} height={9} rx={3.5} className="fill-accent-soft" />
+      {/* dedos */}
+      {dedos.map((d, i) => {
+        const h = 2.4 + d.ext * d.alturaMax;
+        return (
+          <rect
+            key={i}
+            x={d.dx - 1.1}
+            y={5 - h + 2}
+            width={2.2}
+            height={h}
+            rx={1.1}
+            className="fill-accent-soft"
+            style={{ transition: transicao }}
+          />
+        );
+      })}
+      {/* polegar */}
+      <rect
+        x={-8.2}
+        y={0}
+        width={2.4}
+        height={2.4 + polegar * 6.5}
+        rx={1.2}
+        className="fill-accent-soft"
+        style={{
+          transform: `rotate(${25 - polegar * 45}deg)`,
+          transformOrigin: "-7px 2px",
+          transition: transicao,
+        }}
+      />
+    </g>
   );
 }
