@@ -177,6 +177,13 @@ function Painel({ onSair }: { onSair: () => void }) {
   const [mapaFiltro, setMapaFiltro] = useState("todos");
   const [destaque, setDestaque] = useState<string[]>([]);
   const [respostaIA, setRespostaIA] = useState<string | null>(null);
+  const [aviso, setAviso] = useState<string | null>(null);
+
+  function setAcao(texto: string) {
+    setAviso(texto);
+    setTimeout(() => setAviso(null), 3200);
+  }
+
   const [verRecomendacao, setVerRecomendacao] = useState(false);
   const mapaRef = useRef<HTMLDivElement>(null);
 
