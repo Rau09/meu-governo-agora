@@ -1,7 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { TrendingDown, Users, Clock3, CheckCircle2, Lock, LogOut, MapPin, AlertTriangle } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Users,
+  Clock3,
+  CheckCircle2,
+  Lock,
+  LogOut,
+  MapPin,
+  Inbox,
+  ChevronRight,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+import { MapaOcorrencias } from "@/components/MapaOcorrencias";
 import {
   AREAS,
   STATUS_OCORRENCIA,
@@ -10,6 +22,23 @@ import {
   type Ocorrencia,
   type StatusOcorrencia,
 } from "@/lib/city-store";
+import {
+  NIVEIS,
+  PERGUNTAS_IA,
+  alertas,
+  analisar,
+  atrasada,
+  diasAberto,
+  indicadores,
+  metaCategoria,
+  nivel as nivelOcorrencia,
+  prioridades,
+  responderIA,
+  resumir,
+  unificar,
+  type OcorrenciaGestao,
+} from "@/lib/gestao-dados";
+
 
 export const Route = createFileRoute("/gestao")({
   head: () => ({
