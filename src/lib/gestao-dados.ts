@@ -29,7 +29,7 @@ export type OcorrenciaGestao = {
 
 export const NIVEIS: Record<Nivel, { rotulo: string; emoji: string; classe: string; ordem: number }> = {
   critico: { rotulo: "Crítico", emoji: "🔴", classe: "bg-destructive/10 text-destructive", ordem: 0 },
-  alta: { rotulo: "Alta prioridade", emoji: "🟠", classe: "bg-accent-soft text-accent-foreground", ordem: 1 },
+  alta: { rotulo: "Alta prioridade", emoji: "🟠", classe: "bg-accent-soft text-accent", ordem: 1 },
   atencao: { rotulo: "Atenção", emoji: "🟡", classe: "bg-secondary text-secondary-foreground", ordem: 2 },
   normal: { rotulo: "Normal", emoji: "🟢", classe: "bg-success/15 text-success", ordem: 3 },
 };
@@ -333,7 +333,14 @@ export function prioridades(lista: OcorrenciaGestao[]): Prioridade[] {
     const media = itens.reduce((s, o) => s + pontuacao(o), 0) / itens.length;
     const bonus = Math.min(20, (itens.length - 1) * 6);
     const score = media + bonus;
-    const n: Nivel = score >= 72 ? "critico" : score >= 58 ? "alta" : score >= 44 ? "atencao" : "normal";
+    const n: Nivel =
+      score >= 72 && itens.length >= 3
+        ? "critico"
+        : score >= 58 && itens.length >= 2
+          ? "alta"
+          : score >= 44
+            ? "atencao"
+            : "normal";
     const atrasadas = itens.filter(atrasada).length;
     return {
       id,
