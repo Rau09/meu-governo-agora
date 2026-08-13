@@ -58,11 +58,17 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setArrastado(true);
 
     const maxX = typeof window !== "undefined" ? window.innerWidth - 56 - 16 : 0;
-    const maxY = typeof window !== "undefined" ? window.innerHeight - 56 - 96 : 0;
+    // Mudamos o maxY para permitir o movimento para cima, calculando a partir do topo
+    // O botão está fixado em bottom-24 (96px). 
+    // Para subir, dy é negativo. O limite superior é quando o topo do botão toca o topo da tela.
+    // O botão está a (window.innerHeight - 96 - 56) do topo.
+    const currentFromTop = typeof window !== "undefined" ? window.innerHeight - 96 - 56 : 0;
+    const minY = -currentFromTop + 16; // Mantém 16px de margem do topo
+    const maxY = 96 - 16; // Mantém 16px de margem do fundo (bottom-24 é 96px, queremos evitar que suma pra baixo também)
 
     setPos({
-      x: clamp(inicio.current.posX + dx, -maxX, 0),
-      y: clamp(inicio.current.posY + dy, -maxY, 0),
+      x: clamp(inicio.current.posX + dx, -maxX, 16),
+      y: clamp(inicio.current.posY + dy, minY, maxY),
     });
   }
 
