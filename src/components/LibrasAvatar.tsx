@@ -58,11 +58,17 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setArrastado(true);
 
     const maxX = typeof window !== "undefined" ? window.innerWidth - 56 - 16 : 0;
-    const maxY = typeof window !== "undefined" ? window.innerHeight - 56 - 96 : 0;
+    // Mudamos o maxY para permitir o movimento para cima, calculando a partir do topo
+    // O botão está fixado em bottom-24 (96px). 
+    // Para subir, dy é negativo. O limite superior é quando o topo do botão toca o topo da tela.
+    // O botão está a (window.innerHeight - 96 - 56) do topo.
+    const currentFromTop = typeof window !== "undefined" ? window.innerHeight - 96 - 56 : 0;
+    const minY = -currentFromTop + 16; // Mantém 16px de margem do topo
+    const maxY = 96 - 16; // Mantém 16px de margem do fundo (bottom-24 é 96px, queremos evitar que suma pra baixo também)
 
     setPos({
-      x: clamp(inicio.current.posX + dx, -maxX, 0),
-      y: clamp(inicio.current.posY + dy, -maxY, 0),
+      x: clamp(inicio.current.posX + dx, -maxX, 16),
+      y: clamp(inicio.current.posY + dy, minY, maxY),
     });
   }
 
@@ -102,7 +108,16 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
       </button>
 
       {aberto && (
-        <div className="absolute bottom-[72px] right-0 z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float">
+        <div 
+          className={`absolute right-0 z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float ${
+            // Se o botão estiver na metade superior da tela, mostra o popup abaixo dele.
+            // pos.y negativo significa que subiu.
+            // O botão está em bottom-24 (96px). Metade da tela é innerHeight / 2.
+            typeof window !== 'undefined' && (window.innerHeight - 96 + pos.y) < window.innerHeight / 2
+              ? "top-[72px]" 
+              : "bottom-[72px]"
+          }`}
+        >
           <div className="flex items-center justify-between bg-primary-soft px-4 py-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
               Intérprete de Libras
