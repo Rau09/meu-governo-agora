@@ -108,7 +108,16 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
       </button>
 
       {aberto && (
-        <div className="absolute bottom-[72px] right-0 z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float">
+        <div 
+          className={`absolute right-0 z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float ${
+            // Se o botão estiver na metade superior da tela, mostra o popup abaixo dele.
+            // pos.y negativo significa que subiu.
+            // O botão está em bottom-24 (96px). Metade da tela é innerHeight / 2.
+            typeof window !== 'undefined' && (window.innerHeight - 96 + pos.y) < window.innerHeight / 2
+              ? "top-[72px]" 
+              : "bottom-[72px]"
+          }`}
+        >
           <div className="flex items-center justify-between bg-primary-soft px-4 py-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
               Intérprete de Libras
