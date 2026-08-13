@@ -130,7 +130,8 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             </div>
           </div>
 
-          <div className="flex justify-center bg-secondary/60 py-4">
+          <div className="flex justify-center bg-linear-to-b from-primary/10 to-primary/5 py-4 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_70%)]" />
             <SignerFigure pose={pose} />
           </div>
 
@@ -176,33 +177,37 @@ function SignerFigure({ pose }: { pose: Pose }) {
         style={{
           transform: `rotate(${pose.tronco ?? 0}deg)`,
           transformOrigin: "60px 120px",
-          transition: "transform 320ms ease-in-out",
+          transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        {/* corpo */}
-        <path d="M36 138 Q36 84 60 84 Q84 84 84 138 Z" className="fill-primary" />
-        <path d="M47 84h26v9a13 13 0 0 1-26 0z" className="fill-primary/70" />
+        {/* Camisa */}
+        <path d="M34 138 Q34 82 60 82 Q86 82 86 138 Z" className="fill-primary" />
+        <path d="M47 82h26v8a13 13 0 0 1-26 0z" className="fill-white/20" />
+        
+        {/* Pescoço e Rosto (Traços humanos de animação) */}
+        <rect x="55" y="68" width="10" height="14" rx="5" className="fill-[#F5D5B8]" />
+        <circle cx="60" cy="48" r="23" className="fill-[#F5D5B8]" />
+        
+        {/* Cabelo */}
+        <path d="M37 45a23 23 0 0 1 46 0c0-15-9-23-23-23S37 30 37 45z" className="fill-[#4A3728]" />
+        
+        {/* Olhos e Expressão */}
+        <circle cx="52" cy="48" r="3" className="fill-[#333]" />
+        <circle cx="68" cy="48" r="3" className="fill-[#333]" />
+        <path d="M54 58q6 4 12 0" className="stroke-[#333]" strokeWidth="2.5" fill="none" strokeLinecap="round" />
 
-        {/* pescoço e cabeça */}
-        <rect x="55" y="70" width="10" height="12" rx="5" className="fill-accent-soft" />
-        <circle cx="60" cy="48" r="23" className="fill-accent-soft" />
-        <path d="M37 45a23 23 0 0 1 46 0c0-15-9-23-23-23S37 30 37 45z" className="fill-foreground/80" />
-        <circle cx="52" cy="48" r="2.6" className="fill-foreground" />
-        <circle cx="68" cy="48" r="2.6" className="fill-foreground" />
-        <path d="M54 58q6 4.5 12 0" className="stroke-foreground" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-
-        {/* braço esquerdo (à direita na tela) */}
+        {/* Braço esquerdo (à direita na tela) */}
         <Braco
           x={78}
-          y={88}
+          y={86}
           rotacao={pose.bracoEsq}
           cotovelo={pose.coveloEsq}
           config={pose.maoEsq}
         />
-        {/* braço direito (à esquerda na tela) */}
+        {/* Braço direito (à esquerda na tela) */}
         <Braco
           x={42}
-          y={88}
+          y={86}
           rotacao={pose.bracoDir}
           cotovelo={pose.coveloDir}
           config={pose.maoDir}
@@ -227,9 +232,10 @@ function Braco({
 }) {
   // O braço em repouso aponta para baixo; ampliamos o ângulo para que os sinais
   // aconteçam na altura do peito e do rosto, como na sinalização real.
-  const ombro = rotacao * 2.1;
-  const flexao = cotovelo * 1.25;
-  const transicao = "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)";
+  // Ajuste de ângulos para que a sinalização aconteça na região da barriga/peito
+  const ombro = rotacao * 1.6;
+  const flexao = cotovelo * 1.1;
+  const transicao = "transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1)";
   return (
     <g
       style={{
@@ -238,7 +244,7 @@ function Braco({
       }}
     >
       {/* ombro → cotovelo */}
-      <rect x={-5} y={-4} width={10} height={26} rx={5} className="fill-accent-soft" />
+      <rect x={-5} y={-4} width={10} height={26} rx={5} fill="#F5D5B8" />
       <g
         style={{
           transform: `translate(0px, 22px) rotate(${flexao}deg)`,
@@ -246,7 +252,7 @@ function Braco({
         }}
       >
         {/* antebraço */}
-        <rect x={-4.5} y={-3} width={9} height={22} rx={4.5} className="fill-accent-soft" />
+        <rect x={-4.5} y={-3} width={9} height={22} rx={4.5} fill="#F5D5B8" />
         <g style={{ transform: "translate(0px, 20px)" }}>
           <Mao config={config} />
         </g>
@@ -270,7 +276,7 @@ function Mao({ config }: { config: Configuracao }) {
   return (
     <g>
       {/* palma */}
-      <rect x={-5} y={-2} width={10} height={9} rx={3.5} className="fill-accent-soft stroke-accent/20 stroke-[0.5]" />
+      <rect x={-5} y={-2} width={10} height={9} rx={3.5} fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.5" />
       {/* dedos */}
       {dedos.map((d, i) => {
         const h = 2.4 + d.ext * d.alturaMax;
@@ -282,7 +288,7 @@ function Mao({ config }: { config: Configuracao }) {
             width={2.2}
             height={h}
             rx={1.1}
-            className="fill-accent-soft stroke-accent/10 stroke-[0.3]"
+            fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.3"
             style={{ transition: transicao }}
           />
         );
@@ -294,7 +300,7 @@ function Mao({ config }: { config: Configuracao }) {
         width={2.4}
         height={2.4 + polegar * 6.5}
         rx={1.2}
-        className="fill-accent-soft stroke-accent/10 stroke-[0.3]"
+        fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.3"
         style={{
           transform: `rotate(${25 - polegar * 45}deg)`,
           transformOrigin: "-7px 2px",
