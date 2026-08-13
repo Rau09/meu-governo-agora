@@ -166,7 +166,7 @@ function SignerFigure({ pose }: { pose: Pose }) {
   return (
     <svg
       viewBox="0 0 120 150"
-      className="h-36 w-32"
+      className="h-44 w-36 drop-shadow-md"
       role="img"
       aria-label="Avatar sinalizando em Libras"
     >
@@ -227,9 +227,9 @@ function Braco({
 }) {
   // O braço em repouso aponta para baixo; ampliamos o ângulo para que os sinais
   // aconteçam na altura do peito e do rosto, como na sinalização real.
-  const ombro = rotacao * 1.9;
-  const flexao = cotovelo * 1.1;
-  const transicao = "transform 320ms cubic-bezier(0.4, 0.1, 0.2, 1)";
+  const ombro = rotacao * 2.1;
+  const flexao = cotovelo * 1.25;
+  const transicao = "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)";
   return (
     <g
       style={{
@@ -258,7 +258,7 @@ function Braco({
 /** Mão com palma e cinco dedos que abrem/fecham conforme a configuração. */
 function Mao({ config }: { config: Configuracao }) {
   const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
-  const transicao = "transform 300ms ease-in-out, height 300ms ease-in-out";
+  const transicao = "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), height 350ms ease-in-out";
 
   const dedos: { dx: number; ext: number; alturaMax: number }[] = [
     { dx: -3.6, ext: indicador, alturaMax: 9 },
@@ -270,7 +270,7 @@ function Mao({ config }: { config: Configuracao }) {
   return (
     <g>
       {/* palma */}
-      <rect x={-5} y={-2} width={10} height={9} rx={3.5} className="fill-accent-soft" />
+      <rect x={-5} y={-2} width={10} height={9} rx={3.5} className="fill-accent-soft stroke-accent/20 stroke-[0.5]" />
       {/* dedos */}
       {dedos.map((d, i) => {
         const h = 2.4 + d.ext * d.alturaMax;
@@ -282,7 +282,7 @@ function Mao({ config }: { config: Configuracao }) {
             width={2.2}
             height={h}
             rx={1.1}
-            className="fill-accent-soft"
+            className="fill-accent-soft stroke-accent/10 stroke-[0.3]"
             style={{ transition: transicao }}
           />
         );
@@ -294,7 +294,7 @@ function Mao({ config }: { config: Configuracao }) {
         width={2.4}
         height={2.4 + polegar * 6.5}
         rx={1.2}
-        className="fill-accent-soft"
+        className="fill-accent-soft stroke-accent/10 stroke-[0.3]"
         style={{
           transform: `rotate(${25 - polegar * 45}deg)`,
           transformOrigin: "-7px 2px",
