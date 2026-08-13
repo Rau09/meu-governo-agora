@@ -16,6 +16,11 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
   const [tocando, setTocando] = useState(true);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [arrastado, setArrastado] = useState(false);
+  const arrastando = useRef(false);
+  const inicio = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
+
   useEffect(() => {
     setIndice(0);
     setTocando(true);
@@ -35,19 +40,69 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
   const passo = passos[indice];
   const pose = passo?.pose ?? POSE_REPOUSO;
 
+  function clamp(n: number, min: number, max: number) {
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function onPointerDown(e: React.PointerEvent<HTMLButtonElement>) {
+    inicio.current = { x: e.clientX, y: e.clientY, posX: pos.x, posY: pos.y };
+    arrastando.current = true;
+    setArrastado(false);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLButtonElement>) {
+    if (!arrastando.current) return;
+    const dx = e.clientX - inicio.current.x;
+    const dy = e.clientY - inicio.current.y;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setArrastado(true);
+
+    const maxX = typeof window !== "undefined" ? window.innerWidth - 56 - 16 : 0;
+    const maxY = typeof window !== "undefined" ? window.innerHeight - 56 - 96 : 0;
+
+    setPos({
+      x: clamp(inicio.current.posX + dx, -maxX, 0),
+      y: clamp(inicio.current.posY + dy, -maxY, 0),
+    });
+  }
+
+  function onPointerUp(e: React.PointerEvent<HTMLButtonElement>) {
+    arrastando.current = false;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {}
+  }
+
+  function onClick() {
+    if (arrastado) {
+      setArrastado(false);
+      return;
+    }
+    setAberto((v) => !v);
+  }
+
   return (
-    <>
+    <div
+      className="fixed bottom-24 right-4 z-50"
+      style={{
+        transform: `translate3d(${pos.x}px, ${pos.y}px, 0)`,
+      }}
+    >
       <button
         type="button"
-        onClick={() => setAberto((v) => !v)}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onClick={onClick}
         aria-label={aberto ? "Fechar intérprete de Libras" : "Abrir intérprete de Libras"}
-        className="fixed bottom-24 right-4 z-50 flex size-14 items-center justify-center rounded-full bg-accent-gradient text-accent-foreground shadow-float transition-transform active:scale-95"
+        className="flex size-14 items-center justify-center rounded-full bg-accent-gradient text-accent-foreground shadow-float transition-transform cursor-grab active:cursor-grabbing active:scale-95"
+        style={{ touchAction: "none" }}
       >
         {aberto ? <X className="size-6" /> : <Hand className="size-6" />}
       </button>
 
       {aberto && (
-        <div className="fixed bottom-42 right-4 z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float">
+        <div className="absolute bottom-[72px] right-0 z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float">
           <div className="flex items-center justify-between bg-primary-soft px-4 py-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
               Intérprete de Libras
@@ -83,7 +138,7 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             <div className="border-t border-border px-4 py-2 text-center">
               <p className="font-display text-base font-bold leading-none text-primary">{passo.glosa}</p>
               <p className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-                {passo.datilologia ? `soletrando “${passo.palavra}”` : `sinal de “${passo.palavra}”`}
+                {passo.datilologia ? `soletrando "${passo.palavra}"` : `sinal de "${passo.palavra}"`}
               </p>
             </div>
           )}
@@ -103,7 +158,7 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
           </p>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
