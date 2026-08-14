@@ -25,17 +25,20 @@ function CausaAnimalPage() {
               <Camera className="size-8" />
               <span className="font-bold text-sm">Registrar Ocorrência</span>
             </Link>
-            <div className="flex flex-col gap-3 p-5 rounded-[2rem] bg-secondary border border-border text-foreground active:scale-95 transition-transform">
+            <Link 
+              to="/comunidade" 
+              className="flex flex-col gap-3 p-5 rounded-[2rem] bg-secondary border border-border text-foreground active:scale-95 transition-transform"
+            >
               <MapPin className="size-8 text-primary" />
               <span className="font-bold text-sm">Mapa Animal</span>
-            </div>
+            </Link>
           </div>
         </section>
 
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Para Adoção</h2>
-            <button className="text-[10px] font-bold text-primary">Ver todos</button>
+            <Link to="/causa-animal" className="text-[10px] font-bold text-primary">Ver todos</Link>
           </div>
           <div className="flex gap-4 overflow-x-auto pb-4 -mx-1 px-1 snap-x">
             {animaisAdoção.map((pet) => (
@@ -43,7 +46,7 @@ function CausaAnimalPage() {
                 <img src={pet.img} alt={pet.nome} className="size-20 rounded-2xl object-cover mb-3" />
                 <p className="font-bold text-sm">{pet.nome}</p>
                 <p className="text-[10px] text-muted-foreground">{pet.raca} · {pet.idade}</p>
-                <button className="mt-3 w-full py-2 rounded-xl bg-primary/10 text-primary text-[10px] font-bold">Quero Conhecer</button>
+                <Link to="/atendimento" className="mt-3 block text-center py-2 rounded-xl bg-primary/10 text-primary text-[10px] font-bold active:scale-95 transition-transform">Quero Conhecer</Link>
               </div>
             ))}
           </div>
@@ -70,9 +73,12 @@ function CausaAnimalPage() {
           <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
             Seja um voluntário, ofereça lar temporário ou participe de nossas campanhas de arrecadação.
           </p>
-          <button className="flex items-center gap-2 text-sm font-bold text-primary">
+          <Link 
+            to="/atendimento" 
+            className="flex items-center gap-2 text-sm font-bold text-primary active:scale-95 transition-transform"
+          >
             Saber mais <Search className="size-4" />
-          </button>
+          </Link>
         </section>
       </div>
     </AppShell>

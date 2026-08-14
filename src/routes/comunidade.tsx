@@ -61,23 +61,32 @@ function ComunidadePage() {
         </section>
 
         <section className="grid grid-cols-2 gap-4">
-          <div className="p-5 rounded-3xl bg-secondary border border-border flex flex-col gap-3">
+          <Link 
+            to="/gestao" 
+            className="p-5 rounded-3xl bg-secondary border border-border flex flex-col gap-3 active:scale-95 transition-transform"
+          >
             <MapPin className="size-6 text-primary" />
             <span className="font-bold text-sm">Mapa da Cidade</span>
-          </div>
-          <div className="p-5 rounded-3xl bg-secondary border border-border flex flex-col gap-3">
+          </Link>
+          <Link 
+            to="/atendimento" 
+            className="p-5 rounded-3xl bg-secondary border border-border flex flex-col gap-3 active:scale-95 transition-transform"
+          >
             <MessageSquare className="size-6 text-primary" />
             <span className="font-bold text-sm">Sugestões</span>
-          </div>
+          </Link>
         </section>
 
-        <section className="p-5 rounded-3xl bg-accent-gradient text-accent-foreground flex items-center gap-4">
+        <Link 
+          to="/atendimento" 
+          className="p-5 rounded-3xl bg-accent-gradient text-accent-foreground flex items-center gap-4 active:scale-[0.98] transition-transform"
+        >
           <AlertCircle className="size-8 opacity-50" />
           <div>
             <p className="font-bold text-sm">Prevenção Cantu</p>
             <p className="text-[10px] opacity-90">Participe dos mutirões de limpeza no seu bairro.</p>
           </div>
-        </section>
+        </Link>
       </div>
     </AppShell>
   );

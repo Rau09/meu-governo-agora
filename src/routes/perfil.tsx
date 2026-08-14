@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { UserRound, ShieldCheck, Bell, History, Settings, LogOut, ChevronRight, MapPin } from "lucide-react";
 import { useCidadao } from "@/lib/cantu-store";
@@ -49,40 +49,52 @@ function PerfilPage() {
         <section className="space-y-2">
           <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-2 mb-3">Minha Atividade</h3>
           <div className="rounded-[2rem] bg-card border border-border overflow-hidden">
-            <button className="w-full flex items-center justify-between p-4 hover:bg-secondary transition-colors border-b border-border">
+            <Link 
+              to="/comunidade" 
+              className="w-full flex items-center justify-between p-4 hover:bg-secondary transition-colors border-b border-border"
+            >
               <div className="flex items-center gap-3">
                 <History className="size-5 text-primary" />
                 <span className="text-sm font-medium">Histórico de Protocolos</span>
               </div>
               <ChevronRight className="size-4 text-muted-foreground" />
-            </button>
-            <button className="w-full flex items-center justify-between p-4 hover:bg-secondary transition-colors">
+            </Link>
+            <Link 
+              to="/saude" 
+              className="w-full flex items-center justify-between p-4 hover:bg-secondary transition-colors"
+            >
               <div className="flex items-center gap-3">
                 <ShieldCheck className="size-5 text-primary" />
                 <span className="text-sm font-medium">Dados da Carteira de Saúde</span>
               </div>
               <ChevronRight className="size-4 text-muted-foreground" />
-            </button>
+            </Link>
           </div>
         </section>
 
         <section className="space-y-2">
           <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-2 mb-3">Preferências</h3>
           <div className="rounded-[2rem] bg-card border border-border overflow-hidden">
-            <button className="w-full flex items-center justify-between p-4 hover:bg-secondary transition-colors border-b border-border">
+            <Link 
+              to="/atendimento" 
+              className="w-full flex items-center justify-between p-4 hover:bg-secondary transition-colors border-b border-border"
+            >
               <div className="flex items-center gap-3">
                 <Bell className="size-5 text-primary" />
                 <span className="text-sm font-medium">Notificações</span>
               </div>
               <ChevronRight className="size-4 text-muted-foreground" />
-            </button>
-            <button className="w-full flex items-center justify-between p-4 hover:bg-secondary transition-colors">
+            </Link>
+            <Link 
+              to="/atendimento" 
+              className="w-full flex items-center justify-between p-4 hover:bg-secondary transition-colors"
+            >
               <div className="flex items-center gap-3">
                 <Settings className="size-5 text-primary" />
                 <span className="text-sm font-medium">Configurações da Conta</span>
               </div>
               <ChevronRight className="size-4 text-muted-foreground" />
-            </button>
+            </Link>
           </div>
         </section>
 

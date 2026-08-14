@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Users,
@@ -388,9 +388,9 @@ function Painel({ onSair }: { onSair: () => void }) {
 
         {/* 5. Análise da IA */}
         <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
-          <h2 className="flex items-center gap-2 text-sm font-bold">
+          <Link to="/atendimento" className="flex items-center gap-2 text-sm font-bold hover:text-primary transition-colors">
             <Sparkles className="size-4 text-primary" /> Análise da IA
-          </h2>
+          </Link>
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{analise.texto}</p>
 
           <div className="mt-3 rounded-2xl bg-primary-soft p-3">
