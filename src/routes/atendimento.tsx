@@ -5,7 +5,10 @@ import { AppShell, TopBar } from "@/components/AppShell";
 import { responder } from "@/lib/cantu-ia";
 
 
+type Busca = { protocolo?: string };
 export const Route = createFileRoute("/atendimento")({
+  validateSearch: (search: Record<string, unknown>): Busca =>
+    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
   head: () => ({
     meta: [
       { title: "Atendimento 24/7 — Cantu Conecta" },
@@ -42,6 +45,7 @@ const atalhos = [
 
 
 function Atendimento() {
+  const { protocolo } = Route.useSearch();
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       de: "bot",
@@ -49,6 +53,12 @@ function Atendimento() {
         "Olá! Sou a assistente do Cantu Conecta. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
     },
   ]);
+
+  useEffect(() => {
+    if (protocolo) {
+      enviar(`Andamento do protocolo ${protocolo}`);
+    }
+  }, [protocolo]);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
 

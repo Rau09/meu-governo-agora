@@ -235,16 +235,18 @@ function MinhasSolicitacoes({ ocorrencias }: { ocorrencias: Ocorrencia[] }) {
       <ul className="space-y-2">
         {ocorrencias.slice(0, 5).map((o) => (
           <li key={o.protocolo} className="rounded-2xl border border-border bg-card p-3 shadow-card">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold">{o.categoria}</span>
-              <span className="rounded-full bg-primary-soft px-2 py-1 text-[10px] font-bold text-primary">
-                {o.protocolo}
-              </span>
-            </div>
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{o.descricao}</p>
-            <p className="mt-1 text-[11px] font-medium">
-              {new Date(o.criadoEm).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
-            </p>
+            <Link to="/atendimento" search={{ protocolo: o.protocolo }} className="block">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold">{o.categoria}</span>
+                <span className="rounded-full bg-primary-soft px-2 py-1 text-[10px] font-bold text-primary">
+                  {o.protocolo}
+                </span>
+              </div>
+              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{o.descricao}</p>
+              <p className="mt-1 text-[11px] font-medium text-muted-foreground">
+                {new Date(o.criadoEm).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+              </p>
+            </Link>
           </li>
         ))}
       </ul>
