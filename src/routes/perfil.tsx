@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { UserRound, ShieldCheck, Bell, History, Settings, LogOut, ChevronRight, MapPin } from "lucide-react";
 import { useCidadao } from "@/lib/cantu-store";
