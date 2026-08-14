@@ -191,12 +191,15 @@ function SignerFigure({ pose }: { pose: Pose }) {
         {/* Sombra no chão */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
         
-        {/* Imagem do Macaco */}
-        <div className="relative w-full h-full z-10 overflow-hidden rounded-2xl border-2 border-white/50">
+        {/* Personagem do Macaco 3D Realista */}
+        <div className="relative w-full h-full z-10 overflow-hidden rounded-2xl border-2 border-white/50 shadow-2xl bg-black/5">
           <img 
             src={avatarAsset.url} 
-            alt="Macaco Intérprete" 
-            className="w-full h-full object-cover scale-110"
+            alt="Macaco Intérprete 3D" 
+            className="w-full h-full object-cover scale-125 object-center"
+            style={{
+              filter: "drop-shadow(0 10px 8px rgb(0 0 0 / 0.15)) contrast(1.1)",
+            }}
           />
         </div>
 
