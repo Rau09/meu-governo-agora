@@ -203,34 +203,38 @@ function SignerFigure({ pose }: { pose: Pose }) {
           transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        {/* Camisa */}
-        <path d="M34 138 Q34 82 60 82 Q86 82 86 138 Z" className="fill-primary" />
-        <path d="M47 82h26v8a13 13 0 0 1-26 0z" className="fill-white/20" />
+        {/* Usar a imagem do avatar como o corpo/rosto central */}
+        <defs>
+          <clipPath id="avatarClip">
+            <circle cx="60" cy="65" r="45" />
+          </clipPath>
+        </defs>
         
-        {/* Pescoço e Rosto (Traços humanos de animação) */}
-        <rect x="55" y="68" width="10" height="14" rx="5" className="fill-[#F5D5B8]" />
-        <circle cx="60" cy="48" r="23" className="fill-[#F5D5B8]" />
+        {/* Fundo do corpo para dar contraste */}
+        <circle cx="60" cy="65" r="46" className="fill-white" />
         
-        {/* Cabelo */}
-        <path d="M37 45a23 23 0 0 1 46 0c0-15-9-23-23-23S37 30 37 45z" className="fill-[#4A3728]" />
-        
-        {/* Olhos e Expressão */}
-        <circle cx="52" cy="48" r="3" className="fill-[#333]" />
-        <circle cx="68" cy="48" r="3" className="fill-[#333]" />
-        <path d="M54 58q6 4 12 0" className="stroke-[#333]" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        {/* Imagem do Avatar Centralizada */}
+        <image 
+          href={avatarAsset.url} 
+          x="15" 
+          y="20" 
+          width="90" 
+          height="90" 
+          clipPath="url(#avatarClip)"
+        />
 
         {/* Braço esquerdo (à direita na tela) */}
         <Braco
-          x={78}
-          y={86}
+          x={85}
+          y={80}
           rotacao={pose.bracoEsq}
           cotovelo={pose.coveloEsq}
           config={pose.maoEsq}
         />
         {/* Braço direito (à esquerda na tela) */}
         <Braco
-          x={42}
-          y={86}
+          x={35}
+          y={80}
           rotacao={pose.bracoDir}
           cotovelo={pose.coveloDir}
           config={pose.maoDir}
