@@ -6,6 +6,7 @@ import { LibrasAvatar } from "./LibrasAvatar";
 const nav = [
   { to: "/", label: "Início", icon: Home },
   { to: "/saude", label: "Saúde", icon: Stethoscope },
+  { to: "/atendimento", label: "Assistente", icon: MessageCircle },
   { to: "/causa-animal", label: "Animal", icon: PawPrint },
   { to: "/perfil", label: "Perfil", icon: UserRound },
 ] as const;
