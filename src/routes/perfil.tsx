@@ -30,7 +30,7 @@ function PerfilPage() {
   }
 
   return (
-    <AppShell librasMensagem="Seu perfil: aqui você vê seus dados, histórico de protocolos e pode ajustar suas notificações.">
+    <AppShell librasMensagem="deixe facil o acesso">
       <TopBar titulo="Meu Perfil" />
       
       <div className="px-5 py-6 space-y-6">
