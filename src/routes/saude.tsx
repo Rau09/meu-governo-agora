@@ -18,11 +18,11 @@ function SaudePage() {
       <div className="px-5 py-6 space-y-8">
         <section>
           <div className="grid grid-cols-2 gap-4">
-            <Link to="/agendamento" preload="intent" className="flex flex-col gap-3 p-5 rounded-3xl bg-success/10 border border-success/20 text-success active:scale-95 transition-transform transform-gpu">
+            <Link to="/agendamento" className="flex flex-col gap-3 p-5 rounded-3xl bg-success/10 border border-success/20 text-success active:scale-95 transition-transform">
               <CalendarPlus className="size-8" />
               <span className="font-bold text-sm">Novo Agendamento</span>
             </Link>
-            <Link to="/medicamentos" preload="intent" className="flex flex-col gap-3 p-5 rounded-3xl bg-primary/10 border border-primary/20 text-primary active:scale-95 transition-transform transform-gpu">
+            <Link to="/medicamentos" className="flex flex-col gap-3 p-5 rounded-3xl bg-primary/10 border border-primary/20 text-primary active:scale-95 transition-transform">
               <Pill className="size-8" />
               <span className="font-bold text-sm">Medicamentos</span>
             </Link>

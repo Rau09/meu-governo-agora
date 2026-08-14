@@ -11,7 +11,6 @@ import {
   Activity,
   ShieldCheck,
   Bell,
-  Building2,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useAgendamentos, useCidadao, useOcorrencias } from "@/lib/cantu-store";
@@ -81,7 +80,6 @@ function Inicio() {
         {!cidadao && (
           <Link
             to="/registro"
-            preload="intent"
             className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-6 text-sm font-bold text-primary shadow-lg active:scale-95 transition-transform"
           >
             Criar meu acesso <ArrowRight className="size-4" />
@@ -95,8 +93,7 @@ function Inicio() {
             <Link
               key={to}
               to={to}
-              preload="intent"
-              className={`flex flex-col justify-between rounded-[2rem] p-5 shadow-float aspect-square transition-transform active:scale-95 transform-gpu ${tone}`}
+              className={`flex flex-col justify-between rounded-[2rem] p-5 shadow-float aspect-square transition-transform active:scale-95 ${tone}`}
             >
               <div className="size-12 rounded-2xl bg-white/20 flex items-center justify-center">
                 <Icon className="size-7" />
@@ -116,7 +113,6 @@ function Inicio() {
             <Link
               key={to}
               to={to}
-              preload="intent"
               className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-card border border-border/50 shadow-sm active:bg-secondary transition-colors"
             >
               <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
@@ -136,8 +132,7 @@ function Inicio() {
           </div>
           <Link
             to="/agendamento"
-            preload="intent"
-            className="group flex items-center gap-4 rounded-[2rem] border border-success/20 bg-success/5 p-5 transition-all hover:bg-success/10 transform-gpu"
+            className="group flex items-center gap-4 rounded-[2rem] border border-success/20 bg-success/5 p-5 transition-all hover:bg-success/10"
           >
             <div className="size-12 rounded-2xl bg-success/10 flex items-center justify-center text-success">
               <Activity className="size-6" />
@@ -186,25 +181,6 @@ function Inicio() {
             </div>
           )}
         </div>
-      </section>
-
-      <section className="px-5 pb-12">
-        <Link
-          to="/gestao"
-          preload="intent"
-          className="flex items-center justify-between p-5 rounded-[2rem] bg-secondary/30 border border-border/50 transition-transform active:scale-95 group transform-gpu"
-        >
-          <div className="flex items-center gap-4">
-            <div className="size-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-sm group-active:bg-primary-soft transition-colors">
-              <Building2 className="size-6" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold">Gestão Municipal</h3>
-              <p className="text-[10px] text-muted-foreground">Acesso restrito para servidores</p>
-            </div>
-          </div>
-          <ArrowRight className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
-        </Link>
       </section>
     </AppShell>
   );

@@ -21,7 +21,7 @@ function CausaAnimalPage() {
       <div className="px-5 py-6 space-y-8">
         <section>
           <div className="grid grid-cols-1">
-            <Link to="/ocorrencia" preload="intent" className="flex flex-col gap-3 p-5 rounded-[2rem] bg-accent-gradient text-accent-foreground active:scale-95 transition-transform shadow-float items-center text-center transform-gpu">
+            <Link to="/ocorrencia" className="flex flex-col gap-3 p-5 rounded-[2rem] bg-accent-gradient text-accent-foreground active:scale-95 transition-transform shadow-float items-center text-center">
               <Camera className="size-8" />
               <span className="font-bold text-sm">Registrar Ocorrência</span>
             </Link>
@@ -36,7 +36,7 @@ function CausaAnimalPage() {
           <div className="flex gap-4 overflow-x-auto pb-4 -mx-1 px-1 snap-x">
             {animaisAdocao.map((pet) => (
               <div key={pet.id} className="min-w-[140px] snap-start rounded-[2rem] bg-card border border-border p-4 shadow-sm">
-                <img src={pet.img} alt={pet.nome} loading="lazy" className="size-20 rounded-2xl object-cover mb-3" />
+                <img src={pet.img} alt={pet.nome} className="size-20 rounded-2xl object-cover mb-3" />
                 <p className="font-bold text-sm">{pet.nome}</p>
                 <p className="text-[10px] text-muted-foreground">{pet.raca} · {pet.idade}</p>
                 <Link to="/atendimento" className="mt-3 block text-center py-2 rounded-xl bg-primary/10 text-primary text-[10px] font-bold active:scale-95 transition-transform">Quero Conhecer</Link>

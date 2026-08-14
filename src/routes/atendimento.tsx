@@ -1,8 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState, memo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { responder } from "@/lib/cantu-ia";
+
+
+type Busca = { protocolo?: string };
+export const Route = createFileRoute("/atendimento")({
+  validateSearch: (search: Record<string, unknown>): Busca =>
+    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
+  head: () => ({
+    meta: [
+      { title: "Atendimento 24/7 — Cantu Conecta" },
+      {
+        name: "description",
+        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
+      },
+      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
+      { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
+    ],
+  }),
+  component: Atendimento,
+});
 
 type Msg = { de: "bot" | "eu"; texto: string; acao?: { rotulo: string; para: string } };
 
@@ -12,8 +31,6 @@ const sugestoes = [
   "Tem buraco na minha rua",
   "Segunda via do IPTU",
   "Andamento do meu protocolo",
-  "Quero adotar um cachorro",
-  "Como denunciar maus-tratos?",
   "Vaga em creche",
   "Horário de atendimento",
 ];
@@ -26,9 +43,8 @@ const atalhos = [
   { icon: GraduationCap, titulo: "Escola", texto: "Vaga em creche" },
 ];
 
-type Busca = { protocolo?: string };
 
-const Atendimento = memo(function Atendimento() {
+function Atendimento() {
   const { protocolo } = Route.useSearch();
   const [msgs, setMsgs] = useState<Msg[]>([
     {
@@ -117,7 +133,7 @@ const Atendimento = memo(function Atendimento() {
         </div>
       </div>
 
-      <div className="mt-5 space-y-3 px-4 pb-52">
+      <div className="mt-5 space-y-3 px-4 pb-44">
         {msgs.map((m, i) => (
           <div key={i} className={`flex gap-2 ${m.de === "eu" ? "justify-end" : "justify-start"}`}>
             {m.de === "bot" && (
@@ -127,7 +143,7 @@ const Atendimento = memo(function Atendimento() {
             )}
             <div className="max-w-[78%] space-y-2">
               <p
-                className={`whitespace-pre-line break-words rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-card ${
+                className={`whitespace-pre-line rounded-2xl px-4 py-3 text-[15px] leading-snug shadow-card ${
                   m.de === "eu"
                     ? "rounded-br-sm bg-primary text-primary-foreground"
                     : "rounded-bl-sm bg-card text-card-foreground"
@@ -149,7 +165,7 @@ const Atendimento = memo(function Atendimento() {
         <div ref={fim} />
       </div>
 
-      <div className="fixed bottom-[8.5rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] touch-pan-x">
+      <div className="fixed bottom-[8.5rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 overflow-x-auto px-4 pb-2 [scrollbar-width:none]">
         <div className="flex w-max gap-2">
           {sugestoes.map((s) => (
             <button
@@ -170,7 +186,7 @@ const Atendimento = memo(function Atendimento() {
           e.preventDefault();
           enviar(texto);
         }}
-        className="fixed bottom-20 left-1/2 z-30 flex w-full max-w-[430px] -translate-x-1/2 gap-2 bg-background/95 px-4 py-4 backdrop-blur border-t border-border shadow-2xl"
+        className="fixed bottom-20 left-1/2 z-30 flex w-full max-w-[430px] -translate-x-1/2 gap-2 bg-background/95 px-4 py-3 backdrop-blur"
       >
         <label className="flex-1">
           <span className="sr-only">Escreva sua mensagem</span>
@@ -191,21 +207,4 @@ const Atendimento = memo(function Atendimento() {
       </form>
     </AppShell>
   );
-});
-
-export const Route = createFileRoute("/atendimento")({
-  validateSearch: (search: Record<string, unknown>): Busca =>
-    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
-  head: () => ({
-    meta: [
-      { title: "Atendimento 24/7 — Cantu Conecta" },
-      {
-        name: "description",
-        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
-      },
-      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
-      { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
-    ],
-  }),
-  component: Atendimento,
-});
+}

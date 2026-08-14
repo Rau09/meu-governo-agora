@@ -33,21 +33,6 @@ const KEY_TENTATIVAS = "cantu.tentativas";
 const KEY_OCOR = "cantu.ocorrencias";
 const KEY_ANIMAIS = "cantu.animais";
 
-type Listener = () => void;
-const listeners = new Map<string, Set<Listener>>();
-
-function subscribe(key: string, listener: Listener) {
-  if (!listeners.has(key)) listeners.set(key, new Set());
-  listeners.get(key)!.add(listener);
-  return () => {
-    listeners.get(key)!.delete(listener);
-  };
-}
-
-function notify(key: string) {
-  listeners.get(key)?.forEach((l) => l());
-}
-
 function read<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
   try {
@@ -61,7 +46,7 @@ function read<T>(key: string, fallback: T): T {
 function write(key: string, value: unknown) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(key, JSON.stringify(value));
-  notify(key);
+  window.dispatchEvent(new Event("cantu-store"));
 }
 
 /* ---------- Segurança ---------- */
@@ -146,7 +131,8 @@ export function useCidadao() {
       setDesbloqueado(window.sessionStorage.getItem(KEY_SESSAO) === "1");
     };
     sync();
-    return subscribe(KEY_USER, sync);
+    window.addEventListener("cantu-store", sync);
+    return () => window.removeEventListener("cantu-store", sync);
   }, []);
 
   const salvar = useCallback((c: Cidadao) => {
@@ -161,14 +147,14 @@ export function useCidadao() {
     if (ok) {
       window.sessionStorage.setItem(KEY_SESSAO, "1");
       limparTentativas();
-      notify(KEY_USER);
+      window.dispatchEvent(new Event("cantu-store"));
     }
     return ok;
   }, []);
 
   const bloquear = useCallback(() => {
     window.sessionStorage.removeItem(KEY_SESSAO);
-    notify(KEY_USER);
+    window.dispatchEvent(new Event("cantu-store"));
   }, []);
 
   const sair = useCallback(() => {
@@ -187,7 +173,8 @@ export function useAgendamentos() {
   useEffect(() => {
     const sync = () => setAgendamentos(read<Agendamento[]>(KEY_AGENDA, []));
     sync();
-    return subscribe(KEY_AGENDA, sync);
+    window.addEventListener("cantu-store", sync);
+    return () => window.removeEventListener("cantu-store", sync);
   }, []);
 
   const criar = useCallback((a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
@@ -378,7 +365,8 @@ export function useOcorrencias() {
   useEffect(() => {
     const sync = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
     sync();
-    return subscribe(KEY_OCOR, sync);
+    window.addEventListener("cantu-store", sync);
+    return () => window.removeEventListener("cantu-store", sync);
   }, []);
 
   const criar = useCallback((o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {

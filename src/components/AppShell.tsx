@@ -1,4 +1,4 @@
-import { type ReactNode, memo } from "react";
+import type { ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Stethoscope, PawPrint, MapPin, MessageCircle, UserRound, Building2 } from "lucide-react";
 import { LibrasAvatar } from "./LibrasAvatar";
@@ -11,7 +11,7 @@ const nav = [
   { to: "/perfil", label: "Perfil", icon: UserRound },
 ] as const;
 
-export const AppShell = memo(function AppShell({
+export function AppShell({
   children,
   librasMensagem,
 }: {
@@ -23,7 +23,7 @@ export const AppShell = memo(function AppShell({
   return (
     <div className="min-h-dvh bg-secondary/40">
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float">
-        <main className="pb-32 overflow-x-hidden">{children}</main>
+        <main className="pb-28">{children}</main>
 
         <nav
           aria-label="Navegação principal"
@@ -36,7 +36,6 @@ export const AppShell = memo(function AppShell({
                 <li key={to}>
                   <Link
                     to={to}
-                    preload="intent"
                     className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl text-[10px] font-semibold transition-colors ${
                       ativo ? "bg-primary-soft text-primary" : "text-muted-foreground"
                     }`}
@@ -54,13 +53,13 @@ export const AppShell = memo(function AppShell({
       </div>
     </div>
   );
-});
+}
 
-export const TopBar = memo(function TopBar({ titulo, subtitulo }: { titulo: string; subtitulo?: string }) {
+export function TopBar({ titulo, subtitulo }: { titulo: string; subtitulo?: string }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   
   return (
-    <header className="sticky top-0 z-40 bg-hero px-5 pb-8 pt-10 text-primary-foreground transform-gpu shadow-lg">
+    <header className="bg-hero px-5 pb-8 pt-10 text-primary-foreground">
       <div className="flex justify-between items-start mb-2">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">
           Cantuquiriguaçu · PR
@@ -75,6 +74,5 @@ export const TopBar = memo(function TopBar({ titulo, subtitulo }: { titulo: stri
       {subtitulo && <p className="mt-1 text-sm opacity-90">{subtitulo}</p>}
     </header>
   );
-});
-
+}
 

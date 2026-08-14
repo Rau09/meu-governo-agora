@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, memo, useCallback } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Hand, X, Play, Pause, RotateCcw } from "lucide-react";
 import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } from "@/lib/libras";
 
@@ -6,14 +6,14 @@ import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } fr
 /**
  * Avatar de Libras: assistente de acessibilidade para pessoas surdas.
  */
-export const LibrasAvatar = memo(function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
+export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
   const [aberto, setAberto] = useState(false);
   const texto = mensagem ?? "Estou traduzindo esta tela em Libras para você.";
   const passos = useMemo(() => montarSequencia(texto), [texto]);
 
   const [indice, setIndice] = useState(0);
   const [tocando, setTocando] = useState(true);
-  const timer = useRef<number | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [arrastado, setArrastado] = useState(false);
@@ -27,22 +27,12 @@ export const LibrasAvatar = memo(function LibrasAvatar({ mensagem }: { mensagem?
 
   useEffect(() => {
     if (!aberto || !tocando || passos.length === 0) return;
-    
-    let lastTime = performance.now();
-    const animate = (currentTime: number) => {
-      if (!tocando) return;
-      
-      const atual = passos[indice] ?? passos[0]!;
-      if (currentTime - lastTime >= atual.duracao) {
-        setIndice((i) => (i + 1) % passos.length);
-        lastTime = currentTime;
-      }
-      timer.current = requestAnimationFrame(animate);
-    };
-    
-    timer.current = requestAnimationFrame(animate);
+    const atual = passos[indice] ?? passos[0]!;
+    timer.current = setTimeout(() => {
+      setIndice((i) => (i + 1) % passos.length);
+    }, atual.duracao);
     return () => {
-      if (timer.current) cancelAnimationFrame(timer.current);
+      if (timer.current) clearTimeout(timer.current);
     };
   }, [aberto, tocando, indice, passos]);
 
@@ -185,11 +175,11 @@ export const LibrasAvatar = memo(function LibrasAvatar({ mensagem }: { mensagem?
       )}
     </div>
   );
-});
+}
 
-const SignerFigure = memo(function SignerFigure({ pose }: { pose: Pose }) {
+function SignerFigure({ pose }: { pose: Pose }) {
   return (
-    <div className="relative h-44 w-36 drop-shadow-lg perspective-1000 transform-gpu">
+    <div className="relative h-44 w-36 drop-shadow-lg perspective-1000">
       <div 
         className="relative w-full h-full preserve-3d"
         style={{
@@ -259,9 +249,9 @@ const SignerFigure = memo(function SignerFigure({ pose }: { pose: Pose }) {
       </div>
     </div>
   );
-});
+}
 
-const Braco = memo(function Braco({
+function Braco({
   x,
   y,
   rotacao,
@@ -302,10 +292,10 @@ const Braco = memo(function Braco({
       </g>
     </g>
   );
-});
+}
 
 /** Mão com palma e cinco dedos que abrem/fecham conforme a configuração. */
-const Mao = memo(function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: string }) {
+function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: string }) {
   const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
   const transicao = "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), height 350ms ease-in-out";
 
@@ -354,6 +344,6 @@ const Mao = memo(function Mao({ config, color = "#F5D5B8" }: { config: Configura
       />
     </g>
   );
-});
+}
 
 

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState, memo, useCallback } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Users,
   Clock3,
@@ -169,7 +169,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
   );
 }
 
-const Painel = memo(function Painel({ onSair }: { onSair: () => void }) {
+function Painel({ onSair }: { onSair: () => void }) {
   const { agendamentos } = useAgendamentos();
   const { ocorrencias, atualizarStatus } = useOcorrencias();
   const [filtro, setFiltro] = useState<string>("todas");
@@ -617,9 +617,9 @@ const Painel = memo(function Painel({ onSair }: { onSair: () => void }) {
       )}
     </AppShell>
   );
-});
+}
 
-const DetalheLista = memo(function DetalheLista({
+function DetalheLista({
   titulo,
   nota,
   itens,
@@ -696,9 +696,11 @@ const DetalheLista = memo(function DetalheLista({
       </div>
     </div>
   );
-});
+}
 
-const CardOcorrencia = memo(function CardOcorrencia({
+
+
+function CardOcorrencia({
   ocorrencia,
   indice,
   onStatus,
@@ -775,4 +777,4 @@ const CardOcorrencia = memo(function CardOcorrencia({
       </div>
     </li>
   );
-});
+}
