@@ -62,10 +62,8 @@ function Inicio() {
           </div>
           <button 
             type="button"
-            className="relative p-2 rounded-full bg-white/10 active:scale-95 transition-transform"
-            onClick={() => {
-              window.location.href = "/ocorrencia";
-            }}
+            className="relative p-2 rounded-full bg-white/10 opacity-50 cursor-default"
+            disabled
           >
             <Bell className="size-5" />
             <span className="absolute top-1 right-1 size-2 rounded-full bg-destructive border-2 border-primary" />
