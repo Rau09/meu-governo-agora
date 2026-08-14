@@ -20,8 +20,10 @@ export const Route = createFileRoute("/atendimento")({
       { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
     ],
   }),
-  component: Atendimento,
+  component: AtendimentoPage,
 });
+
+function AtendimentoPage() {
 
 type Msg = { de: "bot" | "eu"; texto: string; acao?: { rotulo: string; para: string } };
 
