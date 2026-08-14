@@ -8,13 +8,13 @@ import { responder } from "@/lib/cantu-ia";
 export const Route = createFileRoute("/atendimento")({
   head: () => ({
     meta: [
-      { title: "Atendimento 24/7 — QI Cidadão" },
+      { title: "Atendimento 24/7 — Cantu Conecta" },
       {
         name: "description",
-        content: "Assistente virtual da Prefeitura de Quedas do Iguaçu disponível 24 horas para tirar dúvidas e resolver serviços.",
+        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
       },
-      { property: "og:title", content: "Atendimento 24/7 — QI Cidadão" },
-      { property: "og:description", content: "Respostas imediatas sobre saúde, educação e serviços urbanos, a qualquer hora." },
+      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
+      { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
     ],
   }),
   component: Atendimento,
