@@ -57,15 +57,22 @@ function mascaraTel(v: string) {
 function Registro() {
   const { cidadao, desbloqueado, salvar, sair, desbloquear, bloquear } = useCidadao();
   const navigate = useNavigate();
-  const [passo, setPasso] = useState(1);
-  const [form, setForm] = useState({ 
+  const [form, setForm] = useState<{
+    nome: string;
+    cpf: string;
+    telefone: string;
+    bairro: string;
+    municipio: string;
+    estado: string;
+    preferencias: string[];
+  }>({ 
     nome: "", 
     cpf: "", 
     telefone: "", 
     bairro: "", 
-    municipio: MUNICIPIOS_CANTU[MUNICIPIOS_CANTU.indexOf("Quedas do Iguaçu")] || MUNICIPIOS_CANTU[0], 
+    municipio: "Quedas do Iguaçu", 
     estado: "Paraná",
-    preferencias: [] as string[]
+    preferencias: []
   });
   const [pin, setPin] = useState("");
   const [pin2, setPin2] = useState("");
@@ -188,7 +195,7 @@ function Registro() {
       cpf: form.cpf,
       telefone: form.telefone,
       bairro: form.bairro.trim().slice(0, 60),
-      municipio: form.municipio || MUNICIPIOS_CANTU[0],
+      municipio: form.municipio,
       estado: form.estado,
       preferencias: form.preferencias,
       salt,
