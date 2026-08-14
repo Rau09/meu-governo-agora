@@ -184,23 +184,23 @@ function SignerFigure({ pose }: { pose: Pose }) {
       <div 
         className="relative w-full h-full preserve-3d"
         style={{
-          transform: `rotateY(${pose.tronco ?? 0}deg) translateY(${Math.sin(Date.now() / 500) * 2}px)`,
+          transform: `rotateY(${pose.tronco ?? 0}deg)`,
           transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
         {/* Sombra no chão */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
         
-        {/* Imagem do Personagem com Máscara Complexa para parecer 3D/Real */}
-        <div className="relative w-full h-full z-10 overflow-hidden rounded-b-2xl">
+        {/* Imagem do Macaco */}
+        <div className="relative w-full h-full z-10 overflow-hidden rounded-2xl border-2 border-white/50">
           <img 
             src={avatarAsset.url} 
-            alt="Personagem Real" 
-            className="w-full h-full object-cover scale-110 translate-y-2"
+            alt="Macaco Intérprete" 
+            className="w-full h-full object-cover scale-110"
           />
         </div>
 
-        {/* Braços e mãos articuladas sobrepostos à imagem para parecer que o boneco está sinalizando */}
+        {/* Braços e mãos articuladas sobrepostos */}
         <svg
           viewBox="0 0 120 150"
           className="absolute inset-0 z-20 pointer-events-none"
@@ -212,21 +212,23 @@ function SignerFigure({ pose }: { pose: Pose }) {
               transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
-            {/* Braço esquerdo (à direita na tela) - Tons de pele realistas */}
+            {/* Braço esquerdo (à direita na tela) - Tons mais escuros para o macaco */}
             <Braco
-              x={92}
-              y={75}
+              x={95}
+              y={80}
               rotacao={pose.bracoEsq}
               cotovelo={pose.coveloEsq}
               config={pose.maoEsq}
+              color="#5D4037"
             />
             {/* Braço direito (à esquerda na tela) */}
             <Braco
-              x={28}
-              y={75}
+              x={25}
+              y={80}
               rotacao={pose.bracoDir}
               cotovelo={pose.coveloDir}
               config={pose.maoDir}
+              color="#5D4037"
             />
           </g>
         </svg>
@@ -234,6 +236,102 @@ function SignerFigure({ pose }: { pose: Pose }) {
     </div>
   );
 }
+
+function Braco({
+  x,
+  y,
+  rotacao,
+  cotovelo,
+  config,
+  color = "#F5D5B8",
+}: {
+  x: number;
+  y: number;
+  rotacao: number;
+  cotovelo: number;
+  config: Configuracao;
+  color?: string;
+}) {
+  const ombro = rotacao * 1.6;
+  const flexao = cotovelo * 1.1;
+  const transicao = "transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1)";
+  return (
+    <g
+      style={{
+        transform: `translate(${x}px, ${y}px) rotate(${ombro}deg)`,
+        transition: transicao,
+      }}
+    >
+      {/* ombro → cotovelo */}
+      <rect x={-6} y={-4} width={12} height={28} rx={6} fill={color} />
+      <g
+        style={{
+          transform: `translate(0px, 24px) rotate(${flexao}deg)`,
+          transition: transicao,
+        }}
+      >
+        {/* antebraço */}
+        <rect x={-5.5} y={-3} width={11} height={24} rx={5.5} fill={color} />
+        <g style={{ transform: "translate(0px, 22px)" }}>
+          <Mao config={config} color={color} />
+        </g>
+      </g>
+    </g>
+  );
+}
+
+/** Mão com palma e cinco dedos que abrem/fecham conforme a configuração. */
+function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: string }) {
+  const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
+  const transicao = "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), height 350ms ease-in-out";
+
+  const dedos: { dx: number; ext: number; alturaMax: number }[] = [
+    { dx: -4, ext: indicador, alturaMax: 10 },
+    { dx: -1.4, ext: medio, alturaMax: 11 },
+    { dx: 1.4, ext: anelar, alturaMax: 10 },
+    { dx: 4, ext: minimo, alturaMax: 8.5 },
+  ];
+
+  const strokeColor = color === "#5D4037" ? "#3E2723" : "#D4A373";
+
+  return (
+    <g>
+      {/* palma */}
+      <rect x={-6} y={-2} width={12} height={10} rx={4} fill={color} stroke={strokeColor} strokeWidth="0.5" />
+      {/* dedos */}
+      {dedos.map((d, i) => {
+        const h = 2.8 + d.ext * d.alturaMax;
+        return (
+          <rect
+            key={i}
+            x={d.dx - 1.25}
+            y={5 - h + 2.5}
+            width={2.5}
+            height={h}
+            rx={1.25}
+            fill={color} stroke={strokeColor} strokeWidth="0.4"
+            style={{ transition: transicao }}
+          />
+        );
+      })}
+      {/* polegar */}
+      <rect
+        x={-9}
+        y={0}
+        width={2.8}
+        height={2.8 + polegar * 7.5}
+        rx={1.4}
+        fill={color} stroke={strokeColor} strokeWidth="0.4"
+        style={{
+          transform: `rotate(${25 - polegar * 45}deg)`,
+          transformOrigin: "-7px 2px",
+          transition: transicao,
+        }}
+      />
+    </g>
+  );
+}
+
 
 function Braco({
   x,
