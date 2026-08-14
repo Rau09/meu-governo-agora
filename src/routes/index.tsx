@@ -59,7 +59,17 @@ function Inicio() {
              <div className="size-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-lg">C</div>
              <span className="font-display text-xl font-bold tracking-tight">Cantu Conecta</span>
           </div>
-          <button className="relative p-2 rounded-full bg-white/10">
+          <button 
+            type="button"
+            className="relative p-2 rounded-full bg-white/10 active:scale-95 transition-transform"
+            onClick={() => {
+              if (cidadao) {
+                 window.location.href = "/perfil";
+              } else {
+                 window.location.href = "/registro";
+              }
+            }}
+          >
             <Bell className="size-5" />
             <span className="absolute top-1 right-1 size-2 rounded-full bg-destructive border-2 border-primary" />
           </button>
