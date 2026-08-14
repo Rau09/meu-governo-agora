@@ -81,6 +81,7 @@ function Inicio() {
         {!cidadao && (
           <Link
             to="/registro"
+            preload="intent"
             className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-6 text-sm font-bold text-primary shadow-lg active:scale-95 transition-transform"
           >
             Criar meu acesso <ArrowRight className="size-4" />
@@ -94,7 +95,8 @@ function Inicio() {
             <Link
               key={to}
               to={to}
-              className={`flex flex-col justify-between rounded-[2rem] p-5 shadow-float aspect-square transition-transform active:scale-95 ${tone}`}
+              preload="intent"
+              className={`flex flex-col justify-between rounded-[2rem] p-5 shadow-float aspect-square transition-transform active:scale-95 transform-gpu ${tone}`}
             >
               <div className="size-12 rounded-2xl bg-white/20 flex items-center justify-center">
                 <Icon className="size-7" />
@@ -114,6 +116,7 @@ function Inicio() {
             <Link
               key={to}
               to={to}
+              preload="intent"
               className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-card border border-border/50 shadow-sm active:bg-secondary transition-colors"
             >
               <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
@@ -133,7 +136,8 @@ function Inicio() {
           </div>
           <Link
             to="/agendamento"
-            className="group flex items-center gap-4 rounded-[2rem] border border-success/20 bg-success/5 p-5 transition-all hover:bg-success/10"
+            preload="intent"
+            className="group flex items-center gap-4 rounded-[2rem] border border-success/20 bg-success/5 p-5 transition-all hover:bg-success/10 transform-gpu"
           >
             <div className="size-12 rounded-2xl bg-success/10 flex items-center justify-center text-success">
               <Activity className="size-6" />
@@ -187,7 +191,8 @@ function Inicio() {
       <section className="px-5 pb-12">
         <Link
           to="/gestao"
-          className="flex items-center justify-between p-5 rounded-[2rem] bg-secondary/30 border border-border/50 transition-transform active:scale-95 group"
+          preload="intent"
+          className="flex items-center justify-between p-5 rounded-[2rem] bg-secondary/30 border border-border/50 transition-transform active:scale-95 group transform-gpu"
         >
           <div className="flex items-center gap-4">
             <div className="size-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-sm group-active:bg-primary-soft transition-colors">

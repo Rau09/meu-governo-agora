@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useRef, useState, memo } from "react";
 import { Camera, MapPin, Send, CheckCircle2, AlertTriangle, X } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { CATEGORIAS_OCORRENCIA, useOcorrencias, type Ocorrencia } from "@/lib/cantu-store";
@@ -225,7 +225,7 @@ function ComunicarProblema() {
   );
 }
 
-function MinhasSolicitacoes({ ocorrencias }: { ocorrencias: Ocorrencia[] }) {
+const MinhasSolicitacoes = memo(function MinhasSolicitacoes({ ocorrencias }: { ocorrencias: Ocorrencia[] }) {
   if (ocorrencias.length === 0) return null;
   return (
     <section className="pb-4">
@@ -252,4 +252,4 @@ function MinhasSolicitacoes({ ocorrencias }: { ocorrencias: Ocorrencia[] }) {
       </ul>
     </section>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, memo } from "react";
 import { MapPin, X } from "lucide-react";
 import {
   BAIRROS,
@@ -17,7 +17,7 @@ import { STATUS_OCORRENCIA } from "@/lib/cantu-store";
  * Mapa de ocorrências (mapa esquemático da cidade, sem dependências externas).
  * Os marcadores vêm da mesma lista usada pelo resto do painel.
  */
-export function MapaOcorrencias({
+export const MapaOcorrencias = memo(function MapaOcorrencias({
   lista,
   filtroInicial = "todos",
   destaque,
@@ -89,7 +89,7 @@ export function MapaOcorrencias({
 
       <div className="relative mt-3 aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border bg-secondary/50">
         {/* malha viária esquemática */}
-        <svg viewBox="0 0 100 75" className="absolute inset-0 size-full" aria-hidden="true">
+        <svg viewBox="0 0 100 75" className="absolute inset-0 size-full transform-gpu" aria-hidden="true">
           <rect width="100" height="75" className="fill-success/5" />
           <path d="M0 26 H100 M0 50 H100 M28 0 V75 M62 0 V75" className="stroke-border" strokeWidth="1.6" />
           <path d="M12 0 L44 75 M100 12 L40 75" className="stroke-border/60" strokeWidth="1" />
@@ -151,9 +151,9 @@ export function MapaOcorrencias({
       {sel && <DetalheMarcador ocorrencia={sel} onFechar={() => setSel(null)} />}
     </section>
   );
-}
+});
 
-function DetalheMarcador({ ocorrencia, onFechar }: { ocorrencia: OcorrenciaGestao; onFechar: () => void }) {
+const DetalheMarcador = memo(function DetalheMarcador({ ocorrencia, onFechar }: { ocorrencia: OcorrenciaGestao; onFechar: () => void }) {
   const st = STATUS_OCORRENCIA.find((s) => s.id === ocorrencia.status)!;
   const n = NIVEIS[nivel(ocorrencia)];
   return (
@@ -215,4 +215,4 @@ function DetalheMarcador({ ocorrencia, onFechar }: { ocorrencia: OcorrenciaGesta
       </a>
     </div>
   );
-}
+});
