@@ -1,55 +1,50 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Stethoscope,
-  GraduationCap,
-  Truck,
-  FileText,
-  CalendarPlus,
+  PawPrint,
+  MapPin,
   MessageCircle,
-  ShieldCheck,
-  Clock,
+  CalendarPlus,
   ArrowRight,
   UserRound,
-  Pill,
-  Camera,
+  Search,
+  Activity,
+  ShieldCheck,
+  Bell,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { useAgendamentos, useCidadao } from "@/lib/city-store";
+import { useAgendamentos, useCidadao } from "@/lib/cantu-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "QI Cidadão — App da Prefeitura de Quedas do Iguaçu" },
+      { title: "Cantu Conecta — Saúde e Causa Animal na Cantuquiriguaçu" },
       {
         name: "description",
         content:
-          "Agende consultas, resolva serviços urbanos e fale com a prefeitura 24/7 pelo app QI Cidadão de Quedas do Iguaçu.",
+          "Sua cidade, sua saúde, seu cuidado. Plataforma de tecnologia cívica para aproximar o cidadão do poder público.",
       },
-      { property: "og:title", content: "QI Cidadão — App da Prefeitura de Quedas do Iguaçu" },
+      { property: "og:title", content: "Cantu Conecta — Sua cidade, sua saúde, seu cuidado" },
       {
         property: "og:description",
-        content: "Saúde, educação e serviços urbanos na palma da mão, sem fila e com atendimento 24 horas.",
+        content: "Agende consultas, acompanhe a causa animal e participe da sua comunidade.",
       },
     ],
   }),
   component: Inicio,
 });
 
-const atalhos = [
-  { to: "/agendamento", label: "Agendar consulta", icon: CalendarPlus, tone: "bg-primary text-primary-foreground" },
-  { to: "/atendimento", label: "Atendimento 24/7", icon: MessageCircle, tone: "bg-accent-gradient text-accent-foreground" },
-  { to: "/medicamentos", label: "Medicamentos", icon: Pill, tone: "bg-card text-foreground" },
-  { to: "/ocorrencia", label: "Comunicar problema", icon: Camera, tone: "bg-card text-foreground" },
-  { to: "/servicos", label: "Serviços da cidade", icon: Truck, tone: "bg-card text-foreground" },
-  { to: "/registro", label: "Meu cadastro", icon: UserRound, tone: "bg-card text-foreground" },
+const atalhosPrincipais = [
+  { to: "/saude", label: "Minha Saúde", icon: Stethoscope, tone: "bg-success text-success-foreground", desc: "Agendamentos e exames" },
+  { to: "/causa-animal", label: "Causa Animal", icon: PawPrint, tone: "bg-accent-gradient text-accent-foreground", desc: "Adoção e ocorrências" },
 ] as const;
 
-const areas = [
-  { icon: Stethoscope, nome: "Saúde", desc: "Consultas, vacinas e exames" },
-  { icon: GraduationCap, nome: "Educação", desc: "Matrícula, creche e transporte" },
-  { icon: Truck, nome: "Urbanos", desc: "Coleta, iluminação e obras" },
-  { icon: FileText, nome: "Cidadania", desc: "IPTU, alvarás e social" },
-];
+const acoesRapidas = [
+  { to: "/agendamento", label: "Agendar", icon: CalendarPlus },
+  { to: "/atendimento", label: "Assistente", icon: MessageCircle },
+  { to: "/comunidade", label: "Problemas", icon: MapPin },
+  { to: "/medicamentos", label: "Remédios", icon: Search },
+] as const;
 
 function Inicio() {
   const { cidadao } = useCidadao();
@@ -57,103 +52,113 @@ function Inicio() {
   const proximo = agendamentos[0];
 
   return (
-    <AppShell librasMensagem="Tela inicial: aqui você agenda consultas, acessa serviços da cidade e fala com a prefeitura a qualquer hora.">
-      <header className="bg-hero px-5 pb-10 pt-10 text-primary-foreground">
+    <AppShell librasMensagem="Bem-vindo ao Cantu Conecta. Aqui você acessa serviços de saúde, cuida da causa animal e participa da melhoria da sua cidade.">
+      <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold">
-            <span className="size-2 animate-pulse rounded-full bg-success" />
-            Sistema ativo 24/7
-          </span>
-          <span className="font-display text-lg font-bold">QI</span>
+          <div className="flex items-center gap-2">
+             <div className="size-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-lg">C</div>
+             <span className="font-display text-xl font-bold tracking-tight">Cantu Conecta</span>
+          </div>
+          <button className="relative p-2 rounded-full bg-white/10">
+            <Bell className="size-5" />
+            <span className="absolute top-1 right-1 size-2 rounded-full bg-destructive border-2 border-primary" />
+          </button>
         </div>
 
-        <h1 className="mt-6 text-3xl font-bold leading-tight">
-          {cidadao ? `Olá, ${cidadao.nome.split(" ")[0]}!` : "Sua cidade na palma da mão"}
+        <h1 className="mt-8 text-3xl font-bold leading-tight">
+          {cidadao ? `Olá, ${cidadao.nome.split(" ")[0]}!` : "Sua cidade, seu cuidado."}
         </h1>
-        <p className="mt-2 max-w-[28ch] text-sm opacity-90">
-          Atendimento público sem fila, sem deslocamento e sem espera.
+        <p className="mt-2 max-w-[30ch] text-sm opacity-90">
+          Aproximando você dos serviços públicos de forma inteligente e humana.
         </p>
 
         {!cidadao && (
           <Link
             to="/registro"
-            className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-card px-5 text-sm font-semibold text-primary shadow-card"
+            className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-6 text-sm font-bold text-primary shadow-lg active:scale-95 transition-transform"
           >
             Criar meu acesso <ArrowRight className="size-4" />
           </Link>
         )}
       </header>
 
-      <section className="-mt-6 px-4">
-        <div className="grid grid-cols-2 gap-3">
-          {atalhos.map(({ to, label, icon: Icon, tone }) => (
+      <section className="-mt-8 px-5">
+        <div className="grid grid-cols-2 gap-4">
+          {atalhosPrincipais.map(({ to, label, icon: Icon, tone, desc }) => (
             <Link
               key={to}
               to={to}
-              className={`flex min-h-24 flex-col justify-between rounded-3xl p-4 shadow-card transition-transform active:scale-[0.97] ${tone}`}
+              className={`flex flex-col justify-between rounded-[2rem] p-5 shadow-float aspect-square transition-transform active:scale-95 ${tone}`}
             >
-              <Icon className="size-6" />
-              <span className="text-sm font-semibold leading-tight">{label}</span>
+              <div className="size-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                <Icon className="size-7" />
+              </div>
+              <div>
+                <span className="block text-lg font-bold leading-tight">{label}</span>
+                <span className="text-[10px] opacity-80 font-medium">{desc}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-8 px-5">
+        <div className="grid grid-cols-4 gap-2">
+          {acoesRapidas.map(({ to, label, icon: Icon }) => (
+            <Link
+              key={to}
+              to={to}
+              className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-card border border-border/50 shadow-sm active:bg-secondary transition-colors"
+            >
+              <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+                <Icon className="size-5" />
+              </div>
+              <span className="text-[10px] font-bold text-muted-foreground">{label}</span>
             </Link>
           ))}
         </div>
       </section>
 
       {proximo && (
-        <section className="mt-6 px-4">
-          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
-            Próximo agendamento
-          </h2>
+        <section className="mt-8 px-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Saúde: Próxima Consulta</h2>
+            <Link to="/saude" className="text-[10px] font-bold text-primary">Ver todos</Link>
+          </div>
           <Link
             to="/agendamento"
-            className="flex items-center gap-3 rounded-3xl border border-primary/20 bg-primary-soft p-4"
+            className="group flex items-center gap-4 rounded-[2rem] border border-success/20 bg-success/5 p-5 transition-all hover:bg-success/10"
           >
-            <Clock className="size-8 text-primary" />
+            <div className="size-12 rounded-2xl bg-success/10 flex items-center justify-center text-success">
+              <Activity className="size-6" />
+            </div>
             <div className="flex-1">
-              <p className="font-semibold">{proximo.servico}</p>
+              <p className="font-bold text-sm">{proximo.servico}</p>
               <p className="text-xs text-muted-foreground">
-                {proximo.unidade} · {new Date(proximo.data + "T00:00").toLocaleDateString("pt-BR")} às {proximo.hora}
+                {proximo.unidade} · {proximo.hora}
               </p>
             </div>
-            <ArrowRight className="size-4 text-primary" />
+            <div className="size-8 rounded-full bg-white flex items-center justify-center text-success shadow-sm group-active:scale-90 transition-transform">
+              <ArrowRight className="size-4" />
+            </div>
           </Link>
         </section>
       )}
 
-      <section className="mt-6 px-4">
-        <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted-foreground">
-          Áreas de atendimento
-        </h2>
-        <ul className="space-y-2">
-          {areas.map(({ icon: Icon, nome, desc }) => (
-            <li key={nome}>
-              <Link
-                to="/servicos"
-                className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-card"
-              >
-                <span className="flex size-11 items-center justify-center rounded-2xl bg-primary-soft text-primary">
-                  <Icon className="size-5" />
-                </span>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold">{nome}</p>
-                  <p className="text-xs text-muted-foreground">{desc}</p>
-                </div>
-                <ArrowRight className="size-4 text-muted-foreground" />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-6 px-4">
-        <div className="flex items-start gap-3 rounded-3xl bg-secondary p-4">
-          <ShieldCheck className="size-6 text-primary" />
-          <p className="text-xs leading-relaxed text-muted-foreground">
-            Acessibilidade real: intérprete de Libras em todas as telas, linguagem simples e canais
-            alternativos de atendimento para todos os cidadãos.
-          </p>
+      <section className="mt-8 px-5 pb-8">
+        <div className="p-6 rounded-[2rem] bg-secondary/50 border border-border/50 flex gap-4">
+          <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+             <ShieldCheck className="size-6" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold">Plataforma Segura</h3>
+            <p className="text-[11px] leading-relaxed text-muted-foreground">
+              Seus dados são protegidos seguindo a LGPD. O Cantu Conecta é uma ponte tecnológica para facilitar o cuidado com você e sua cidade.
+            </p>
+          </div>
         </div>
       </section>
     </AppShell>
   );
 }
+

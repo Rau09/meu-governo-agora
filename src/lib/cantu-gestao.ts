@@ -1,4 +1,4 @@
-import { MEDICAMENTOS, statusMedicamento, type Ocorrencia, type StatusOcorrencia } from "@/lib/city-store";
+import { MEDICAMENTOS, statusMedicamento, type Ocorrencia, type StatusOcorrencia } from "@/lib/cantu-store";
 
 /**
  * Camada de inteligência do Painel de Gestão.

@@ -10,8 +10,8 @@ import {
   metaCategoria,
   nivel,
   type OcorrenciaGestao,
-} from "@/lib/gestao-dados";
-import { STATUS_OCORRENCIA } from "@/lib/city-store";
+} from "@/lib/cantu-gestao";
+import { STATUS_OCORRENCIA } from "@/lib/cantu-store";
 
 /**
  * Mapa de ocorrências (mapa esquemático da cidade, sem dependências externas).

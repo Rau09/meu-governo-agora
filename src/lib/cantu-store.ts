@@ -17,16 +17,19 @@ export type Cidadao = {
   cpf: string;
   telefone: string;
   bairro: string;
+  municipio?: string;
   /** Hash SHA-256 do PIN + salt. O PIN nunca é guardado em texto puro. */
   pinHash?: string;
   salt?: string;
   consentimentoEm?: string;
 };
 
-const KEY_USER = "qi.cidadao";
-const KEY_AGENDA = "qi.agendamentos";
-const KEY_SESSAO = "qi.sessao";
-const KEY_TENTATIVAS = "qi.tentativas";
+const KEY_USER = "cantu.cidadao";
+const KEY_AGENDA = "cantu.agendamentos";
+const KEY_SESSAO = "cantu.sessao";
+const KEY_TENTATIVAS = "cantu.tentativas";
+const KEY_OCOR = "cantu.ocorrencias";
+const KEY_ANIMAIS = "cantu.animais";
 
 function read<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -41,7 +44,7 @@ function read<T>(key: string, fallback: T): T {
 function write(key: string, value: unknown) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(key, JSON.stringify(value));
-  window.dispatchEvent(new Event("qi-store"));
+  window.dispatchEvent(new Event("cantu-store"));
 }
 
 /* ---------- Segurança ---------- */
@@ -80,7 +83,7 @@ export function gerarSalt() {
 }
 
 export async function hashPin(pin: string, salt: string) {
-  const dados = new TextEncoder().encode(`qi:${salt}:${pin}`);
+  const dados = new TextEncoder().encode(`cantu:${salt}:${pin}`);
   const buf = await crypto.subtle.digest("SHA-256", dados);
   return Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
 }
@@ -126,8 +129,8 @@ export function useCidadao() {
       setDesbloqueado(window.sessionStorage.getItem(KEY_SESSAO) === "1");
     };
     sync();
-    window.addEventListener("qi-store", sync);
-    return () => window.removeEventListener("qi-store", sync);
+    window.addEventListener("cantu-store", sync);
+    return () => window.removeEventListener("cantu-store", sync);
   }, []);
 
   const salvar = useCallback((c: Cidadao) => {
@@ -142,14 +145,14 @@ export function useCidadao() {
     if (ok) {
       window.sessionStorage.setItem(KEY_SESSAO, "1");
       limparTentativas();
-      window.dispatchEvent(new Event("qi-store"));
+      window.dispatchEvent(new Event("cantu-store"));
     }
     return ok;
   }, []);
 
   const bloquear = useCallback(() => {
     window.sessionStorage.removeItem(KEY_SESSAO);
-    window.dispatchEvent(new Event("qi-store"));
+    window.dispatchEvent(new Event("cantu-store"));
   }, []);
 
   const sair = useCallback(() => {
@@ -168,8 +171,8 @@ export function useAgendamentos() {
   useEffect(() => {
     const sync = () => setAgendamentos(read<Agendamento[]>(KEY_AGENDA, []));
     sync();
-    window.addEventListener("qi-store", sync);
-    return () => window.removeEventListener("qi-store", sync);
+    window.addEventListener("cantu-store", sync);
+    return () => window.removeEventListener("cantu-store", sync);
   }, []);
 
   const criar = useCallback((a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
@@ -333,16 +336,14 @@ export type Ocorrencia = {
   status: StatusOcorrencia;
 };
 
-const KEY_OCOR = "qi.ocorrencias";
-
 export function useOcorrencias() {
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
 
   useEffect(() => {
     const sync = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
     sync();
-    window.addEventListener("qi-store", sync);
-    return () => window.removeEventListener("qi-store", sync);
+    window.addEventListener("cantu-store", sync);
+    return () => window.removeEventListener("cantu-store", sync);
   }, []);
 
   const criar = useCallback((o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {
@@ -350,7 +351,7 @@ export function useOcorrencias() {
     const ano = new Date().getFullYear();
     const nova: Ocorrencia = {
       ...o,
-      protocolo: `QI-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+      protocolo: `CANTU-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
       criadoEm: new Date().toISOString(),
       status: "pendente",
     };

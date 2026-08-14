@@ -2,21 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Camera, MapPin, Send, CheckCircle2, AlertTriangle, X } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { CATEGORIAS_OCORRENCIA, useOcorrencias, type Ocorrencia } from "@/lib/city-store";
+import { CATEGORIAS_OCORRENCIA, useOcorrencias, type Ocorrencia } from "@/lib/cantu-store";
 
 export const Route = createFileRoute("/ocorrencia")({
   head: () => ({
     meta: [
-      { title: "Comunicar Problema — QI Cidadão" },
+      { title: "Comunicar Problema — Cantu Conecta" },
       {
         name: "description",
         content:
-          "Comunique buracos, iluminação, entulho e outros problemas urbanos de Quedas do Iguaçu com foto e localização.",
+          "Comunique buracos, iluminação, entulho e outros problemas urbanos na região Cantuquiriguaçu com foto e localização.",
       },
-      { property: "og:title", content: "Comunicar Problema — QI Cidadão" },
+      { property: "og:title", content: "Comunicar Problema — Cantu Conecta" },
       {
         property: "og:description",
-        content: "Envie o problema com foto e GPS e acompanhe o protocolo até a solução.",
+        content: "Envie o problema com foto e GPS e acompanhe o protocolo até a solução na sua cidade.",
       },
     ],
   }),
@@ -81,8 +81,8 @@ function ComunicarProblema() {
   if (enviada) {
     return (
       <AppShell librasMensagem="Solicitação enviada. Guarde o número do protocolo para acompanhar.">
-        <TopBar titulo="Solicitação enviada" subtitulo="A prefeitura já recebeu seu chamado" />
-        <div className="-mt-5 space-y-4 px-4">
+        <TopBar titulo="Solicitação enviada" subtitulo="A equipe Cantu Conecta já recebeu seu chamado" />
+        <div className="-mt-5 space-y-4 px-4 pb-10">
           <div className="animate-in rounded-3xl border border-border bg-card p-5 text-center shadow-card fade-in zoom-in-95 duration-500">
             <CheckCircle2 className="mx-auto size-12 text-success" />
             <h2 className="mt-3 text-base font-bold">Protocolo gerado</h2>
@@ -92,7 +92,7 @@ function ComunicarProblema() {
               {new Date(enviada.criadoEm).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
             </p>
             <p className="mt-3 rounded-2xl bg-secondary p-3 text-xs text-muted-foreground">
-              Status atual: 🔴 Pendente. A equipe da Prefeitura vai analisar e atualizar o andamento no
+              Status atual: 🔴 Pendente. A equipe técnica vai analisar e atualizar o andamento no 
               painel de gestão.
             </p>
           </div>

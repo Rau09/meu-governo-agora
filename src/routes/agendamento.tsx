@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CalendarCheck, CheckCircle2, Trash2, MapPin, Clock } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { AREAS, HORARIOS, useAgendamentos, useCidadao } from "@/lib/city-store";
+import { AREAS, HORARIOS, useAgendamentos, useCidadao } from "@/lib/cantu-store";
 
 type Busca = { servico?: string };
 
@@ -11,13 +11,13 @@ export const Route = createFileRoute("/agendamento")({
     typeof search['servico'] === "string" ? { servico: search['servico'] } : {},
   head: () => ({
     meta: [
-      { title: "Agendar Atendimento — QI Cidadão" },
+      { title: "Agendar Atendimento — Cantu Conecta" },
       {
         name: "description",
-        content: "Agende consultas de saúde, matrículas e serviços urbanos de Quedas do Iguaçu em poucos toques.",
+        content: "Agende consultas de saúde, serviços para animais e solicitações urbanas na região Cantuquiriguaçu.",
       },
-      { property: "og:title", content: "Agendar Atendimento — QI Cidadão" },
-      { property: "og:description", content: "Escolha o serviço, a unidade e o horário. Sem fila, sem espera." },
+      { property: "og:title", content: "Agendar Atendimento — Cantu Conecta" },
+      { property: "og:description", content: "Escolha o serviço, a unidade e o horário. Sem fila, sem espera na sua cidade." },
     ],
   }),
   component: Agendamento,

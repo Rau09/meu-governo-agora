@@ -1,6 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { UserRound, CheckCircle2, LogOut, ShieldCheck, Lock, Eye, EyeOff, KeyRound } from "lucide-react";
+import { 
+  UserRound, CheckCircle2, LogOut, ShieldCheck, Lock, 
+  Eye, EyeOff, KeyRound, MapPin, Phone, CreditCard, 
+  User, ArrowRight, ArrowLeft 
+} from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import {
   forcaPin,
@@ -13,21 +17,21 @@ import {
   useCidadao,
   validarCpf,
   validarTelefone,
-} from "@/lib/city-store";
+} from "@/lib/cantu-store";
 
 export const Route = createFileRoute("/registro")({
   head: () => ({
     meta: [
-      { title: "Criar Acesso Seguro — QI Cidadão" },
+      { title: "Criar Acesso Seguro — Cantu Conecta" },
       {
         name: "description",
         content:
-          "Cadastre-se com segurança no QI Cidadão: PIN protegido, validação de CPF e dados guardados apenas no seu aparelho.",
+          "Cadastre-se com segurança no Cantu Conecta: PIN protegido, validação de CPF e dados guardados apenas no seu aparelho.",
       },
-      { property: "og:title", content: "Criar Acesso Seguro — QI Cidadão" },
+      { property: "og:title", content: "Criar Acesso Seguro — Cantu Conecta" },
       {
         property: "og:description",
-        content: "Cadastro protegido por PIN de 6 dígitos para agendar serviços da Prefeitura de Quedas do Iguaçu.",
+        content: "Cadastro protegido por PIN de 6 dígitos para agendar serviços públicos na região Cantuquiriguaçu.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -52,7 +56,8 @@ function mascaraTel(v: string) {
 function Registro() {
   const { cidadao, desbloqueado, salvar, sair, desbloquear, bloquear } = useCidadao();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ nome: "", cpf: "", telefone: "", bairro: "" });
+  const [passo, setPasso] = useState(1);
+  const [form, setForm] = useState({ nome: "", cpf: "", telefone: "", bairro: "", municipio: "" });
   const [pin, setPin] = useState("");
   const [pin2, setPin2] = useState("");
   const [aceite, setAceite] = useState(false);
@@ -60,35 +65,42 @@ function Registro() {
   const [enviando, setEnviando] = useState(false);
   const [mostrarDados, setMostrarDados] = useState(false);
 
-  /* ---- Já cadastrado e com sessão bloqueada: pede o PIN ---- */
   if (cidadao && !desbloqueado) {
     return <TelaPin onEntrar={desbloquear} onSair={sair} nome={cidadao.nome} />;
   }
 
-  /* ---- Já cadastrado e desbloqueado ---- */
   if (cidadao) {
     return (
       <AppShell librasMensagem="Você já possui acesso criado. Seus dados aparecem protegidos nesta tela.">
         <TopBar titulo="Meu acesso" subtitulo="Cadastro protegido por PIN" />
         <div className="-mt-5 space-y-4 px-4">
-          <div className="rounded-3xl border border-border bg-card p-5 shadow-card">
-            <div className="flex items-center gap-3">
-              <span className="flex size-14 items-center justify-center rounded-2xl bg-primary-soft text-primary">
+          <div className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-5">
+              <ShieldCheck className="size-24" />
+            </div>
+            <div className="flex items-center gap-4 mb-6">
+              <span className="flex size-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-lg">
                 <UserRound className="size-7" />
               </span>
               <div>
                 <p className="font-display text-lg font-bold">{cidadao.nome}</p>
-                <p className="text-xs text-muted-foreground">{cidadao.bairro || "Quedas do Iguaçu"}</p>
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <MapPin className="size-3" /> {cidadao.municipio || "Cantuquiriguaçu"} · {cidadao.bairro}
+                </p>
               </div>
             </div>
-            <dl className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between border-b border-border pb-2">
-                <dt className="text-muted-foreground">CPF</dt>
-                <dd className="font-medium">{mostrarDados ? cidadao.cpf : ocultarCpf(cidadao.cpf)}</dd>
+            <dl className="space-y-4 text-sm">
+              <div className="flex justify-between items-center border-b border-border/50 pb-3">
+                <dt className="text-muted-foreground flex items-center gap-2 text-xs uppercase tracking-wider font-bold">
+                   <CreditCard className="size-3" /> CPF
+                </dt>
+                <dd className="font-mono font-bold text-base">{mostrarDados ? cidadao.cpf : ocultarCpf(cidadao.cpf)}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">WhatsApp</dt>
-                <dd className="font-medium">
+              <div className="flex justify-between items-center pb-1">
+                <dt className="text-muted-foreground flex items-center gap-2 text-xs uppercase tracking-wider font-bold">
+                  <Phone className="size-3" /> WhatsApp
+                </dt>
+                <dd className="font-bold text-base">
                   {mostrarDados ? cidadao.telefone : ocultarTelefone(cidadao.telefone)}
                 </dd>
               </div>
@@ -96,42 +108,43 @@ function Registro() {
             <button
               type="button"
               onClick={() => setMostrarDados((v) => !v)}
-              className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-xs font-semibold text-secondary-foreground"
+              className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-xs font-bold text-primary active:scale-95 transition-transform"
             >
               {mostrarDados ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              {mostrarDados ? "Ocultar dados" : "Mostrar dados completos"}
+              {mostrarDados ? "Ocultar dados" : "Ver dados completos"}
             </button>
           </div>
 
-          <button
-            type="button"
-            onClick={() => navigate({ to: "/agendamento" })}
-            className="min-h-14 w-full rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card"
-          >
-            Agendar um atendimento
-          </button>
-          <button
-            type="button"
-            onClick={bloquear}
-            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-sm font-semibold text-secondary-foreground"
-          >
-            <Lock className="size-4" /> Bloquear com PIN
-          </button>
-          <button
-            type="button"
-            onClick={sair}
-            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-destructive"
-          >
-            <LogOut className="size-4" /> Apagar acesso deste aparelho
-          </button>
+          <div className="grid grid-cols-1 gap-3">
+            <button
+              type="button"
+              onClick={() => navigate({ to: "/saude" })}
+              className="min-h-14 w-full rounded-[2rem] bg-primary text-sm font-bold text-primary-foreground shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
+            >
+              Acessar Serviços
+            </button>
+            <button
+              type="button"
+              onClick={bloquear}
+              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-sm font-bold text-muted-foreground active:scale-95 transition-transform"
+            >
+              <Lock className="size-4" /> Bloquear Acesso
+            </button>
+            <button
+              type="button"
+              onClick={sair}
+              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl text-xs font-bold text-destructive/70 hover:text-destructive transition-colors"
+            >
+              <LogOut className="size-4" /> Apagar deste dispositivo
+            </button>
+          </div>
         </div>
       </AppShell>
     );
   }
 
   /* ---- Cadastro ---- */
-  async function enviar(e: React.FormEvent) {
-    e.preventDefault();
+  async function enviar() {
     if (form.nome.trim().split(/\s+/).length < 2) {
       setErro("Informe seu nome completo (nome e sobrenome).");
       return;
@@ -157,6 +170,7 @@ function Registro() {
       setErro("É preciso aceitar o uso dos dados conforme a LGPD.");
       return;
     }
+    
     setErro("");
     setEnviando(true);
     const salt = gerarSalt();
@@ -165,118 +179,216 @@ function Registro() {
       cpf: form.cpf,
       telefone: form.telefone,
       bairro: form.bairro.trim().slice(0, 60),
+      municipio: form.municipio || "Quedas do Iguaçu",
       salt,
       pinHash: await hashPin(pin, salt),
       consentimentoEm: new Date().toISOString(),
     });
     setEnviando(false);
-    navigate({ to: "/agendamento" });
+    navigate({ to: "/saude" });
   }
 
   return (
-    <AppShell librasMensagem="Tela de cadastro seguro. Preencha seus dados e crie um PIN de 6 dígitos.">
-      <TopBar titulo="Criar meu acesso" subtitulo="Cadastro seguro em menos de um minuto" />
+    <AppShell librasMensagem={`Passo ${passo} de 4: Preencha seus dados para criar seu acesso seguro.`}>
+      <TopBar 
+        titulo="Criar meu acesso" 
+        subtitulo={`Passo ${passo} de 4 — ${passo === 1 ? 'Identificação' : passo === 2 ? 'Localização' : passo === 3 ? 'Segurança' : 'Privacidade'}`} 
+      />
 
-      <form onSubmit={enviar} className="-mt-5 space-y-4 px-4">
-        <div className="space-y-3 rounded-3xl border border-border bg-card p-4 shadow-card">
-          <Campo
-            label="Nome completo"
-            value={form.nome}
-            onChange={(v) => setForm({ ...form, nome: v.slice(0, 80) })}
-            placeholder="Maria da Silva"
-            autoComplete="name"
-          />
-          <Campo
-            label="CPF"
-            value={form.cpf}
-            onChange={(v) => setForm({ ...form, cpf: mascaraCpf(v) })}
-            placeholder="000.000.000-00"
-            inputMode="numeric"
-          />
-          <Campo
-            label="WhatsApp"
-            value={form.telefone}
-            onChange={(v) => setForm({ ...form, telefone: mascaraTel(v) })}
-            placeholder="(46) 90000-0000"
-            inputMode="tel"
-            autoComplete="tel"
-          />
-          <Campo
-            label="Bairro"
-            value={form.bairro}
-            onChange={(v) => setForm({ ...form, bairro: v.slice(0, 60) })}
-            placeholder="Centro"
-          />
-        </div>
-
-        <div className="space-y-3 rounded-3xl border border-border bg-card p-4 shadow-card">
-          <p className="flex items-center gap-2 text-xs font-bold text-primary">
-            <KeyRound className="size-4" /> PIN de segurança
-          </p>
-          <p className="text-[11px] text-muted-foreground">
-            Crie 6 dígitos para proteger seus dados. Ele é guardado apenas de forma criptografada.
-          </p>
-          <Campo
-            label="Criar PIN (6 dígitos)"
-            value={pin}
-            onChange={(v) => setPin(v.replace(/\D/g, "").slice(0, 6))}
-            placeholder="••••••"
-            inputMode="numeric"
-            secreto
-          />
-          <Campo
-            label="Repetir PIN"
-            value={pin2}
-            onChange={(v) => setPin2(v.replace(/\D/g, "").slice(0, 6))}
-            placeholder="••••••"
-            inputMode="numeric"
-            secreto
-          />
-        </div>
-
-        <label className="flex items-start gap-3 rounded-3xl bg-secondary p-4 text-xs text-muted-foreground">
-          <input
-            type="checkbox"
-            checked={aceite}
-            onChange={(e) => setAceite(e.target.checked)}
-            className="mt-0.5 size-5 accent-[hsl(var(--primary))]"
-          />
-          <span>
-            Autorizo a Prefeitura de Quedas do Iguaçu a usar meus dados apenas para agendamentos e atendimento,
-            conforme a LGPD.
-          </span>
-        </label>
-
-        {erro && (
-          <p role="alert" className="text-center text-xs font-semibold text-destructive">
-            {erro}
-          </p>
-        )}
-
-        <ul className="space-y-2 rounded-3xl bg-secondary p-4 text-xs text-muted-foreground">
-          {[
-            "CPF validado automaticamente",
-            "PIN criptografado, nunca salvo em texto puro",
-            "Dados ficam só neste aparelho",
-          ].map((b) => (
-            <li key={b} className="flex items-center gap-2">
-              <CheckCircle2 className="size-4 text-success" /> {b}
-            </li>
+      <div className="-mt-5 px-4 pb-10">
+        {/* Progress Bar */}
+        <div className="mb-6 flex gap-2">
+          {[1, 2, 3, 4].map((i) => (
+            <div 
+              key={i} 
+              className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
+                i <= passo ? 'bg-primary' : 'bg-secondary'
+              }`} 
+            />
           ))}
-        </ul>
+        </div>
 
-        <button
-          type="submit"
-          disabled={enviando}
-          className="min-h-14 w-full rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card disabled:opacity-60"
-        >
-          {enviando ? "Protegendo seus dados…" : "Criar meu acesso seguro"}
-        </button>
+        <div className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card min-h-[300px] flex flex-col">
+          {passo === 1 && (
+            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <User className="size-6" />
+                <h2 className="font-bold text-lg">Quem é você?</h2>
+              </div>
+              <Campo
+                label="Nome completo"
+                value={form.nome}
+                onChange={(v) => setForm({ ...form, nome: v.slice(0, 80) })}
+                placeholder="Maria da Silva"
+                autoComplete="name"
+              />
+              <Campo
+                label="CPF"
+                value={form.cpf}
+                onChange={(v) => setForm({ ...form, cpf: mascaraCpf(v) })}
+                placeholder="000.000.000-00"
+                inputMode="numeric"
+              />
+              <Campo
+                label="WhatsApp"
+                value={form.telefone}
+                onChange={(v) => setForm({ ...form, telefone: mascaraTel(v) })}
+                placeholder="(46) 90000-0000"
+                inputMode="tel"
+                autoComplete="tel"
+              />
+            </div>
+          )}
 
-        <p className="flex items-center justify-center gap-1 pb-4 text-[11px] text-muted-foreground">
-          <ShieldCheck className="size-3" /> Seus dados ficam protegidos conforme a LGPD.
+          {passo === 2 && (
+            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <MapPin className="size-6" />
+                <h2 className="font-bold text-lg">Onde você mora?</h2>
+              </div>
+              <Campo
+                label="Município"
+                value={form.municipio}
+                onChange={(v) => setForm({ ...form, municipio: v })}
+                placeholder="Ex: Quedas do Iguaçu"
+              />
+              <Campo
+                label="Bairro / Comunidade"
+                value={form.bairro}
+                onChange={(v) => setForm({ ...form, bairro: v.slice(0, 60) })}
+                placeholder="Ex: Centro"
+              />
+              <div className="p-4 rounded-2xl bg-secondary/50 border border-border flex items-start gap-3">
+                <ShieldCheck className="size-5 text-success mt-0.5" />
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Esses dados ajudam a prefeitura a planejar serviços específicos para a sua região na Cantuquiriguaçu.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {passo === 3 && (
+            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <Lock className="size-6" />
+                <h2 className="font-bold text-lg">Segurança Digital</h2>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Crie um PIN de 6 dígitos para proteger seus dados. Ele é guardado de forma criptografada apenas neste aparelho.
+              </p>
+              <Campo
+                label="Criar PIN (6 dígitos)"
+                value={pin}
+                onChange={(v) => setPin(v.replace(/\D/g, "").slice(0, 6))}
+                placeholder="••••••"
+                inputMode="numeric"
+                secreto
+              />
+              <Campo
+                label="Repetir PIN"
+                value={pin2}
+                onChange={(v) => setPin2(v.replace(/\D/g, "").slice(0, 6))}
+                placeholder="••••••"
+                inputMode="numeric"
+                secreto
+              />
+            </div>
+          )}
+
+          {passo === 4 && (
+            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <ShieldCheck className="size-6" />
+                <h2 className="font-bold text-lg">Privacidade & LGPD</h2>
+              </div>
+              
+              <label className="flex items-start gap-3 rounded-2xl bg-secondary p-5 text-xs text-muted-foreground border border-border cursor-pointer active:scale-[0.98] transition-transform">
+                <input
+                  type="checkbox"
+                  checked={aceite}
+                  onChange={(e) => setAceite(e.target.checked)}
+                  className="mt-0.5 size-5 accent-[hsl(var(--primary))]"
+                />
+                <span className="leading-relaxed">
+                  Autorizo o processamento dos meus dados para fins de agendamento de consultas e serviços públicos, 
+                  garantindo que não serão compartilhados com terceiros sem minha autorização expressa, conforme a LGPD.
+                </span>
+              </label>
+
+              <div className="space-y-3">
+                {[
+                  "Dados criptografados de ponta a ponta",
+                  "Privacidade garantida por padrão",
+                  "Exclusão de dados a qualquer momento",
+                ].map((b) => (
+                  <div key={b} className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                    <CheckCircle2 className="size-4 text-success shrink-0" /> {b}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {erro && (
+            <p role="alert" className="mt-4 text-center text-xs font-bold text-destructive animate-bounce">
+              {erro}
+            </p>
+          )}
+
+          {/* Navigation Buttons */}
+          <div className="mt-8 flex gap-3">
+            {passo > 1 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setPasso(passo - 1);
+                  setErro("");
+                }}
+                className="size-14 rounded-2xl bg-secondary flex items-center justify-center text-muted-foreground active:scale-90 transition-transform"
+              >
+                <ArrowLeft className="size-6" />
+              </button>
+            )}
+            
+            <button
+              type="button"
+              disabled={enviando}
+              onClick={() => {
+                if (passo < 4) {
+                  // Basic validation before moving forward
+                  if (passo === 1 && (!form.nome || !form.cpf || !form.telefone)) {
+                    setErro("Preencha todos os campos para continuar.");
+                    return;
+                  }
+                  if (passo === 2 && !form.bairro) {
+                    setErro("Informe seu bairro ou comunidade.");
+                    return;
+                  }
+                  if (passo === 3 && (pin.length < 6 || pin !== pin2)) {
+                    setErro(pin.length < 6 ? "O PIN deve ter 6 dígitos." : "Os PINs não conferem.");
+                    return;
+                  }
+                  setErro("");
+                  setPasso(passo + 1);
+                } else {
+                  enviar();
+                }
+              }}
+              className="flex-1 min-h-14 rounded-2xl bg-primary text-primary-foreground font-bold shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
+            >
+              {passo < 4 ? (
+                <>Próximo Passo <ArrowRight className="size-5" /></>
+              ) : (
+                enviando ? "Processando..." : "Concluir Cadastro"
+              )}
+            </button>
+          </div>
+        </div>
+
+        <p className="mt-6 text-center text-[10px] text-muted-foreground uppercase tracking-widest font-bold opacity-50">
+          Cantu Conecta · Cidadania Digital
         </p>
-      </form>
+      </div>
     </AppShell>
   );
 }

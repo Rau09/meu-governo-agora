@@ -1,12 +1,11 @@
-import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento } from "@/lib/city-store";
+import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento } from "@/lib/cantu-store";
 import { normalizar } from "@/lib/libras";
 
 /**
- * Assistente virtual do QI Cidadão.
+ * Inteligência Cantu Conecta.
  *
- * Só responde com base no que existe dentro do app (serviços, estoque simulado
- * de medicamentos e solicitações salvas). Quando não encontra a informação,
- * assume que não sabe em vez de inventar.
+ * Especializada em triagem de saúde, causa animal e serviços urbanos regionais.
+ * Focada na região da Cantuquiriguaçu, PR.
  */
 
 export type Resposta = { texto: string; acao?: { rotulo: string; para: string } };
@@ -115,13 +114,13 @@ function buscarMedicamento(pergunta: string): Resposta | null {
 
 function consultarProtocolo(pergunta: string): Resposta | null {
   const ocorrencias = lerOcorrencias();
-  const codigo = pergunta.match(/QI-\d{4}-[A-Z0-9]{4,6}/i)?.[0]?.toUpperCase();
+  const codigo = pergunta.match(/CANTU-\d{4}-[A-Z0-9]{4,6}/i)?.[0]?.toUpperCase();
 
   if (codigo) {
     const o = ocorrencias.find((x) => x.protocolo.toUpperCase() === codigo);
     if (!o) {
       return {
-        texto: `Não encontrei o protocolo ${codigo} neste aparelho. Confira o número ou consulte a Prefeitura pelo telefone (46) 3532-0000.`,
+        texto: `Não encontrei o protocolo ${codigo} neste aparelho. Confira o número ou consulte a Central da Cantuquiriguaçu.`,
       };
     }
     const st = STATUS_OCORRENCIA.find((s) => s.id === o.status)!;
@@ -193,6 +192,6 @@ export function responder(pergunta: string): Resposta {
 
   return {
     texto:
-      "Não tenho essa informação aqui no app. Posso ajudar com agendamento de consultas, serviços da cidade, estoque de medicamentos, comunicar problemas e andamento de protocolos. Para outros assuntos, fale com a Prefeitura pelo (46) 3532-0000.",
+      "Ainda estou aprendendo sobre este assunto. Posso te ajudar com agendamento de saúde, proteção animal, estoque de medicamentos e acompanhamento de protocolos na região Cantu.",
   };
 }

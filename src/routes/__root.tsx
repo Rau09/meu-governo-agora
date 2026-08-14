@@ -77,15 +77,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "QI Cidadão — Prefeitura de Quedas do Iguaçu" },
+      { title: "Cantu Conecta — Inovação Cívica Cantuquiriguaçu" },
       {
         name: "description",
-        content: "App oficial de atendimento ao cidadão de Quedas do Iguaçu: agendamentos, serviços e suporte 24/7.",
+        content: "Plataforma integrada de atendimento ao cidadão da região Cantuquiriguaçu: saúde, causa animal e serviços urbanos.",
       },
-      { property: "og:title", content: "QI Cidadão — Prefeitura de Quedas do Iguaçu" },
+      { property: "og:title", content: "Cantu Conecta — Inovação Cívica Cantuquiriguaçu" },
       {
         property: "og:description",
-        content: "Saúde, educação e serviços urbanos na palma da mão, sem fila.",
+        content: "O Futuro do Atendimento Público na Cantuquiriguaçu chegou.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

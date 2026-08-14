@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search, ArrowRight, Pill, Camera } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { AREAS } from "@/lib/city-store";
+import { AREAS } from "@/lib/cantu-store";
 
 export const Route = createFileRoute("/servicos")({
   head: () => ({

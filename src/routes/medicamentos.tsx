@@ -2,21 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, Pill } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { MEDICAMENTOS, statusMedicamento } from "@/lib/city-store";
+import { MEDICAMENTOS, statusMedicamento } from "@/lib/cantu-store";
 
 export const Route = createFileRoute("/medicamentos")({
   head: () => ({
     meta: [
-      { title: "Medicamentos Disponíveis — QI Cidadão" },
+      { title: "Medicamentos Disponíveis — Cantu Conecta" },
       {
         name: "description",
         content:
-          "Consulte a disponibilidade de medicamentos nas unidades de saúde de Quedas do Iguaçu antes de sair de casa.",
+          "Consulte a disponibilidade de medicamentos nas unidades de saúde da região Cantuquiriguaçu antes de sair de casa.",
       },
-      { property: "og:title", content: "Medicamentos Disponíveis — QI Cidadão" },
+      { property: "og:title", content: "Medicamentos Disponíveis — Cantu Conecta" },
       {
         property: "og:description",
-        content: "Veja em qual UBS o seu medicamento está disponível e a quantidade em estoque.",
+        content: "Veja em qual UBS o seu medicamento está disponível e a quantidade em estoque na sua cidade.",
       },
     ],
   }),

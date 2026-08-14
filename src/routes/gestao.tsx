@@ -21,7 +21,7 @@ import {
   useOcorrencias,
   type Ocorrencia,
   type StatusOcorrencia,
-} from "@/lib/city-store";
+} from "@/lib/cantu-store";
 import {
   NIVEIS,
   PERGUNTAS_IA,
@@ -37,19 +37,19 @@ import {
   resumir,
   unificar,
   type OcorrenciaGestao,
-} from "@/lib/gestao-dados";
+} from "@/lib/cantu-gestao";
 
 
 export const Route = createFileRoute("/gestao")({
   head: () => ({
     meta: [
-      { title: "Painel de Gestão — QI Cidadão" },
+      { title: "Painel de Gestão — Cantu Conecta" },
       {
         name: "description",
-        content: "Painel restrito da Prefeitura de Quedas do Iguaçu: demanda por área e fila de atendimentos.",
+        content: "Painel restrito da região Cantuquiriguaçu: demanda por área e inteligência de gestão pública.",
       },
-      { property: "og:title", content: "Painel de Gestão — QI Cidadão" },
-      { property: "og:description", content: "Acesso restrito da equipe da Prefeitura para gestão dos atendimentos." },
+      { property: "og:title", content: "Painel de Gestão — Cantu Conecta" },
+      { property: "og:description", content: "Acesso restrito para gestão inteligente dos serviços regionais." },
     ],
   }),
   component: Gestao,
@@ -259,8 +259,8 @@ function Painel({ onSair }: { onSair: () => void }) {
   ];
 
   return (
-    <AppShell librasMensagem="Painel de gestão da prefeitura, com alertas, prioridades, mapa, análise da inteligência artificial e indicadores.">
-      <TopBar titulo="Painel de Gestão" subtitulo="Quedas do Iguaçu — PR · uso interno" />
+    <AppShell librasMensagem="Painel de gestão regional, com alertas, prioridades, mapa e análise da inteligência artificial para a Cantuquiriguaçu.">
+      <TopBar titulo="Gestão Inteligente" subtitulo="Cantu Conecta · Regional · uso interno" />
 
       <div className="-mt-5 space-y-5 px-4">
         <div className="flex justify-end">
@@ -301,8 +301,8 @@ function Painel({ onSair }: { onSair: () => void }) {
             animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
           }`}
         >
-          <h2 className="text-sm font-extrabold uppercase tracking-wide">🚨 Atenção da Prefeitura</h2>
-          <p className="text-[11px] text-muted-foreground">O que precisa ser resolvido agora.</p>
+          <h2 className="text-sm font-extrabold uppercase tracking-wide">🚨 Central de Atenção</h2>
+          <p className="text-[11px] text-muted-foreground">Prioridades críticas identificadas na região.</p>
           <ul className="mt-3 space-y-2">
             {alertasAtivos.map((a) => (
               <li key={a.id}>
