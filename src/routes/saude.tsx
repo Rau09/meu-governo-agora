@@ -60,14 +60,14 @@ function SaudePage() {
             <h2 className="font-bold">Campanhas Ativas</h2>
           </div>
           <div className="space-y-3">
-            <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-sm">
+            <Link to="/agendamento" className="block p-4 rounded-2xl bg-white/10 backdrop-blur-sm active:scale-95 transition-transform">
               <p className="font-bold text-sm">Vacinação contra Gripe</p>
               <p className="text-xs opacity-80">Disponível em todas as UBS do município.</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-sm">
+            </Link>
+            <Link to="/agendamento" className="block p-4 rounded-2xl bg-white/10 backdrop-blur-sm active:scale-95 transition-transform">
               <p className="font-bold text-sm">Prevenção: Saúde Bucal</p>
               <p className="text-xs opacity-80">Mutirão de limpeza no Centro Odontológico.</p>
-            </div>
+            </Link>
           </div>
         </section>
       </div>
