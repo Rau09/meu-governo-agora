@@ -1,11 +1,10 @@
 import { MEDICAMENTOS, statusMedicamento, type Ocorrencia, type StatusOcorrencia } from "@/lib/cantu-store";
 
 /**
- * Camada de inteligência do Painel de Gestão.
+ * Camada de inteligência regional do Cantu Conecta.
  *
- * Junta as solicitações reais (feitas pelo cidadão e salvas no aparelho) com um
- * conjunto demonstrativo coerente, e deriva tudo a partir da MESMA lista:
- * resumo, alertas, prioridades, mapa, indicadores e análise da IA.
+ * Consolida solicitações reais e dados demonstrativos para a região Cantuquiriguaçu,
+ * derivando análises inteligentes para gestão pública eficiente.
  */
 
 /* ---------- Tipos ---------- */
