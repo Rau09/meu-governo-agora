@@ -338,12 +338,13 @@ export const STATUS_OCORRENCIA: {
   rotulo: string;
   emoji: string;
   classe: string;
+  gravidade: number; // 1 (Normal) a 4 (Emergência)
 }[] = [
-  { id: "recebido", rotulo: "Recebido", emoji: "📥", classe: "bg-secondary text-muted-foreground" },
-  { id: "analise", rotulo: "Em análise", emoji: "🟡", classe: "bg-accent-soft text-accent-foreground" },
-  { id: "encaminhado", rotulo: "Encaminhado", emoji: "📤", classe: "bg-primary-soft text-primary" },
-  { id: "andamento", rotulo: "Em andamento", emoji: "🔵", classe: "bg-info text-white" },
-  { id: "resolvido", rotulo: "Resolvido", emoji: "🟢", classe: "bg-success/15 text-success" },
+  { id: "recebido", rotulo: "Recebido", emoji: "📥", classe: "bg-secondary text-muted-foreground", gravidade: 1 },
+  { id: "analise", rotulo: "Em análise", emoji: "🟡", classe: "bg-accent-soft text-accent-foreground", gravidade: 2 },
+  { id: "encaminhado", rotulo: "Encaminhado", emoji: "📤", classe: "bg-primary-soft text-primary", gravidade: 2 },
+  { id: "andamento", rotulo: "Em andamento", emoji: "🔵", classe: "bg-info text-white", gravidade: 3 },
+  { id: "resolvido", rotulo: "Resolvido", emoji: "🟢", classe: "bg-success/15 text-success", gravidade: 0 },
 ];
 
 export type Ocorrencia = {

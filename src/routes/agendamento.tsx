@@ -36,7 +36,9 @@ function Agendamento() {
   const [areaId, setAreaId] = useState<string>(areaInicial);
   const area = AREAS.find((a) => a.id === areaId) ?? AREAS[0];
   const [servico, setServico] = useState<string>(servicoInicial ?? area.servicos[0]);
-  const [unidade, setUnidade] = useState<string>(area.unidades[0]);
+  const [unidade, setUnidade] = useState<string>(
+    cidadao?.municipio ? `${area.unidades[0]} (${cidadao.municipio})` : area.unidades[0]
+  );
   const [data, setData] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10));
   const [hora, setHora] = useState<string>("");
   const [feito, setFeito] = useState<string | null>(null);
