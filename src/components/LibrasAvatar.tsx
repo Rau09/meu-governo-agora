@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Hand, X, Play, Pause, RotateCcw } from "lucide-react";
 import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } from "@/lib/libras";
+import avatarAsset from "@/assets/avatar_libras.jpeg.asset.json";
 
 /**
  * Avatar de Libras: assistente de acessibilidade para pessoas surdas.
- * Fica flutuando sobre a interface e sinaliza o conteúdo da tela, seguindo
- * a sequência de sinais/datilologia montada em `src/lib/libras.ts`.
  */
 export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
   const [aberto, setAberto] = useState(false);
@@ -58,16 +57,14 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setArrastado(true);
 
     const maxX = typeof window !== "undefined" ? window.innerWidth - 56 - 16 : 0;
-    // Mudamos o maxY para permitir o movimento para cima, calculando a partir do topo
-    // O botão está fixado em bottom-24 (96px). 
-    // Para subir, dy é negativo. O limite superior é quando o topo do botão toca o topo da tela.
-    // O botão está a (window.innerHeight - 96 - 56) do topo.
+    const minX = typeof window !== "undefined" ? -window.innerWidth + 56 + 16 : 0;
+    
     const currentFromTop = typeof window !== "undefined" ? window.innerHeight - 96 - 56 : 0;
-    const minY = -currentFromTop + 16; // Mantém 16px de margem do topo
-    const maxY = 96 - 16; // Mantém 16px de margem do fundo (bottom-24 é 96px, queremos evitar que suma pra baixo também)
+    const minY = -currentFromTop + 16;
+    const maxY = 96 - 16;
 
     setPos({
-      x: clamp(inicio.current.posX + dx, -maxX, 16),
+      x: clamp(inicio.current.posX + dx, minX, 16),
       y: clamp(inicio.current.posY + dy, minY, maxY),
     });
   }
@@ -109,10 +106,11 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
 
       {aberto && (
         <div 
-          className={`absolute right-0 z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float ${
-            // Se o botão estiver na metade superior da tela, mostra o popup abaixo dele.
-            // pos.y negativo significa que subiu.
-            // O botão está em bottom-24 (96px). Metade da tela é innerHeight / 2.
+          className={`absolute z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float ${
+            typeof window !== 'undefined' && (window.innerWidth - 16 + pos.x) < window.innerWidth / 2
+              ? "left-0" 
+              : "right-0"
+          } ${
             typeof window !== 'undefined' && (window.innerHeight - 96 + pos.y) < window.innerHeight / 2
               ? "top-[72px]" 
               : "bottom-[72px]"
@@ -145,8 +143,18 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             </div>
           </div>
 
-          <div className="flex justify-center bg-linear-to-b from-primary/10 to-primary/5 py-4 relative overflow-hidden">
+          <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-4 relative overflow-hidden">
             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_70%)]" />
+            
+            <div className="relative mb-2">
+              <img 
+                src={avatarAsset.url} 
+                alt="Avatar Libras" 
+                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md z-10 relative"
+              />
+              <div className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-white z-20" />
+            </div>
+
             <SignerFigure pose={pose} />
           </div>
 
