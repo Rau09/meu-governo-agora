@@ -75,5 +75,6 @@ export const TopBar = memo(function TopBar({ titulo, subtitulo }: { titulo: stri
       {subtitulo && <p className="mt-1 text-sm opacity-90">{subtitulo}</p>}
     </header>
   );
-}
+});
+
 
