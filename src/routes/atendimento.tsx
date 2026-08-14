@@ -170,7 +170,7 @@ const Atendimento = memo(function Atendimento() {
           e.preventDefault();
           enviar(texto);
         }}
-        className="fixed bottom-20 left-1/2 z-30 flex w-full max-w-[430px] -translate-x-1/2 gap-2 bg-background/95 px-4 py-3 backdrop-blur"
+        className="fixed bottom-20 left-1/2 z-30 flex w-full max-w-[430px] -translate-x-1/2 gap-2 bg-background/95 px-4 py-4 backdrop-blur border-t border-border shadow-2xl"
       >
         <label className="flex-1">
           <span className="sr-only">Escreva sua mensagem</span>

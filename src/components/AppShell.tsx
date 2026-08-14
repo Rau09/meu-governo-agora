@@ -23,7 +23,7 @@ export const AppShell = memo(function AppShell({
   return (
     <div className="min-h-dvh bg-secondary/40">
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float">
-        <main className="pb-28">{children}</main>
+        <main className="pb-32 overflow-x-hidden">{children}</main>
 
         <nav
           aria-label="Navegação principal"
