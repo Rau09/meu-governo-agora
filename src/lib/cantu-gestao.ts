@@ -531,7 +531,7 @@ export function responderIA(id: string, lista: OcorrenciaGestao[]): string {
   }
   if (id === "bairro") {
     const b = concentracao(lista)[0];
-    return `${b?.bairro ?? "Centro"} é o bairro que mais precisa de atenção: ${b?.qtd ?? 0} ocorrências ativas (${b?.pct ?? 0}% do total da cidade).`;
+    return `${b?.bairro ?? "Centro"} é o bairro que mais precisa de atenção: ${b?.qtd ?? 0} ocorrências ativas (${b?.pct ?? 0}% do total regional).`;
   }
   if (id === "atrasados") {
     const atr = ativos.filter(atrasada);
