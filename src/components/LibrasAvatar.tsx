@@ -143,18 +143,9 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             </div>
           </div>
 
-          <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-4 relative overflow-hidden">
+          <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-8 relative overflow-hidden">
             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_70%)]" />
             
-            <div className="relative mb-2">
-              <img 
-                src={avatarAsset.url} 
-                alt="Avatar Libras" 
-                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md z-10 relative"
-              />
-              <div className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-white z-20" />
-            </div>
-
             <SignerFigure pose={pose} />
           </div>
 
