@@ -117,7 +117,7 @@ const Atendimento = memo(function Atendimento() {
         </div>
       </div>
 
-      <div className="mt-5 space-y-3 px-4 pb-44">
+      <div className="mt-5 space-y-3 px-4 pb-52">
         {msgs.map((m, i) => (
           <div key={i} className={`flex gap-2 ${m.de === "eu" ? "justify-end" : "justify-start"}`}>
             {m.de === "bot" && (
@@ -127,7 +127,7 @@ const Atendimento = memo(function Atendimento() {
             )}
             <div className="max-w-[78%] space-y-2">
               <p
-                className={`whitespace-pre-line rounded-2xl px-4 py-3 text-[15px] leading-snug shadow-card ${
+                className={`whitespace-pre-line break-words rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-card ${
                   m.de === "eu"
                     ? "rounded-br-sm bg-primary text-primary-foreground"
                     : "rounded-bl-sm bg-card text-card-foreground"
@@ -149,7 +149,7 @@ const Atendimento = memo(function Atendimento() {
         <div ref={fim} />
       </div>
 
-      <div className="fixed bottom-[8.5rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 overflow-x-auto px-4 pb-2 [scrollbar-width:none]">
+      <div className="fixed bottom-[8.5rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] touch-pan-x">
         <div className="flex w-max gap-2">
           {sugestoes.map((s) => (
             <button
