@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Sparkles,
   X,
+  AlertTriangle,
 } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { MapaOcorrencias } from "@/components/MapaOcorrencias";
@@ -230,7 +231,7 @@ function Painel({ onSair }: { onSair: () => void }) {
       label: "Solicitações abertas",
       nota: `${resumo.variacaoAbertas >= 0 ? "↑" : "↓"} ${Math.abs(resumo.variacaoAbertas)}% vs. mês anterior`,
       tom: "text-primary",
-      itens: ativos.filter((o) => o.status === "pendente" || o.status === "analise"),
+      itens: ativos.filter((o) => o.status === "recebido" || o.status === "analise"),
     },
     {
       icon: Users,
@@ -238,15 +239,23 @@ function Painel({ onSair }: { onSair: () => void }) {
       label: "Em execução",
       nota: "equipes em campo",
       tom: "text-primary",
-      itens: ativos.filter((o) => o.status === "execucao"),
+      itens: ativos.filter((o) => o.status === "andamento"),
     },
     {
       icon: Clock3,
       valor: resumo.atrasadas,
       label: "Atrasadas",
       nota: "⚠️ precisam de atenção",
-      tom: "text-destructive",
+      tom: "text-destructive font-bold",
       itens: ativos.filter(atrasada),
+    },
+    {
+      icon: AlertTriangle,
+      valor: resumo.criticas,
+      label: "Gravidade Alta",
+      nota: "prioridade total",
+      tom: "text-destructive",
+      itens: ativos.filter((o) => nivelOcorrencia(o) === "critico"),
     },
     {
       icon: CheckCircle2,

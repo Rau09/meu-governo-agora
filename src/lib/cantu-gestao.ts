@@ -116,54 +116,54 @@ const DESCRICOES: Record<string, string[]> = {
 /** Distribuição pensada para bater com o resumo: 27 abertas, 14 em execução, 5 atrasadas, 83 resolvidas. */
 const PLANO: { categoria: string; bairro: string; status: StatusOcorrencia; dias: number }[] = [
   // Iluminação concentrada no Jardim Alvorada (gera o alerta de concentração)
-  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "pendente", dias: 21 },
-  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "pendente", dias: 18 },
-  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "pendente", dias: 14 },
+  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "recebido", dias: 21 },
+  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "recebido", dias: 18 },
+  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "recebido", dias: 14 },
   { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "analise", dias: 11 },
   { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "analise", dias: 9 },
-  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "execucao", dias: 6 },
-  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "execucao", dias: 4 },
-  { categoria: "Poste/lâmpada com defeito", bairro: "Centro", status: "pendente", dias: 8 },
-  { categoria: "Poste/lâmpada com defeito", bairro: "Bela Vista", status: "pendente", dias: 5 },
+  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "andamento", dias: 6 },
+  { categoria: "Poste/lâmpada com defeito", bairro: "Jardim Alvorada", status: "andamento", dias: 4 },
+  { categoria: "Poste/lâmpada com defeito", bairro: "Centro", status: "recebido", dias: 8 },
+  { categoria: "Poste/lâmpada com defeito", bairro: "Bela Vista", status: "recebido", dias: 5 },
   { categoria: "Poste/lâmpada com defeito", bairro: "Vila Rural", status: "analise", dias: 3 },
-  { categoria: "Poste/lâmpada com defeito", bairro: "Água Santa", status: "execucao", dias: 2 },
+  { categoria: "Poste/lâmpada com defeito", bairro: "Água Santa", status: "andamento", dias: 2 },
   // Buracos
-  { categoria: "Buraco na rua", bairro: "Centro", status: "pendente", dias: 16 },
-  { categoria: "Buraco na rua", bairro: "São Francisco", status: "pendente", dias: 12 },
+  { categoria: "Buraco na rua", bairro: "Centro", status: "recebido", dias: 16 },
+  { categoria: "Buraco na rua", bairro: "São Francisco", status: "recebido", dias: 12 },
   { categoria: "Buraco na rua", bairro: "São Francisco", status: "analise", dias: 7 },
-  { categoria: "Buraco na rua", bairro: "Bela Vista", status: "execucao", dias: 5 },
-  { categoria: "Buraco na rua", bairro: "Vila Rural", status: "execucao", dias: 3 },
-  { categoria: "Problema na via", bairro: "Vila Rural", status: "pendente", dias: 9 },
+  { categoria: "Buraco na rua", bairro: "Bela Vista", status: "andamento", dias: 5 },
+  { categoria: "Buraco na rua", bairro: "Vila Rural", status: "andamento", dias: 3 },
+  { categoria: "Problema na via", bairro: "Vila Rural", status: "recebido", dias: 9 },
   { categoria: "Problema na via", bairro: "Água Santa", status: "analise", dias: 4 },
   // Lixo
-  { categoria: "Lixo/entulho", bairro: "Centro", status: "pendente", dias: 11 },
-  { categoria: "Lixo/entulho", bairro: "Bela Vista", status: "pendente", dias: 6 },
-  { categoria: "Lixo/entulho", bairro: "São Francisco", status: "execucao", dias: 2 },
-  { categoria: "Lixo/entulho", bairro: "Água Santa", status: "execucao", dias: 1 },
+  { categoria: "Lixo/entulho", bairro: "Centro", status: "recebido", dias: 11 },
+  { categoria: "Lixo/entulho", bairro: "Bela Vista", status: "recebido", dias: 6 },
+  { categoria: "Lixo/entulho", bairro: "São Francisco", status: "andamento", dias: 2 },
+  { categoria: "Lixo/entulho", bairro: "Água Santa", status: "andamento", dias: 1 },
   // Árvores
-  { categoria: "Árvore caída", bairro: "Bela Vista", status: "pendente", dias: 6 },
-  { categoria: "Árvore caída", bairro: "Centro", status: "execucao", dias: 2 },
+  { categoria: "Árvore caída", bairro: "Bela Vista", status: "recebido", dias: 6 },
+  { categoria: "Árvore caída", bairro: "Centro", status: "andamento", dias: 2 },
   { categoria: "Árvore caída", bairro: "Jardim Alvorada", status: "analise", dias: 4 },
   // Vazamentos
-  { categoria: "Vazamento", bairro: "São Francisco", status: "pendente", dias: 7 },
-  { categoria: "Vazamento", bairro: "Centro", status: "execucao", dias: 1 },
+  { categoria: "Vazamento", bairro: "São Francisco", status: "recebido", dias: 7 },
+  { categoria: "Vazamento", bairro: "Centro", status: "andamento", dias: 1 },
   { categoria: "Vazamento", bairro: "Vila Rural", status: "analise", dias: 2 },
   // Saúde
-  { categoria: "Falta de medicamento", bairro: "Bela Vista", status: "pendente", dias: 9 },
+  { categoria: "Falta de medicamento", bairro: "Bela Vista", status: "recebido", dias: 9 },
   { categoria: "Falta de medicamento", bairro: "São Francisco", status: "analise", dias: 5 },
-  { categoria: "Atendimento em UBS", bairro: "Centro", status: "pendente", dias: 4 },
-  { categoria: "Atendimento em UBS", bairro: "Bela Vista", status: "execucao", dias: 2 },
-  { categoria: "Falta de medicamento", bairro: "Centro", status: "execucao", dias: 1 },
+  { categoria: "Atendimento em UBS", bairro: "Centro", status: "recebido", dias: 4 },
+  { categoria: "Atendimento em UBS", bairro: "Bela Vista", status: "andamento", dias: 2 },
+  { categoria: "Falta de medicamento", bairro: "Centro", status: "andamento", dias: 1 },
   // Educação
-  { categoria: "Transporte escolar", bairro: "Vila Rural", status: "pendente", dias: 8 },
+  { categoria: "Transporte escolar", bairro: "Vila Rural", status: "recebido", dias: 8 },
   { categoria: "Transporte escolar", bairro: "Água Santa", status: "analise", dias: 3 },
-  { categoria: "Estrutura escolar", bairro: "Jardim Alvorada", status: "pendente", dias: 12 },
-  { categoria: "Estrutura escolar", bairro: "Centro", status: "execucao", dias: 4 },
+  { categoria: "Estrutura escolar", bairro: "Jardim Alvorada", status: "recebido", dias: 12 },
+  { categoria: "Estrutura escolar", bairro: "Centro", status: "andamento", dias: 4 },
   // Complementos em execução
-  { categoria: "Lixo/entulho", bairro: "Jardim Alvorada", status: "execucao", dias: 3 },
-  { categoria: "Buraco na rua", bairro: "Água Santa", status: "execucao", dias: 6 },
-  { categoria: "Problema na via", bairro: "Centro", status: "execucao", dias: 5 },
-  { categoria: "Vazamento", bairro: "Bela Vista", status: "execucao", dias: 4 },
+  { categoria: "Lixo/entulho", bairro: "Jardim Alvorada", status: "andamento", dias: 3 },
+  { categoria: "Buraco na rua", bairro: "Água Santa", status: "andamento", dias: 6 },
+  { categoria: "Problema na via", bairro: "Centro", status: "andamento", dias: 5 },
+  { categoria: "Vazamento", bairro: "Bela Vista", status: "andamento", dias: 4 },
 ];
 
 const DIA = 86400000;
@@ -284,8 +284,8 @@ export type Resumo = {
 };
 
 export function resumir(lista: OcorrenciaGestao[]): Resumo {
-  const abertas = lista.filter((o) => o.status === "pendente" || o.status === "analise");
-  const execucao = lista.filter((o) => o.status === "execucao");
+  const abertas = lista.filter((o) => o.status === "recebido" || o.status === "analise");
+  const execucao = lista.filter((o) => o.status === "andamento");
   const ativos = [...abertas, ...execucao];
   const medicamentosEmFalta = MEDICAMENTOS.filter((m) => statusMedicamento(m.quantidade).id === "indisponivel").map(
     (m) => ({ nome: m.nome, unidade: m.unidade }),
@@ -384,8 +384,8 @@ export function indicadores(lista: OcorrenciaGestao[]): Indicador[] {
   return GRUPOS.map((grupo) => {
     const itens = lista.filter((o) => metaCategoria(o.categoria).grupo === grupo);
     const ativos = itens.filter((o) => o.status !== "resolvido");
-    const abertas = itens.filter((o) => o.status === "pendente" || o.status === "analise").length;
-    const execucao = itens.filter((o) => o.status === "execucao").length;
+    const abertas = itens.filter((o) => o.status === "recebido" || o.status === "analise").length;
+    const execucao = itens.filter((o) => o.status === "andamento").length;
     const atrasadas = ativos.filter(atrasada).length;
     return {
       grupo,

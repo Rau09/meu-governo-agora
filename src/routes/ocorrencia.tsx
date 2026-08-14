@@ -92,7 +92,7 @@ function ComunicarProblema() {
               {new Date(enviada.criadoEm).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
             </p>
             <p className="mt-3 rounded-2xl bg-secondary p-3 text-xs text-muted-foreground">
-              Status atual: 🔴 Pendente. A equipe técnica vai analisar e atualizar o andamento no 
+              Status atual: 📥 Recebido. A equipe técnica vai analisar e atualizar o andamento no 
               painel de gestão.
             </p>
           </div>

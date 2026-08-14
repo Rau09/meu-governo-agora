@@ -7,7 +7,7 @@ export const Route = createFileRoute("/causa-animal")({
   component: CausaAnimalPage,
 });
 
-const animaisAdoção = [
+const animaisAdocao = [
   { id: 1, nome: "Bolinha", raca: "SRD", idade: "2 anos", img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100&h=100&fit=crop" },
   { id: 2, nome: "Mel", raca: "Labrador", idade: "4 meses", img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=100&h=100&fit=crop" },
   { id: 3, nome: "Thor", raca: "Pastor Alemão", idade: "3 anos", img: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=100&h=100&fit=crop" },
@@ -41,7 +41,7 @@ function CausaAnimalPage() {
             <Link to="/causa-animal" className="text-[10px] font-bold text-primary">Ver todos</Link>
           </div>
           <div className="flex gap-4 overflow-x-auto pb-4 -mx-1 px-1 snap-x">
-            {animaisAdoção.map((pet) => (
+            {animaisAdocao.map((pet) => (
               <div key={pet.id} className="min-w-[140px] snap-start rounded-[2rem] bg-card border border-border p-4 shadow-sm">
                 <img src={pet.img} alt={pet.nome} className="size-20 rounded-2xl object-cover mb-3" />
                 <p className="font-bold text-sm">{pet.nome}</p>
