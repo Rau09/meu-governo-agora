@@ -1,27 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { responder } from "@/lib/cantu-ia";
-
-
-type Busca = { protocolo?: string };
-export const Route = createFileRoute("/atendimento")({
-  validateSearch: (search: Record<string, unknown>): Busca =>
-    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
-  head: () => ({
-    meta: [
-      { title: "Atendimento 24/7 — Cantu Conecta" },
-      {
-        name: "description",
-        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
-      },
-      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
-      { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
-    ],
-  }),
-  component: Atendimento,
-});
 
 type Msg = { de: "bot" | "eu"; texto: string; acao?: { rotulo: string; para: string } };
 
@@ -45,8 +26,9 @@ const atalhos = [
   { icon: GraduationCap, titulo: "Escola", texto: "Vaga em creche" },
 ];
 
+type Busca = { protocolo?: string };
 
-function Atendimento() {
+const Atendimento = memo(function Atendimento() {
   const { protocolo } = Route.useSearch();
   const [msgs, setMsgs] = useState<Msg[]>([
     {
@@ -209,4 +191,21 @@ function Atendimento() {
       </form>
     </AppShell>
   );
-}
+});
+
+export const Route = createFileRoute("/atendimento")({
+  validateSearch: (search: Record<string, unknown>): Busca =>
+    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
+  head: () => ({
+    meta: [
+      { title: "Atendimento 24/7 — Cantu Conecta" },
+      {
+        name: "description",
+        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
+      },
+      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
+      { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
+    ],
+  }),
+  component: Atendimento,
+});
