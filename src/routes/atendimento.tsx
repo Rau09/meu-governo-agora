@@ -2,19 +2,19 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { responder } from "@/lib/assistente";
+import { responder } from "@/lib/cantu-ia";
 
 
 export const Route = createFileRoute("/atendimento")({
   head: () => ({
     meta: [
-      { title: "Atendimento 24/7 — QI Cidadão" },
+      { title: "Atendimento 24/7 — Cantu Conecta" },
       {
         name: "description",
-        content: "Assistente virtual da Prefeitura de Quedas do Iguaçu disponível 24 horas para tirar dúvidas e resolver serviços.",
+        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
       },
-      { property: "og:title", content: "Atendimento 24/7 — QI Cidadão" },
-      { property: "og:description", content: "Respostas imediatas sobre saúde, educação e serviços urbanos, a qualquer hora." },
+      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
+      { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
     ],
   }),
   component: Atendimento,
@@ -46,7 +46,7 @@ function Atendimento() {
     {
       de: "bot",
       texto:
-        "Olá! Sou a assistente virtual da Prefeitura de Quedas do Iguaçu. Estou disponível 24 horas. Como posso ajudar?",
+        "Olá! Sou a assistente do Cantu Conecta. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
     },
   ]);
   const [texto, setTexto] = useState("");
@@ -74,13 +74,13 @@ function Atendimento() {
       <div className="-mt-5 space-y-3 px-4">
         <div className="grid grid-cols-3 gap-2">
           <a
-            href="https://wa.me/554635320000"
+            href="https://wa.me/554699999999"
             className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl bg-success text-[11px] font-bold text-success-foreground shadow-card"
           >
             <MessageCircle className="size-5" /> WhatsApp
           </a>
           <a
-            href="tel:+554635320000"
+            href="tel:+554699999999"
             className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl bg-card text-[11px] font-bold shadow-card"
           >
             <Phone className="size-5" /> Ligar

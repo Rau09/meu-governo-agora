@@ -1,11 +1,10 @@
-import { MEDICAMENTOS, statusMedicamento, type Ocorrencia, type StatusOcorrencia } from "@/lib/city-store";
+import { MEDICAMENTOS, statusMedicamento, type Ocorrencia, type StatusOcorrencia } from "@/lib/cantu-store";
 
 /**
- * Camada de inteligência do Painel de Gestão.
+ * Camada de inteligência regional do Cantu Conecta.
  *
- * Junta as solicitações reais (feitas pelo cidadão e salvas no aparelho) com um
- * conjunto demonstrativo coerente, e deriva tudo a partir da MESMA lista:
- * resumo, alertas, prioridades, mapa, indicadores e análise da IA.
+ * Consolida solicitações reais e dados demonstrativos para a região Cantuquiriguaçu,
+ * derivando análises inteligentes para gestão pública eficiente.
  */
 
 /* ---------- Tipos ---------- */
@@ -176,7 +175,7 @@ function gerarDemo(): OcorrenciaGestao[] {
     const bairro = BAIRROS.find((b) => b.nome === p.bairro)!;
     const textos = DESCRICOES[p.categoria] ?? DESCRICOES["Outro"]!;
     return {
-      protocolo: `QI-2026-D${String(i + 1).padStart(3, "0")}`,
+      protocolo: `CANTU-2026-D${String(i + 1).padStart(3, "0")}`,
       categoria: p.categoria,
       bairro: p.bairro,
       lat: bairro.lat + (r() - 0.5) * 0.012,
@@ -197,7 +196,7 @@ function gerarDemo(): OcorrenciaGestao[] {
     const categoria = cats[Math.floor(r() * cats.length)]!;
     const bairro = BAIRROS[Math.floor(r() * BAIRROS.length)]!;
     resolvidas.push({
-      protocolo: `QI-2026-R${String(i + 1).padStart(3, "0")}`,
+      protocolo: `CANTU-2026-R${String(i + 1).padStart(3, "0")}`,
       categoria,
       bairro: bairro.nome,
       lat: bairro.lat + (r() - 0.5) * 0.012,
@@ -532,7 +531,7 @@ export function responderIA(id: string, lista: OcorrenciaGestao[]): string {
   }
   if (id === "bairro") {
     const b = concentracao(lista)[0];
-    return `${b?.bairro ?? "Centro"} é o bairro que mais precisa de atenção: ${b?.qtd ?? 0} ocorrências ativas (${b?.pct ?? 0}% do total da cidade).`;
+    return `${b?.bairro ?? "Centro"} é o bairro que mais precisa de atenção: ${b?.qtd ?? 0} ocorrências ativas (${b?.pct ?? 0}% do total regional).`;
   }
   if (id === "atrasados") {
     const atr = ativos.filter(atrasada);

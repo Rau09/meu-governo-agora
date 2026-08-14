@@ -12,10 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgendamentoRouteImport } from './routes/agendamento'
 import { Route as AtendimentoRouteImport } from './routes/atendimento'
+import { Route as CausaAnimalRouteImport } from './routes/causa-animal'
+import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as GestaoRouteImport } from './routes/gestao'
 import { Route as MedicamentosRouteImport } from './routes/medicamentos'
 import { Route as OcorrenciaRouteImport } from './routes/ocorrencia'
+import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as RegistroRouteImport } from './routes/registro'
+import { Route as SaudeRouteImport } from './routes/saude'
 import { Route as ServicosRouteImport } from './routes/servicos'
 
 const IndexRoute = IndexRouteImport.update({
@@ -33,6 +37,16 @@ const AtendimentoRoute = AtendimentoRouteImport.update({
   path: '/atendimento',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CausaAnimalRoute = CausaAnimalRouteImport.update({
+  id: '/causa-animal',
+  path: '/causa-animal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunidadeRoute = ComunidadeRouteImport.update({
+  id: '/comunidade',
+  path: '/comunidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GestaoRoute = GestaoRouteImport.update({
   id: '/gestao',
   path: '/gestao',
@@ -48,9 +62,19 @@ const OcorrenciaRoute = OcorrenciaRouteImport.update({
   path: '/ocorrencia',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegistroRoute = RegistroRouteImport.update({
   id: '/registro',
   path: '/registro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SaudeRoute = SaudeRouteImport.update({
+  id: '/saude',
+  path: '/saude',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicosRoute = ServicosRouteImport.update({
@@ -63,20 +87,28 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
+  '/causa-animal': typeof CausaAnimalRoute
+  '/comunidade': typeof ComunidadeRoute
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
+  '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
+  '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
+  '/causa-animal': typeof CausaAnimalRoute
+  '/comunidade': typeof ComunidadeRoute
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
+  '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
+  '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
 }
 export interface FileRoutesById {
@@ -84,10 +116,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
+  '/causa-animal': typeof CausaAnimalRoute
+  '/comunidade': typeof ComunidadeRoute
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
+  '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
+  '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
 }
 export interface FileRouteTypes {
@@ -96,30 +132,42 @@ export interface FileRouteTypes {
     | '/'
     | '/agendamento'
     | '/atendimento'
+    | '/causa-animal'
+    | '/comunidade'
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
+    | '/perfil'
     | '/registro'
+    | '/saude'
     | '/servicos'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/agendamento'
     | '/atendimento'
+    | '/causa-animal'
+    | '/comunidade'
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
+    | '/perfil'
     | '/registro'
+    | '/saude'
     | '/servicos'
   id:
     | '__root__'
     | '/'
     | '/agendamento'
     | '/atendimento'
+    | '/causa-animal'
+    | '/comunidade'
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
+    | '/perfil'
     | '/registro'
+    | '/saude'
     | '/servicos'
   fileRoutesById: FileRoutesById
 }
@@ -127,10 +175,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgendamentoRoute: typeof AgendamentoRoute
   AtendimentoRoute: typeof AtendimentoRoute
+  CausaAnimalRoute: typeof CausaAnimalRoute
+  ComunidadeRoute: typeof ComunidadeRoute
   GestaoRoute: typeof GestaoRoute
   MedicamentosRoute: typeof MedicamentosRoute
   OcorrenciaRoute: typeof OcorrenciaRoute
+  PerfilRoute: typeof PerfilRoute
   RegistroRoute: typeof RegistroRoute
+  SaudeRoute: typeof SaudeRoute
   ServicosRoute: typeof ServicosRoute
 }
 
@@ -157,6 +209,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AtendimentoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/causa-animal': {
+      id: '/causa-animal'
+      path: '/causa-animal'
+      fullPath: '/causa-animal'
+      preLoaderRoute: typeof CausaAnimalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunidade': {
+      id: '/comunidade'
+      path: '/comunidade'
+      fullPath: '/comunidade'
+      preLoaderRoute: typeof ComunidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gestao': {
       id: '/gestao'
       path: '/gestao'
@@ -178,11 +244,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OcorrenciaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/registro': {
       id: '/registro'
       path: '/registro'
       fullPath: '/registro'
       preLoaderRoute: typeof RegistroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saude': {
+      id: '/saude'
+      path: '/saude'
+      fullPath: '/saude'
+      preLoaderRoute: typeof SaudeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/servicos': {
@@ -199,10 +279,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgendamentoRoute: AgendamentoRoute,
   AtendimentoRoute: AtendimentoRoute,
+  CausaAnimalRoute: CausaAnimalRoute,
+  ComunidadeRoute: ComunidadeRoute,
   GestaoRoute: GestaoRoute,
   MedicamentosRoute: MedicamentosRoute,
   OcorrenciaRoute: OcorrenciaRoute,
+  PerfilRoute: PerfilRoute,
   RegistroRoute: RegistroRoute,
+  SaudeRoute: SaudeRoute,
   ServicosRoute: ServicosRoute,
 }
 export const routeTree = rootRouteImport

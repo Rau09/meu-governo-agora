@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, CalendarDays, LayoutGrid, MessageCircle, Building2 } from "lucide-react";
+import { Home, Stethoscope, PawPrint, MapPin, MessageCircle, UserRound, Building2 } from "lucide-react";
 import { LibrasAvatar } from "./LibrasAvatar";
 
 const nav = [
   { to: "/", label: "Início", icon: Home },
-  { to: "/servicos", label: "Serviços", icon: LayoutGrid },
-  { to: "/agendamento", label: "Agendar", icon: CalendarDays },
-  { to: "/atendimento", label: "Atendimento", icon: MessageCircle },
-  { to: "/gestao", label: "Gestão", icon: Building2 },
+  { to: "/saude", label: "Saúde", icon: Stethoscope },
+  { to: "/causa-animal", label: "Animal", icon: PawPrint },
+  { to: "/comunidade", label: "Cidade", icon: MapPin },
+  { to: "/perfil", label: "Perfil", icon: UserRound },
 ] as const;
 
 export function AppShell({
@@ -56,13 +56,23 @@ export function AppShell({
 }
 
 export function TopBar({ titulo, subtitulo }: { titulo: string; subtitulo?: string }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  
   return (
-    <header className="bg-hero px-5 pb-8 pt-10 text-primary-foreground">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
-        Quedas do Iguaçu · PR
-      </p>
+    <header className="bg-hero px-5 pb-8 pt-10 text-primary-foreground relative">
+      <div className="flex justify-between items-start mb-2">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">
+          Cantuquiriguaçu · PR
+        </p>
+        {pathname !== "/gestao" && (
+           <Link to="/gestao" className="opacity-40 hover:opacity-100 transition-opacity">
+             <Building2 className="size-4" />
+           </Link>
+        )}
+      </div>
       <h1 className="mt-1 text-2xl font-bold">{titulo}</h1>
       {subtitulo && <p className="mt-1 text-sm opacity-90">{subtitulo}</p>}
     </header>
   );
 }
+
