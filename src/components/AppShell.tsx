@@ -59,7 +59,7 @@ export function TopBar({ titulo, subtitulo }: { titulo: string; subtitulo?: stri
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   
   return (
-    <header className="bg-hero px-5 pb-8 pt-10 text-primary-foreground relative">
+    <header className="bg-hero px-5 pb-8 pt-10 text-primary-foreground">
       <div className="flex justify-between items-start mb-2">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">
           Cantuquiriguaçu · PR
