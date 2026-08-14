@@ -230,7 +230,7 @@ function Painel({ onSair }: { onSair: () => void }) {
       label: "Solicitações abertas",
       nota: `${resumo.variacaoAbertas >= 0 ? "↑" : "↓"} ${Math.abs(resumo.variacaoAbertas)}% vs. mês anterior`,
       tom: "text-primary",
-      itens: ativos.filter((o) => o.status === "pendente" || o.status === "analise"),
+      itens: ativos.filter((o) => o.status === "recebido" || o.status === "analise"),
     },
     {
       icon: Users,
@@ -238,7 +238,7 @@ function Painel({ onSair }: { onSair: () => void }) {
       label: "Em execução",
       nota: "equipes em campo",
       tom: "text-primary",
-      itens: ativos.filter((o) => o.status === "execucao"),
+      itens: ativos.filter((o) => o.status === "andamento"),
     },
     {
       icon: Clock3,
