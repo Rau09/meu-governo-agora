@@ -46,7 +46,7 @@ function Atendimento() {
     {
       de: "bot",
       texto:
-        "Olá! Sou a assistente virtual da Prefeitura de Quedas do Iguaçu. Estou disponível 24 horas. Como posso ajudar?",
+        "Olá! Sou a assistente do Cantu Conecta. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
     },
   ]);
   const [texto, setTexto] = useState("");
