@@ -31,6 +31,8 @@ const sugestoes = [
   "Tem buraco na minha rua",
   "Segunda via do IPTU",
   "Andamento do meu protocolo",
+  "Quero adotar um cachorro",
+  "Como denunciar maus-tratos?",
   "Vaga em creche",
   "Horário de atendimento",
 ];

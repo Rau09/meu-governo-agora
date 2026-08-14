@@ -77,6 +77,14 @@ const REGRAS: Regra[] = [
       acao: { rotulo: "Ir para Agendar", para: "/agendamento" },
     },
   },
+  {
+    chaves: ["animal", "animais", "cachorro", "cao", "gato", "pet", "adocao", "maus", "tratos", "denuncia", "castracao", "vacinacao", "animal", "protecao"],
+    resposta: {
+      texto:
+        "O Cantu Conecta apoia a Causa Animal! Na aba Animal você pode ver pets para adoção, registrar animais perdidos ou denunciar maus-tratos. Denúncias geram um protocolo para acompanhamento da prefeitura.",
+      acao: { rotulo: "Causa Animal", para: "/causa-animal" },
+    },
+  },
 ];
 
 const CHAVES_MEDICAMENTO = [
@@ -86,7 +94,10 @@ const CHAVES_MEDICAMENTO = [
 const CHAVES_PROBLEMA = [
   "buraco", "lixo", "entulho", "poste", "lampada", "luz", "iluminacao", "poda", "arvore", "vazamento",
   "esgoto", "rua", "via", "problema", "reclamar", "reclamacao", "denunciar", "comunicar", "asfalto",
+  "animal", "maus-tratos", "cachorro", "gato", "pet",
 ];
+
+const CHAVES_ANIMAL = ["animal", "animais", "cachorro", "cao", "gato", "pet", "adocao", "maus", "tratos", "denuncia", "castracao", "protecao"];
 
 const CHAVES_PROTOCOLO = ["protocolo", "solicitacao", "chamado", "andamento", "status", "acompanhar"];
 
@@ -179,6 +190,14 @@ export function responder(pergunta: string): Resposta {
       texto:
         "Use Comunicar Problema: escolha o tipo (buraco, poste, árvore caída, lixo, via, vazamento ou outro), tire uma foto, ative o GPS e descreva. Você recebe um protocolo na hora.",
       acao: { rotulo: "Comunicar problema", para: "/ocorrencia" },
+    };
+  }
+
+  if (t.some((x) => CHAVES_ANIMAL.includes(x))) {
+    return {
+      texto:
+        "Para assuntos animais, você pode:\n1. Adotar um pet em Causa Animal.\n2. Denunciar maus-tratos em Comunicar Problema (selecione Causa Animal).\n3. Ver campanhas de castração e vacinação regional.",
+      acao: { rotulo: "Causa Animal", para: "/causa-animal" },
     };
   }
 
