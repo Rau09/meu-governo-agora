@@ -65,7 +65,7 @@ const Atendimento = memo(function Atendimento() {
     <AppShell librasMensagem="Atendimento 24 horas. Escreva sua dúvida e a assistente responde na hora.">
       <TopBar titulo="Atendimento 24/7" subtitulo="Assistente virtual sempre disponível" />
 
-      <div className="relative z-0 -mt-5 space-y-3 px-4">
+      <div className="-mt-5 space-y-3 px-4">
         <div className="grid grid-cols-3 gap-2">
           <a
             href="https://wa.me/554699999999"
