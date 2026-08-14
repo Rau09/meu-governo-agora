@@ -179,59 +179,58 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
 
 function SignerFigure({ pose }: { pose: Pose }) {
   return (
-    <svg
-      viewBox="0 0 120 150"
-      className="h-44 w-36 drop-shadow-md"
-      role="img"
-      aria-label="Avatar sinalizando em Libras"
-    >
-      <ellipse cx="60" cy="142" rx="30" ry="5" fill="currentColor" className="text-muted-foreground/25" />
-
-      <g
+    <div className="relative h-44 w-36 drop-shadow-lg perspective-1000">
+      <div 
+        className="relative w-full h-full preserve-3d"
         style={{
-          transform: `rotate(${pose.tronco ?? 0}deg)`,
-          transformOrigin: "60px 120px",
+          transform: `rotateY(${pose.tronco ?? 0}deg) translateY(${Math.sin(Date.now() / 500) * 2}px)`,
           transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        {/* Usar a imagem do avatar como o corpo/rosto central */}
-        <defs>
-          <clipPath id="avatarClip">
-            <circle cx="60" cy="65" r="45" />
-          </clipPath>
-        </defs>
+        {/* Sombra no chão */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
         
-        {/* Fundo do corpo para dar contraste */}
-        <circle cx="60" cy="65" r="46" className="fill-white" />
-        
-        {/* Imagem do Avatar Centralizada */}
-        <image 
-          href={avatarAsset.url} 
-          x="15" 
-          y="20" 
-          width="90" 
-          height="90" 
-          clipPath="url(#avatarClip)"
-        />
+        {/* Imagem do Personagem com Máscara Complexa para parecer 3D/Real */}
+        <div className="relative w-full h-full z-10 overflow-hidden rounded-b-2xl">
+          <img 
+            src={avatarAsset.url} 
+            alt="Personagem Real" 
+            className="w-full h-full object-cover scale-110 translate-y-2"
+          />
+        </div>
 
-        {/* Braço esquerdo (à direita na tela) */}
-        <Braco
-          x={85}
-          y={80}
-          rotacao={pose.bracoEsq}
-          cotovelo={pose.coveloEsq}
-          config={pose.maoEsq}
-        />
-        {/* Braço direito (à esquerda na tela) */}
-        <Braco
-          x={35}
-          y={80}
-          rotacao={pose.bracoDir}
-          cotovelo={pose.coveloDir}
-          config={pose.maoDir}
-        />
-      </g>
-    </svg>
+        {/* Braços e mãos articuladas sobrepostos à imagem para parecer que o boneco está sinalizando */}
+        <svg
+          viewBox="0 0 120 150"
+          className="absolute inset-0 z-20 pointer-events-none"
+        >
+          <g
+            style={{
+              transform: `rotate(${pose.tronco ?? 0}deg)`,
+              transformOrigin: "60px 120px",
+              transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}
+          >
+            {/* Braço esquerdo (à direita na tela) - Tons de pele realistas */}
+            <Braco
+              x={92}
+              y={75}
+              rotacao={pose.bracoEsq}
+              cotovelo={pose.coveloEsq}
+              config={pose.maoEsq}
+            />
+            {/* Braço direito (à esquerda na tela) */}
+            <Braco
+              x={28}
+              y={75}
+              rotacao={pose.bracoDir}
+              cotovelo={pose.coveloDir}
+              config={pose.maoDir}
+            />
+          </g>
+        </svg>
+      </div>
+    </div>
   );
 }
 
@@ -251,6 +250,7 @@ function Braco({
   // O braço em repouso aponta para baixo; ampliamos o ângulo para que os sinais
   // aconteçam na altura do peito e do rosto, como na sinalização real.
   // Ajuste de ângulos para que a sinalização aconteça na região da barriga/peito
+  // Braços com tons de pele mais realistas (D4A373 para sombras e F5D5B8 base)
   const ombro = rotacao * 1.6;
   const flexao = cotovelo * 1.1;
   const transicao = "transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1)";
@@ -262,19 +262,27 @@ function Braco({
       }}
     >
       {/* ombro → cotovelo */}
-      <rect x={-5} y={-4} width={10} height={26} rx={5} fill="#F5D5B8" />
+      <rect x={-6} y={-4} width={12} height={28} rx={6} fill="#F5D5B8" />
+      <rect x={-6} y={-4} width={12} height={28} rx={6} fill="url(#skinGradient)" opacity="0.4" />
       <g
         style={{
-          transform: `translate(0px, 22px) rotate(${flexao}deg)`,
+          transform: `translate(0px, 24px) rotate(${flexao}deg)`,
           transition: transicao,
         }}
       >
         {/* antebraço */}
-        <rect x={-4.5} y={-3} width={9} height={22} rx={4.5} fill="#F5D5B8" />
-        <g style={{ transform: "translate(0px, 20px)" }}>
+        <rect x={-5.5} y={-3} width={11} height={24} rx={5.5} fill="#F5D5B8" />
+        <rect x={-5.5} y={-3} width={11} height={24} rx={5.5} fill="url(#skinGradient)" opacity="0.4" />
+        <g style={{ transform: "translate(0px, 22px)" }}>
           <Mao config={config} />
         </g>
       </g>
+      <defs>
+        <linearGradient id="skinGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#D4A373" />
+          <stop offset="100%" stopColor="transparent" />
+        </linearGradient>
+      </defs>
     </g>
   );
 }
@@ -285,40 +293,40 @@ function Mao({ config }: { config: Configuracao }) {
   const transicao = "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), height 350ms ease-in-out";
 
   const dedos: { dx: number; ext: number; alturaMax: number }[] = [
-    { dx: -3.6, ext: indicador, alturaMax: 9 },
-    { dx: -1.2, ext: medio, alturaMax: 10 },
-    { dx: 1.2, ext: anelar, alturaMax: 9 },
-    { dx: 3.6, ext: minimo, alturaMax: 7.5 },
+    { dx: -4, ext: indicador, alturaMax: 10 },
+    { dx: -1.4, ext: medio, alturaMax: 11 },
+    { dx: 1.4, ext: anelar, alturaMax: 10 },
+    { dx: 4, ext: minimo, alturaMax: 8.5 },
   ];
 
   return (
     <g>
       {/* palma */}
-      <rect x={-5} y={-2} width={10} height={9} rx={3.5} fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.5" />
+      <rect x={-6} y={-2} width={12} height={10} rx={4} fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.5" />
       {/* dedos */}
       {dedos.map((d, i) => {
-        const h = 2.4 + d.ext * d.alturaMax;
+        const h = 2.8 + d.ext * d.alturaMax;
         return (
           <rect
             key={i}
-            x={d.dx - 1.1}
-            y={5 - h + 2}
-            width={2.2}
+            x={d.dx - 1.25}
+            y={5 - h + 2.5}
+            width={2.5}
             height={h}
-            rx={1.1}
-            fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.3"
+            rx={1.25}
+            fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.4"
             style={{ transition: transicao }}
           />
         );
       })}
       {/* polegar */}
       <rect
-        x={-8.2}
+        x={-9}
         y={0}
-        width={2.4}
-        height={2.4 + polegar * 6.5}
-        rx={1.2}
-        fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.3"
+        width={2.8}
+        height={2.8 + polegar * 7.5}
+        rx={1.4}
+        fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.4"
         style={{
           transform: `rotate(${25 - polegar * 45}deg)`,
           transformOrigin: "-7px 2px",
