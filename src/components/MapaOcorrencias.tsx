@@ -127,11 +127,13 @@ export function MapaOcorrencias({
               aria-label={`${o.categoria} em ${o.bairro}`}
               style={pos(o)}
               className={`absolute flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border text-[12px] shadow-card transition-transform duration-200 hover:scale-125 active:scale-95 ${
-                n === "critico"
-                  ? "border-destructive bg-destructive/15"
-                  : n === "alta"
-                    ? "border-accent bg-accent-soft"
-                    : "border-border bg-card"
+                o.status === "resolvido"
+                  ? "border-success bg-success/10 opacity-60"
+                  : n === "critico"
+                    ? "border-destructive bg-destructive/15 animate-pulse"
+                    : n === "alta"
+                      ? "border-accent bg-accent-soft"
+                      : "border-border bg-card"
               } ${realce ? "ring-2 ring-primary" : ""} ${sel?.protocolo === o.protocolo ? "scale-125 ring-2 ring-primary" : ""}`}
             >
               {metaCategoria(o.categoria).emoji}

@@ -245,8 +245,16 @@ function Painel({ onSair }: { onSair: () => void }) {
       valor: resumo.atrasadas,
       label: "Atrasadas",
       nota: "⚠️ precisam de atenção",
-      tom: "text-destructive",
+      tom: "text-destructive font-bold",
       itens: ativos.filter(atrasada),
+    },
+    {
+      icon: AlertTriangle,
+      valor: resumo.criticas,
+      label: "Gravidade Alta",
+      nota: "prioridade total",
+      tom: "text-destructive",
+      itens: ativos.filter((o) => nivelOcorrencia(o) === "critico"),
     },
     {
       icon: CheckCircle2,
