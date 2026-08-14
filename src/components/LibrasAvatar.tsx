@@ -179,59 +179,58 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
 
 function SignerFigure({ pose }: { pose: Pose }) {
   return (
-    <svg
-      viewBox="0 0 120 150"
-      className="h-44 w-36 drop-shadow-md"
-      role="img"
-      aria-label="Avatar sinalizando em Libras"
-    >
-      <ellipse cx="60" cy="142" rx="30" ry="5" fill="currentColor" className="text-muted-foreground/25" />
-
-      <g
+    <div className="relative h-44 w-36 drop-shadow-lg perspective-1000">
+      <div 
+        className="relative w-full h-full preserve-3d"
         style={{
-          transform: `rotate(${pose.tronco ?? 0}deg)`,
-          transformOrigin: "60px 120px",
+          transform: `rotateY(${pose.tronco ?? 0}deg) translateY(${Math.sin(Date.now() / 500) * 2}px)`,
           transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        {/* Usar a imagem do avatar como o corpo/rosto central */}
-        <defs>
-          <clipPath id="avatarClip">
-            <circle cx="60" cy="65" r="45" />
-          </clipPath>
-        </defs>
+        {/* Sombra no chão */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
         
-        {/* Fundo do corpo para dar contraste */}
-        <circle cx="60" cy="65" r="46" className="fill-white" />
-        
-        {/* Imagem do Avatar Centralizada */}
-        <image 
-          href={avatarAsset.url} 
-          x="15" 
-          y="20" 
-          width="90" 
-          height="90" 
-          clipPath="url(#avatarClip)"
-        />
+        {/* Imagem do Personagem com Máscara Complexa para parecer 3D/Real */}
+        <div className="relative w-full h-full z-10 overflow-hidden rounded-b-2xl">
+          <img 
+            src={avatarAsset.url} 
+            alt="Personagem Real" 
+            className="w-full h-full object-cover scale-110 translate-y-2"
+          />
+        </div>
 
-        {/* Braço esquerdo (à direita na tela) */}
-        <Braco
-          x={85}
-          y={80}
-          rotacao={pose.bracoEsq}
-          cotovelo={pose.coveloEsq}
-          config={pose.maoEsq}
-        />
-        {/* Braço direito (à esquerda na tela) */}
-        <Braco
-          x={35}
-          y={80}
-          rotacao={pose.bracoDir}
-          cotovelo={pose.coveloDir}
-          config={pose.maoDir}
-        />
-      </g>
-    </svg>
+        {/* Braços e mãos articuladas sobrepostos à imagem para parecer que o boneco está sinalizando */}
+        <svg
+          viewBox="0 0 120 150"
+          className="absolute inset-0 z-20 pointer-events-none"
+        >
+          <g
+            style={{
+              transform: `rotate(${pose.tronco ?? 0}deg)`,
+              transformOrigin: "60px 120px",
+              transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}
+          >
+            {/* Braço esquerdo (à direita na tela) - Tons de pele realistas */}
+            <Braco
+              x={92}
+              y={75}
+              rotacao={pose.bracoEsq}
+              cotovelo={pose.coveloEsq}
+              config={pose.maoEsq}
+            />
+            {/* Braço direito (à esquerda na tela) */}
+            <Braco
+              x={28}
+              y={75}
+              rotacao={pose.bracoDir}
+              cotovelo={pose.coveloDir}
+              config={pose.maoDir}
+            />
+          </g>
+        </svg>
+      </div>
+    </div>
   );
 }
 
