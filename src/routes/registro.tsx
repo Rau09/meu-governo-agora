@@ -188,7 +188,7 @@ function Registro() {
       cpf: form.cpf,
       telefone: form.telefone,
       bairro: form.bairro.trim().slice(0, 60),
-      municipio: form.municipio,
+      municipio: form.municipio || MUNICIPIOS_CANTU[0],
       estado: form.estado,
       preferencias: form.preferencias,
       salt,
