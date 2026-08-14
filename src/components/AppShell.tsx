@@ -23,7 +23,7 @@ export const AppShell = memo(function AppShell({
   return (
     <div className="min-h-dvh bg-secondary/40">
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float">
-        <main className="pb-28">{children}</main>
+        <main className="pb-32 overflow-x-hidden">{children}</main>
 
         <nav
           aria-label="Navegação principal"
@@ -60,7 +60,7 @@ export const TopBar = memo(function TopBar({ titulo, subtitulo }: { titulo: stri
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   
   return (
-    <header className="bg-hero px-5 pb-8 pt-10 text-primary-foreground transform-gpu">
+    <header className="sticky top-0 z-40 bg-hero px-5 pb-8 pt-10 text-primary-foreground transform-gpu shadow-lg">
       <div className="flex justify-between items-start mb-2">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">
           Cantuquiriguaçu · PR
