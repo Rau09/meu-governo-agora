@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Sparkles,
   X,
+  AlertTriangle,
 } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { MapaOcorrencias } from "@/components/MapaOcorrencias";
