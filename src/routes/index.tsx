@@ -11,6 +11,7 @@ import {
   Activity,
   ShieldCheck,
   Bell,
+  Building2,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useAgendamentos, useCidadao, useOcorrencias } from "@/lib/cantu-store";
@@ -44,6 +45,7 @@ const acoesRapidas = [
   { to: "/atendimento", label: "Assistente", icon: MessageCircle },
   { to: "/ocorrencia", label: "Problemas", icon: MapPin },
   { to: "/medicamentos", label: "Remédios", icon: Search },
+  { to: "/comunidade", label: "Cidade", icon: Building2 },
 ] as const;
 
 function Inicio() {
@@ -108,7 +110,7 @@ function Inicio() {
       </section>
 
       <section className="mt-8 px-5">
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-5 gap-1.5">
           {acoesRapidas.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
