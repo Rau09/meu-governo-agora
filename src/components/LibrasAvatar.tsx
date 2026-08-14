@@ -250,6 +250,7 @@ function Braco({
   // O braço em repouso aponta para baixo; ampliamos o ângulo para que os sinais
   // aconteçam na altura do peito e do rosto, como na sinalização real.
   // Ajuste de ângulos para que a sinalização aconteça na região da barriga/peito
+  // Braços com tons de pele mais realistas (D4A373 para sombras e F5D5B8 base)
   const ombro = rotacao * 1.6;
   const flexao = cotovelo * 1.1;
   const transicao = "transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1)";
@@ -261,19 +262,27 @@ function Braco({
       }}
     >
       {/* ombro → cotovelo */}
-      <rect x={-5} y={-4} width={10} height={26} rx={5} fill="#F5D5B8" />
+      <rect x={-6} y={-4} width={12} height={28} rx={6} fill="#F5D5B8" />
+      <rect x={-6} y={-4} width={12} height={28} rx={6} fill="url(#skinGradient)" opacity="0.4" />
       <g
         style={{
-          transform: `translate(0px, 22px) rotate(${flexao}deg)`,
+          transform: `translate(0px, 24px) rotate(${flexao}deg)`,
           transition: transicao,
         }}
       >
         {/* antebraço */}
-        <rect x={-4.5} y={-3} width={9} height={22} rx={4.5} fill="#F5D5B8" />
-        <g style={{ transform: "translate(0px, 20px)" }}>
+        <rect x={-5.5} y={-3} width={11} height={24} rx={5.5} fill="#F5D5B8" />
+        <rect x={-5.5} y={-3} width={11} height={24} rx={5.5} fill="url(#skinGradient)" opacity="0.4" />
+        <g style={{ transform: "translate(0px, 22px)" }}>
           <Mao config={config} />
         </g>
       </g>
+      <defs>
+        <linearGradient id="skinGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#D4A373" />
+          <stop offset="100%" stopColor="transparent" />
+        </linearGradient>
+      </defs>
     </g>
   );
 }
@@ -284,40 +293,40 @@ function Mao({ config }: { config: Configuracao }) {
   const transicao = "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), height 350ms ease-in-out";
 
   const dedos: { dx: number; ext: number; alturaMax: number }[] = [
-    { dx: -3.6, ext: indicador, alturaMax: 9 },
-    { dx: -1.2, ext: medio, alturaMax: 10 },
-    { dx: 1.2, ext: anelar, alturaMax: 9 },
-    { dx: 3.6, ext: minimo, alturaMax: 7.5 },
+    { dx: -4, ext: indicador, alturaMax: 10 },
+    { dx: -1.4, ext: medio, alturaMax: 11 },
+    { dx: 1.4, ext: anelar, alturaMax: 10 },
+    { dx: 4, ext: minimo, alturaMax: 8.5 },
   ];
 
   return (
     <g>
       {/* palma */}
-      <rect x={-5} y={-2} width={10} height={9} rx={3.5} fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.5" />
+      <rect x={-6} y={-2} width={12} height={10} rx={4} fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.5" />
       {/* dedos */}
       {dedos.map((d, i) => {
-        const h = 2.4 + d.ext * d.alturaMax;
+        const h = 2.8 + d.ext * d.alturaMax;
         return (
           <rect
             key={i}
-            x={d.dx - 1.1}
-            y={5 - h + 2}
-            width={2.2}
+            x={d.dx - 1.25}
+            y={5 - h + 2.5}
+            width={2.5}
             height={h}
-            rx={1.1}
-            fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.3"
+            rx={1.25}
+            fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.4"
             style={{ transition: transicao }}
           />
         );
       })}
       {/* polegar */}
       <rect
-        x={-8.2}
+        x={-9}
         y={0}
-        width={2.4}
-        height={2.4 + polegar * 6.5}
-        rx={1.2}
-        fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.3"
+        width={2.8}
+        height={2.8 + polegar * 7.5}
+        rx={1.4}
+        fill="#F5D5B8" stroke="#D4A373" strokeWidth="0.4"
         style={{
           transform: `rotate(${25 - polegar * 45}deg)`,
           transformOrigin: "-7px 2px",
