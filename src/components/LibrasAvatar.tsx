@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Hand, X, Play, Pause, RotateCcw } from "lucide-react";
 import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } from "@/lib/libras";
-import avatarAsset from "@/assets/monkey_avatar.jpg.asset.json";
+import avatarAsset from "@/assets/avatar_libras.jpeg.asset.json";
 
 
 /**
