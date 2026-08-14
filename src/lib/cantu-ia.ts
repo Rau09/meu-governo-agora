@@ -76,6 +76,7 @@ const REGRAS: Regra[] = [
         "Para marcar, cancelar ou ver seus horários, use a aba Agendar. Ali aparecem também os atendimentos já confirmados.",
       acao: { rotulo: "Ir para Agendar", para: "/agendamento" },
     },
+  },
   {
     chaves: ["animal", "animais", "cachorro", "cao", "gato", "pet", "adocao", "maus", "tratos", "denuncia", "castracao", "vacinacao", "animal", "protecao"],
     resposta: {
