@@ -20,10 +20,8 @@ export const Route = createFileRoute("/atendimento")({
       { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
     ],
   }),
-  component: AtendimentoPage,
+  component: Atendimento,
 });
-
-function AtendimentoPage() {
 
 type Msg = { de: "bot" | "eu"; texto: string; acao?: { rotulo: string; para: string } };
 
@@ -47,8 +45,7 @@ const atalhos = [
   { icon: GraduationCap, titulo: "Escola", texto: "Vaga em creche" },
 ];
 
-
-function Atendimento() {
+const Atendimento = memo(function Atendimento() {
   const { protocolo } = Route.useSearch();
   const [msgs, setMsgs] = useState<Msg[]>([
     {
@@ -211,4 +208,4 @@ function Atendimento() {
       </form>
     </AppShell>
   );
-}
+});
