@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Hand, X, Play, Pause, RotateCcw } from "lucide-react";
 import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } from "@/lib/libras";
-import avatarAsset from "@/assets/monkey_avatar.jpg.asset.json";
+import avatarAsset from "@/assets/avatar_libras.jpeg.asset.json";
 
 
 /**
@@ -191,14 +191,14 @@ function SignerFigure({ pose }: { pose: Pose }) {
         {/* Sombra no chão */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
         
-        {/* Personagem do Macaco 3D Realista */}
-        <div className="relative w-full h-full z-10 overflow-hidden rounded-2xl border-2 border-white/50 shadow-2xl bg-black/5">
+        {/* Personagem Humano Realista */}
+        <div className="relative w-full h-full z-10 overflow-hidden rounded-2xl border-2 border-white/50 shadow-2xl bg-white/5">
           <img 
             src={avatarAsset.url} 
-            alt="Macaco Intérprete 3D" 
-            className="w-full h-full object-cover scale-125 object-center"
+            alt="Intérprete de Libras" 
+            className="w-full h-full object-cover scale-110 object-top"
             style={{
-              filter: "drop-shadow(0 10px 8px rgb(0 0 0 / 0.15)) contrast(1.1)",
+              filter: "contrast(1.05) saturate(1.1)",
             }}
           />
         </div>
@@ -215,14 +215,14 @@ function SignerFigure({ pose }: { pose: Pose }) {
               transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
-            {/* Braço esquerdo (à direita na tela) - Tons mais escuros para o macaco */}
+            {/* Braço esquerdo (à direita na tela) - Tons de pele humana */}
             <Braco
               x={95}
               y={80}
               rotacao={pose.bracoEsq}
               cotovelo={pose.coveloEsq}
               config={pose.maoEsq}
-              color="#5D4037"
+              color="#F5D5B8"
             />
             {/* Braço direito (à esquerda na tela) */}
             <Braco
@@ -231,7 +231,7 @@ function SignerFigure({ pose }: { pose: Pose }) {
               rotacao={pose.bracoDir}
               cotovelo={pose.coveloDir}
               config={pose.maoDir}
-              color="#5D4037"
+              color="#F5D5B8"
             />
           </g>
         </svg>
