@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Hand, X, Play, Pause, RotateCcw } from "lucide-react";
 import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } from "@/lib/libras";
-import avatarAsset from "@/assets/avatar_libras.jpeg.asset.json";
 
 
 /**
@@ -191,17 +190,17 @@ function SignerFigure({ pose }: { pose: Pose }) {
         {/* Sombra no chão */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
         
-        {/* Personagem Humano Realista */}
-        <div className="relative w-full h-full z-10 overflow-hidden rounded-2xl border-2 border-white/50 shadow-2xl bg-white/5">
-          <img 
-            src={avatarAsset.url} 
-            alt="Intérprete de Libras" 
-            className="w-full h-full object-cover scale-110 object-top"
-            style={{
-              filter: "contrast(1.05) saturate(1.1)",
-            }}
-          />
-        </div>
+        {/* Tronco Humano Estilizado (SVG) */}
+        <svg viewBox="0 0 120 150" className="relative w-full h-full z-10 drop-shadow-sm">
+          {/* Cabeça */}
+          <circle cx="60" cy="35" r="18" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
+          {/* Cabelo */}
+          <path d="M45 25 Q60 15 75 25 Q75 35 60 40 Q45 35 45 25" fill="#4A3728" />
+          {/* Tronco */}
+          <path d="M35 60 Q60 55 85 60 L90 130 Q60 135 30 130 Z" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
+          {/* Roupas */}
+          <path d="M35 60 Q60 55 85 60 L88 95 Q60 100 32 95 Z" fill="#3B82F6" />
+        </svg>
 
         {/* Braços e mãos articuladas sobrepostos */}
         <svg
@@ -210,15 +209,14 @@ function SignerFigure({ pose }: { pose: Pose }) {
         >
           <g
             style={{
-              transform: `rotate(${pose.tronco ?? 0}deg)`,
               transformOrigin: "60px 120px",
               transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
-            {/* Braço esquerdo (à direita na tela) - Tons de pele humana */}
+            {/* Braço esquerdo (à direita na tela) */}
             <Braco
-              x={95}
-              y={80}
+              x={90}
+              y={70}
               rotacao={pose.bracoEsq}
               cotovelo={pose.coveloEsq}
               config={pose.maoEsq}
@@ -226,8 +224,8 @@ function SignerFigure({ pose }: { pose: Pose }) {
             />
             {/* Braço direito (à esquerda na tela) */}
             <Braco
-              x={25}
-              y={80}
+              x={30}
+              y={70}
               rotacao={pose.bracoDir}
               cotovelo={pose.coveloDir}
               config={pose.maoDir}
@@ -295,7 +293,7 @@ function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: stri
     { dx: 4, ext: minimo, alturaMax: 8.5 },
   ];
 
-  const strokeColor = color === "#5D4037" ? "#3E2723" : "#D4A373";
+  const strokeColor = "#D4A373";
 
   return (
     <g>
