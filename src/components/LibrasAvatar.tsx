@@ -293,7 +293,7 @@ function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: stri
     { dx: 4, ext: minimo, alturaMax: 8.5 },
   ];
 
-  const strokeColor = color === "#5D4037" ? "#3E2723" : "#D4A373";
+  const strokeColor = "#D4A373";
 
   return (
     <g>
