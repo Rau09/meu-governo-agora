@@ -45,7 +45,6 @@ const acoesRapidas = [
   { to: "/atendimento", label: "Assistente", icon: MessageCircle },
   { to: "/ocorrencia", label: "Problemas", icon: MapPin },
   { to: "/medicamentos", label: "Remédios", icon: Search },
-  { to: "/comunidade", label: "Cidade", icon: Building2 },
 ] as const;
 
 function Inicio() {
@@ -110,7 +109,7 @@ function Inicio() {
       </section>
 
       <section className="mt-8 px-5">
-        <div className="grid grid-cols-5 gap-1.5">
+        <div className="grid grid-cols-4 gap-2">
           {acoesRapidas.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
@@ -183,6 +182,24 @@ function Inicio() {
             </div>
           )}
         </div>
+      </section>
+
+      <section className="px-5 pb-12">
+        <Link
+          to="/gestao"
+          className="flex items-center justify-between p-5 rounded-[2rem] bg-secondary/30 border border-border/50 transition-transform active:scale-95 group"
+        >
+          <div className="flex items-center gap-4">
+            <div className="size-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-sm group-active:bg-primary-soft transition-colors">
+              <Building2 className="size-6" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold">Gestão Municipal</h3>
+              <p className="text-[10px] text-muted-foreground">Acesso restrito para servidores</p>
+            </div>
+          </div>
+          <ArrowRight className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
+        </Link>
       </section>
     </AppShell>
   );
