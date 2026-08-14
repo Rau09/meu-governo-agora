@@ -13,7 +13,7 @@ import {
   Bell,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { useAgendamentos, useCidadao } from "@/lib/cantu-store";
+import { useAgendamentos, useCidadao, useOcorrencias } from "@/lib/cantu-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -42,13 +42,14 @@ const atalhosPrincipais = [
 const acoesRapidas = [
   { to: "/agendamento", label: "Agendar", icon: CalendarPlus },
   { to: "/atendimento", label: "Assistente", icon: MessageCircle },
-  { to: "/comunidade", label: "Problemas", icon: MapPin },
+  { to: "/ocorrencia", label: "Problemas", icon: MapPin },
   { to: "/medicamentos", label: "Remédios", icon: Search },
 ] as const;
 
 function Inicio() {
   const { cidadao } = useCidadao();
   const { agendamentos } = useAgendamentos();
+  const { ocorrencias } = useOcorrencias();
   const proximo = agendamentos[0];
 
   return (
@@ -63,11 +64,7 @@ function Inicio() {
             type="button"
             className="relative p-2 rounded-full bg-white/10 active:scale-95 transition-transform"
             onClick={() => {
-              if (cidadao) {
-                 window.location.href = "/perfil";
-              } else {
-                 window.location.href = "/registro";
-              }
+              window.location.href = "/ocorrencia";
             }}
           >
             <Bell className="size-5" />
@@ -156,16 +153,35 @@ function Inicio() {
       )}
 
       <section className="mt-8 px-5 pb-8">
-        <div className="p-6 rounded-[2rem] bg-secondary/50 border border-border/50 flex gap-4">
-          <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-             <ShieldCheck className="size-6" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="text-sm font-bold">Plataforma Segura</h3>
-            <p className="text-[11px] leading-relaxed text-muted-foreground">
-              Seus dados são protegidos seguindo a LGPD. O Cantu Conecta é uma ponte tecnológica para facilitar o cuidado com você e sua cidade.
-            </p>
-          </div>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Notificações da Cidade</h2>
+        </div>
+        <div className="space-y-3">
+          {ocorrencias.slice(0, 2).map((o) => (
+            <div key={o.protocolo} className="p-4 rounded-2xl bg-card border border-border/50 flex gap-3">
+              <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                <MapPin className="size-5" />
+              </div>
+              <div className="space-y-0.5">
+                <h3 className="text-xs font-bold">{o.categoria}</h3>
+                <p className="text-[10px] text-muted-foreground line-clamp-1">{o.descricao}</p>
+                <p className="text-[9px] font-medium text-primary">Protocolo: {o.protocolo}</p>
+              </div>
+            </div>
+          ))}
+          {ocorrencias.length === 0 && (
+            <div className="p-6 rounded-[2rem] bg-secondary/50 border border-border/50 flex gap-4">
+              <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                <ShieldCheck className="size-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold">Cidade Tranquila</h3>
+                <p className="text-[11px] leading-relaxed text-muted-foreground">
+                  Não há ocorrências críticas registradas no momento. Continue participando para manter nossa cidade segura.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </AppShell>
