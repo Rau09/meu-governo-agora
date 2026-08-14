@@ -20,17 +20,10 @@ function CausaAnimalPage() {
       
       <div className="px-5 py-6 space-y-8">
         <section>
-          <div className="grid grid-cols-2 gap-4">
-            <Link to="/ocorrencia" className="flex flex-col gap-3 p-5 rounded-[2rem] bg-accent-gradient text-accent-foreground active:scale-95 transition-transform shadow-float">
+          <div className="grid grid-cols-1">
+            <Link to="/ocorrencia" className="flex flex-col gap-3 p-5 rounded-[2rem] bg-accent-gradient text-accent-foreground active:scale-95 transition-transform shadow-float items-center text-center">
               <Camera className="size-8" />
               <span className="font-bold text-sm">Registrar Ocorrência</span>
-            </Link>
-            <Link 
-              to="/comunidade" 
-              className="flex flex-col gap-3 p-5 rounded-[2rem] bg-secondary border border-border text-foreground active:scale-95 transition-transform"
-            >
-              <MapPin className="size-8 text-primary" />
-              <span className="font-bold text-sm">Mapa Animal</span>
             </Link>
           </div>
         </section>
