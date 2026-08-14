@@ -57,6 +57,7 @@ function mascaraTel(v: string) {
 function Registro() {
   const { cidadao, desbloqueado, salvar, sair, desbloquear, bloquear } = useCidadao();
   const navigate = useNavigate();
+  const [passo, setPasso] = useState(1);
   const [form, setForm] = useState<{
     nome: string;
     cpf: string;
