@@ -326,6 +326,7 @@ export const CATEGORIAS_OCORRENCIA = [
   "Poste/lâmpada com defeito",
   "Árvore caída",
   "Lixo/entulho",
+  "Causa Animal / Maus-tratos",
   "Problema na via",
   "Vazamento",
   "Outro",
