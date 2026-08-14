@@ -17,7 +17,9 @@ export type Cidadao = {
   cpf: string;
   telefone: string;
   bairro: string;
-  municipio?: string;
+  municipio: string;
+  estado: string;
+  preferencias: string[];
   /** Hash SHA-256 do PIN + salt. O PIN nunca é guardado em texto puro. */
   pinHash?: string;
   salt?: string;
@@ -198,6 +200,24 @@ export function useAgendamentos() {
   return { agendamentos, criar, cancelar };
 }
 
+export const MUNICIPIOS_CANTU = [
+  "Cantagalo",
+  "Catanduvas",
+  "Espigão Alto do Iguaçu",
+  "Foz do Jordão",
+  "Goioxim",
+  "Guaraniaçu",
+  "Laranjeiras do Sul",
+  "Marquinho",
+  "Nova Laranjeiras",
+  "Pinhão",
+  "Porto Barreiro",
+  "Quedas do Iguaçu",
+  "Reserva do Iguaçu",
+  "Rio Bonito do Iguaçu",
+  "Virmond",
+];
+
 export const AREAS = [
   {
     id: "saude",
@@ -311,7 +331,7 @@ export const CATEGORIAS_OCORRENCIA = [
   "Outro",
 ] as const;
 
-export type StatusOcorrencia = "pendente" | "analise" | "execucao" | "resolvido";
+export type StatusOcorrencia = "recebido" | "analise" | "encaminhado" | "andamento" | "resolvido";
 
 export const STATUS_OCORRENCIA: {
   id: StatusOcorrencia;
@@ -319,9 +339,10 @@ export const STATUS_OCORRENCIA: {
   emoji: string;
   classe: string;
 }[] = [
-  { id: "pendente", rotulo: "Pendente", emoji: "🔴", classe: "bg-destructive/10 text-destructive" },
+  { id: "recebido", rotulo: "Recebido", emoji: "📥", classe: "bg-secondary text-muted-foreground" },
   { id: "analise", rotulo: "Em análise", emoji: "🟡", classe: "bg-accent-soft text-accent-foreground" },
-  { id: "execucao", rotulo: "Em execução", emoji: "🔵", classe: "bg-primary-soft text-primary" },
+  { id: "encaminhado", rotulo: "Encaminhado", emoji: "📤", classe: "bg-primary-soft text-primary" },
+  { id: "andamento", rotulo: "Em andamento", emoji: "🔵", classe: "bg-info text-white" },
   { id: "resolvido", rotulo: "Resolvido", emoji: "🟢", classe: "bg-success/15 text-success" },
 ];
 
@@ -353,7 +374,7 @@ export function useOcorrencias() {
       ...o,
       protocolo: `CANTU-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
       criadoEm: new Date().toISOString(),
-      status: "pendente",
+      status: "recebido",
     };
     write(KEY_OCOR, [nova, ...atual]);
     return nova;
