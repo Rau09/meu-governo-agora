@@ -197,7 +197,7 @@ function gerarDemo(): OcorrenciaGestao[] {
     const categoria = cats[Math.floor(r() * cats.length)]!;
     const bairro = BAIRROS[Math.floor(r() * BAIRROS.length)]!;
     resolvidas.push({
-      protocolo: `QI-2026-R${String(i + 1).padStart(3, "0")}`,
+      protocolo: `CANTU-2026-R${String(i + 1).padStart(3, "0")}`,
       categoria,
       bairro: bairro.nome,
       lat: bairro.lat + (r() - 0.5) * 0.012,
