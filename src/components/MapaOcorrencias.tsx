@@ -63,7 +63,7 @@ export function MapaOcorrencias({
   return (
     <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-bold">🗺️ Mapa de ocorrências</h2>
+        <h2 className="text-sm font-bold">🗺️ Mapa Regional</h2>
         <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold">{visiveis.length}</span>
       </div>
 
