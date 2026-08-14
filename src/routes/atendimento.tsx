@@ -4,25 +4,6 @@ import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, 
 import { AppShell, TopBar } from "@/components/AppShell";
 import { responder } from "@/lib/cantu-ia";
 
-
-type Busca = { protocolo?: string };
-export const Route = createFileRoute("/atendimento")({
-  validateSearch: (search: Record<string, unknown>): Busca =>
-    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
-  head: () => ({
-    meta: [
-      { title: "Atendimento 24/7 — Cantu Conecta" },
-      {
-        name: "description",
-        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
-      },
-      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
-      { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
-    ],
-  }),
-  component: Atendimento,
-});
-
 type Msg = { de: "bot" | "eu"; texto: string; acao?: { rotulo: string; para: string } };
 
 const sugestoes = [
@@ -44,6 +25,8 @@ const atalhos = [
   { icon: Pill, titulo: "Remédio", texto: "Quero saber sobre medicamentos" },
   { icon: GraduationCap, titulo: "Escola", texto: "Vaga em creche" },
 ];
+
+type Busca = { protocolo?: string };
 
 const Atendimento = memo(function Atendimento() {
   const { protocolo } = Route.useSearch();
@@ -208,4 +191,21 @@ const Atendimento = memo(function Atendimento() {
       </form>
     </AppShell>
   );
+});
+
+export const Route = createFileRoute("/atendimento")({
+  validateSearch: (search: Record<string, unknown>): Busca =>
+    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
+  head: () => ({
+    meta: [
+      { title: "Atendimento 24/7 — Cantu Conecta" },
+      {
+        name: "description",
+        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
+      },
+      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
+      { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
+    ],
+  }),
+  component: Atendimento,
 });
