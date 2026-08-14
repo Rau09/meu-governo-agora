@@ -176,7 +176,7 @@ function gerarDemo(): OcorrenciaGestao[] {
     const bairro = BAIRROS.find((b) => b.nome === p.bairro)!;
     const textos = DESCRICOES[p.categoria] ?? DESCRICOES["Outro"]!;
     return {
-      protocolo: `QI-2026-D${String(i + 1).padStart(3, "0")}`,
+      protocolo: `CANTU-2026-D${String(i + 1).padStart(3, "0")}`,
       categoria: p.categoria,
       bairro: p.bairro,
       lat: bairro.lat + (r() - 0.5) * 0.012,
