@@ -416,60 +416,57 @@ function Painel({ onSair }: { onSair: () => void }) {
         </div>
 
         {/* 5. Análise da IA */}
-        <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
-          <Link to="/atendimento" className="flex items-center gap-2 text-sm font-bold hover:text-primary transition-colors">
-            <Sparkles className="size-4 text-primary" /> Análise da IA
+        <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <Link to="/atendimento" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors">
+            <Sparkles className="size-4" /> Inteligência Analítica
           </Link>
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{analise.texto}</p>
+          <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">{analise.texto}</p>
 
-          <div className="mt-3 rounded-2xl bg-primary-soft p-3">
-            <p className="text-[11px] font-bold text-primary">💡 Recomendação</p>
-            <p className="mt-1 text-xs leading-relaxed">{analise.recomendacao}</p>
+          <div className="mt-4 rounded-lg border-l-4 border-primary bg-primary-soft/30 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">Diretriz Administrativa</p>
+            <p className="mt-2 text-xs font-medium leading-relaxed text-foreground">{analise.recomendacao}</p>
             {verRecomendacao && (
-              <ul className="mt-2 space-y-1 text-[11px] text-muted-foreground">
-                <li>1. Designar equipe de manutenção para {analise.bairroFoco}.</li>
-                <li>2. Revisar as {resumo.atrasadas} solicitações atrasadas por ordem de prioridade.</li>
-                <li>3. Reavaliar o indicador de {analise.categoriaFoco.toLowerCase()} em 7 dias.</li>
+              <ul className="mt-3 space-y-2 border-t border-primary/10 pt-3 text-[11px] text-muted-foreground">
+                <li className="flex gap-2">
+                  <span className="font-bold text-primary">01.</span>
+                  <span>Mobilizar unidade técnica para {analise.bairroFoco}.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-bold text-primary">02.</span>
+                  <span>Priorizar auditoria dos {resumo.atrasadas} processos em atraso.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-bold text-primary">03.</span>
+                  <span>Monitorar KPI de {analise.categoriaFoco.toLowerCase()} no próximo ciclo.</span>
+                </li>
               </ul>
             )}
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-1.5">
+          <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setVerRecomendacao((v) => !v)}
-              className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+              className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-secondary active:scale-95 transition-colors"
             >
-              {verRecomendacao ? "Ocultar recomendação" : "Ver recomendação"}
+              {verRecomendacao ? "Recolher Relatório" : "Ver Relatório"}
             </button>
             <button
               type="button"
               onClick={() =>
                 setDetalhe({
                   titulo: analise.categoriaFoco,
-                  nota: `${analise.pctCategoria}% das ocorrências ativas`,
+                  nota: `${analise.pctCategoria}% da demanda ativa`,
                   itens: ativos.filter((o) => o.categoria === analise.categoriaFoco),
                 })
               }
-              className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+              className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-secondary active:scale-95 transition-colors"
             >
-              Ver dados
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                irParaMapa(
-                  ativos.filter((o) => o.categoria === analise.categoriaFoco),
-                  metaCategoria(analise.categoriaFoco).filtro,
-                )
-              }
-              className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
-            >
-              Ver no mapa
+              Auditar Dados
             </button>
           </div>
 
-          <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="-mx-5 mt-4 flex gap-2 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {PERGUNTAS_IA.map((p) => (
               <button
                 key={p.id}
