@@ -309,31 +309,41 @@ function Painel({ onSair }: { onSair: () => void }) {
         {/* 2. Central de atenção */}
         <section
           style={{ transitionDelay: "220ms" }}
-          className={`rounded-3xl border-2 border-destructive/25 bg-destructive/[0.04] p-4 shadow-card transition-all duration-500 ease-out ${
+          className={`rounded-xl border border-destructive/20 bg-destructive/[0.02] p-5 shadow-sm transition-all duration-500 ease-out ${
             animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
           }`}
         >
-          <h2 className="text-sm font-extrabold uppercase tracking-wide">🚨 Central de Atenção</h2>
-          <p className="text-[11px] text-muted-foreground">Prioridades críticas identificadas na região.</p>
-          <ul className="mt-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="size-4 text-destructive" />
+            <h2 className="text-xs font-bold uppercase tracking-widest text-destructive">Protocolos Prioritários</h2>
+          </div>
+          <p className="mt-1 text-[11px] text-muted-foreground">Solicitações que requerem intervenção imediata da administração.</p>
+          <ul className="mt-4 space-y-3">
             {alertasAtivos.map((a) => (
               <li key={a.id}>
                 <button
                   type="button"
                   onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })}
-                  className="w-full rounded-2xl border border-border bg-card p-3 text-left shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-float active:scale-[0.99]"
+                  className="w-full rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:border-destructive/30 hover:shadow-md active:scale-[0.99]"
                 >
-                  <div className="flex items-start gap-2">
-                    <span className="text-base leading-none">{a.emoji}</span>
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg leading-none grayscale opacity-80">{a.emoji}</span>
                     <div className="flex-1">
-                      <p className="text-sm font-bold leading-tight">{a.titulo}</p>
-                      <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">{a.detalhe}</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-bold text-foreground">{a.titulo}</p>
+                        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                      </div>
+                      <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">{a.detalhe}</p>
+                      <div className="mt-3 flex items-center gap-2">
+                        <span className={`rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${NIVEIS[a.nivel].classe}`}>
+                          {NIVEIS[a.nivel].rotulo}
+                        </span>
+                        <span className="text-[9px] font-bold text-muted-foreground/60">
+                          {a.acao}
+                        </span>
+                      </div>
                     </div>
-                    <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
                   </div>
-                  <span className={`mt-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${NIVEIS[a.nivel].classe}`}>
-                    {NIVEIS[a.nivel].rotulo} · {a.acao}
-                  </span>
                 </button>
               </li>
             ))}
