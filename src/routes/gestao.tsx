@@ -282,13 +282,16 @@ function Painel({ onSair }: { onSair: () => void }) {
     <AppShell librasMensagem="Painel de gestão regional, com alertas, prioridades, mapa e análise da inteligência artificial para a Cantuquiriguaçu.">
       <TopBar titulo="Painel Administrativo" subtitulo="Gestão Integrada · Cantu Conecta · Administração" />
 
-      <div className="-mt-5 space-y-5 px-4">
-        <div className="flex justify-end">
+      <div className="-mt-5 space-y-6 px-4">
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/60">
+            Sessão Ativa · {new Date().toLocaleDateString('pt-BR')}
+          </p>
           <button
             onClick={onSair}
-            className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold transition-all duration-200 hover:bg-primary-soft hover:text-primary active:scale-95"
+            className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white transition-all hover:bg-white/10 active:scale-95"
           >
-            <LogOut className="size-3.5" /> Sair
+            <LogOut className="size-3" /> Encerrar
           </button>
         </div>
 
