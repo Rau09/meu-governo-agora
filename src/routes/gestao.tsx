@@ -282,21 +282,24 @@ function Painel({ onSair }: { onSair: () => void }) {
         </div>
 
         {/* 1. Resumo superior */}
-        <section className="grid grid-cols-2 gap-3">
+        <section className="grid grid-cols-2 gap-4">
           {cards.map(({ icon: Icon, valor, label, nota, tom, itens }, i) => (
             <button
               key={label}
               type="button"
               onClick={() => setDetalhe({ titulo: label, nota, itens })}
               style={{ transitionDelay: `${i * 70}ms` }}
-              className={`rounded-3xl border border-border bg-card p-3 text-left shadow-card transition-all duration-500 ease-out hover:-translate-y-0.5 hover:shadow-float active:scale-[0.98] ${
+              className={`relative overflow-hidden rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-md active:scale-[0.98] ${
                 animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
               }`}
             >
-              <Icon className={`size-4 ${tom}`} />
-              <p className="mt-1.5 font-display text-2xl font-bold">{valor}</p>
-              <p className="text-[11px] font-semibold leading-tight">{label}</p>
-              <p className={`text-[10px] ${tom === "text-destructive" ? "text-destructive" : "text-muted-foreground"}`}>
+              <div className="flex items-center justify-between">
+                <Icon className={`size-4 ${tom} opacity-80`} />
+                <div className={`size-1.5 rounded-full ${tom.includes("destructive") ? "bg-destructive" : tom.includes("success") ? "bg-success" : "bg-primary"} opacity-40`} />
+              </div>
+              <p className="mt-3 font-display text-3xl font-bold tracking-tight">{valor}</p>
+              <p className="mt-0.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
+              <p className={`mt-2 text-[10px] font-medium ${tom === "text-destructive" ? "text-destructive" : "text-muted-foreground/80"}`}>
                 {nota}
               </p>
             </button>
