@@ -115,53 +115,64 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
   return (
     <AppShell librasMensagem="Área restrita da prefeitura. Faça login para ver o painel de gestão.">
-      <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito da equipe da Prefeitura" />
+      <TopBar titulo="Painel Administrativo" subtitulo="Sistema oficial de gestão Cantu Conecta" />
       <div className="-mt-5 px-4">
         <form
           onSubmit={submit}
-          className="animate-in rounded-3xl border border-border bg-card p-5 shadow-card fade-in slide-in-from-bottom-3 duration-500"
+          className="animate-in rounded-xl border border-border bg-card p-6 shadow-sm fade-in slide-in-from-bottom-3 duration-500"
         >
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-primary-soft">
+          <div className="flex size-12 items-center justify-center rounded-lg bg-primary-soft">
             <Lock className="size-5 text-primary" />
           </div>
-          <h2 className="mt-3 text-base font-bold">Entrar no painel</h2>
-          <p className="text-xs text-muted-foreground">Use as credenciais fornecidas pela Prefeitura.</p>
+          <h2 className="mt-4 text-lg font-bold tracking-tight">Autenticação Administrativa</h2>
+          <p className="text-xs text-muted-foreground">Sistema restrito. Insira suas credenciais oficiais.</p>
 
-          <label className="mt-4 block text-xs font-semibold" htmlFor="usuario">
-            Usuário
-          </label>
-          <input
-            id="usuario"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
-            autoComplete="username"
-            className="mt-1 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
-            placeholder="prefeitura"
-          />
+          <div className="mt-6 space-y-4">
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground" htmlFor="usuario">
+                Identificador do Usuário
+              </label>
+              <input
+                id="usuario"
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                autoComplete="username"
+                className="mt-1.5 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
+                placeholder="Ex: prefeitura"
+              />
+            </div>
 
-          <label className="mt-3 block text-xs font-semibold" htmlFor="senha">
-            Senha
-          </label>
-          <input
-            id="senha"
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            autoComplete="current-password"
-            className="mt-1 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
-            placeholder="••••••••"
-          />
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground" htmlFor="senha">
+                Chave de Acesso
+              </label>
+              <input
+                id="senha"
+                type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                autoComplete="current-password"
+                className="mt-1.5 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
 
-          {erro && <p className="mt-2 text-xs font-medium text-destructive">{erro}</p>}
+          {erro && (
+            <div className="mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-xs font-bold text-destructive">
+              <AlertTriangle className="size-4" />
+              {erro}
+            </div>
+          )}
 
           <button
             type="submit"
-            className="mt-4 w-full rounded-2xl bg-primary py-3 text-sm font-bold text-primary-foreground transition-all duration-200 hover:shadow-float active:scale-[0.98]"
+            className="mt-6 w-full rounded-lg bg-primary py-3.5 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.98]"
           >
-            Entrar
+            Acessar Sistema
           </button>
-          <p className="mt-3 text-center text-[11px] text-muted-foreground">
-            Demonstração: prefeitura / quedas2026
+          <p className="mt-4 text-center text-[10px] font-medium text-muted-foreground/60">
+            Acesso monitorado · IP: 189.XXX.XXX.XXX
           </p>
         </form>
       </div>
@@ -269,34 +280,40 @@ function Painel({ onSair }: { onSair: () => void }) {
 
   return (
     <AppShell librasMensagem="Painel de gestão regional, com alertas, prioridades, mapa e análise da inteligência artificial para a Cantuquiriguaçu.">
-      <TopBar titulo="Gestão Inteligente" subtitulo="Cantu Conecta · Regional · uso interno" />
+      <TopBar titulo="Painel Administrativo" subtitulo="Gestão Integrada · Cantu Conecta · Administração" />
 
-      <div className="-mt-5 space-y-5 px-4">
-        <div className="flex justify-end">
+      <div className="-mt-5 space-y-6 px-4">
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/60">
+            Sessão Ativa · {new Date().toLocaleDateString('pt-BR')}
+          </p>
           <button
             onClick={onSair}
-            className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold transition-all duration-200 hover:bg-primary-soft hover:text-primary active:scale-95"
+            className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white transition-all hover:bg-white/10 active:scale-95"
           >
-            <LogOut className="size-3.5" /> Sair
+            <LogOut className="size-3" /> Encerrar
           </button>
         </div>
 
         {/* 1. Resumo superior */}
-        <section className="grid grid-cols-2 gap-3">
+        <section className="grid grid-cols-2 gap-4">
           {cards.map(({ icon: Icon, valor, label, nota, tom, itens }, i) => (
             <button
               key={label}
               type="button"
               onClick={() => setDetalhe({ titulo: label, nota, itens })}
               style={{ transitionDelay: `${i * 70}ms` }}
-              className={`rounded-3xl border border-border bg-card p-3 text-left shadow-card transition-all duration-500 ease-out hover:-translate-y-0.5 hover:shadow-float active:scale-[0.98] ${
+              className={`relative overflow-hidden rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-md active:scale-[0.98] ${
                 animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
               }`}
             >
-              <Icon className={`size-4 ${tom}`} />
-              <p className="mt-1.5 font-display text-2xl font-bold">{valor}</p>
-              <p className="text-[11px] font-semibold leading-tight">{label}</p>
-              <p className={`text-[10px] ${tom === "text-destructive" ? "text-destructive" : "text-muted-foreground"}`}>
+              <div className="flex items-center justify-between">
+                <Icon className={`size-4 ${tom} opacity-80`} />
+                <div className={`size-1.5 rounded-full ${tom.includes("destructive") ? "bg-destructive" : tom.includes("success") ? "bg-success" : "bg-primary"} opacity-40`} />
+              </div>
+              <p className="mt-3 font-display text-3xl font-bold tracking-tight">{valor}</p>
+              <p className="mt-0.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
+              <p className={`mt-2 text-[10px] font-medium ${tom === "text-destructive" ? "text-destructive" : "text-muted-foreground/80"}`}>
                 {nota}
               </p>
             </button>
@@ -306,31 +323,41 @@ function Painel({ onSair }: { onSair: () => void }) {
         {/* 2. Central de atenção */}
         <section
           style={{ transitionDelay: "220ms" }}
-          className={`rounded-3xl border-2 border-destructive/25 bg-destructive/[0.04] p-4 shadow-card transition-all duration-500 ease-out ${
+          className={`rounded-xl border border-destructive/20 bg-destructive/[0.02] p-5 shadow-sm transition-all duration-500 ease-out ${
             animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
           }`}
         >
-          <h2 className="text-sm font-extrabold uppercase tracking-wide">🚨 Central de Atenção</h2>
-          <p className="text-[11px] text-muted-foreground">Prioridades críticas identificadas na região.</p>
-          <ul className="mt-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="size-4 text-destructive" />
+            <h2 className="text-xs font-bold uppercase tracking-widest text-destructive">Protocolos Prioritários</h2>
+          </div>
+          <p className="mt-1 text-[11px] text-muted-foreground">Solicitações que requerem intervenção imediata da administração.</p>
+          <ul className="mt-4 space-y-3">
             {alertasAtivos.map((a) => (
               <li key={a.id}>
                 <button
                   type="button"
                   onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })}
-                  className="w-full rounded-2xl border border-border bg-card p-3 text-left shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-float active:scale-[0.99]"
+                  className="w-full rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:border-destructive/30 hover:shadow-md active:scale-[0.99]"
                 >
-                  <div className="flex items-start gap-2">
-                    <span className="text-base leading-none">{a.emoji}</span>
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg leading-none grayscale opacity-80">{a.emoji}</span>
                     <div className="flex-1">
-                      <p className="text-sm font-bold leading-tight">{a.titulo}</p>
-                      <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">{a.detalhe}</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-bold text-foreground">{a.titulo}</p>
+                        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                      </div>
+                      <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">{a.detalhe}</p>
+                      <div className="mt-3 flex items-center gap-2">
+                        <span className={`rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${NIVEIS[a.nivel].classe}`}>
+                          {NIVEIS[a.nivel].rotulo}
+                        </span>
+                        <span className="text-[9px] font-bold text-muted-foreground/60">
+                          {a.acao}
+                        </span>
+                      </div>
                     </div>
-                    <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
                   </div>
-                  <span className={`mt-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${NIVEIS[a.nivel].classe}`}>
-                    {NIVEIS[a.nivel].rotulo} · {a.acao}
-                  </span>
                 </button>
               </li>
             ))}
@@ -339,50 +366,57 @@ function Painel({ onSair }: { onSair: () => void }) {
 
         {/* 3. Prioridades */}
         <section>
-          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
-            Prioridades da semana
+          <h2 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/70">
+            Focos de Monitoramento Semanal
           </h2>
-          <ul className="space-y-3">
+          <ul className="space-y-4">
             {focos.map((p, i) => (
               <li
                 key={p.id}
                 style={{ animationDelay: `${i * 60}ms` }}
-                className="animate-in rounded-3xl border border-border bg-card p-3 shadow-card fade-in slide-in-from-bottom-2 duration-500"
+                className="animate-in rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:border-primary/30"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-bold leading-tight">
-                    {NIVEIS[p.nivel].emoji} {p.categoria} — {p.bairro}
-                  </p>
-                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${NIVEIS[p.nivel].classe}`}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <p className="text-sm font-bold text-foreground">
+                      {p.categoria} — {p.bairro}
+                    </p>
+                    <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                      <span className="font-bold text-foreground">{p.total}</span> registros · 
+                      <span className="mx-1 font-bold text-destructive">{p.atrasadas}</span> atrasos · 
+                      <span className="ml-1 font-bold text-primary">+{p.variacao}%</span> este mês
+                    </p>
+                  </div>
+                  <span className={`shrink-0 rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${NIVEIS[p.nivel].classe}`}>
                     {NIVEIS[p.nivel].rotulo}
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-muted-foreground">
-                  {p.total} ocorrências · {p.atrasadas} atrasadas · +{p.variacao}% neste mês ·{" "}
-                  {p.afetados.toLocaleString("pt-BR")} pessoas afetadas
-                </p>
-                <p className="mt-1 text-xs font-medium">“{p.resumo}”</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
+                
+                <div className="mt-3 rounded-lg bg-secondary/30 p-2.5 text-[11px] italic text-muted-foreground/90">
+                  “{p.resumo}”
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => setDetalhe({ titulo: `${p.categoria} — ${p.bairro}`, nota: p.resumo, itens: p.itens })}
-                    className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+                    className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-secondary active:scale-95 transition-colors"
                   >
-                    Ver ocorrências
+                    Detalhes
                   </button>
                   <button
                     type="button"
                     onClick={() => irParaMapa(p.itens, metaCategoria(p.categoria).filtro)}
-                    className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+                    className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-secondary active:scale-95 transition-colors"
                   >
-                    Ver no mapa
+                    Geolocalização
                   </button>
                   <button
                     type="button"
                     onClick={() => setAcao(`Ação criada para ${p.categoria} no bairro ${p.bairro}: equipe designada.`)}
-                    className="rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground active:scale-95"
+                    className="ml-auto rounded-lg bg-primary px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-primary-foreground hover:bg-primary/90 active:scale-95 shadow-sm transition-all"
                   >
-                    Criar ação
+                    Despachar Equipe
                   </button>
                 </div>
               </li>
@@ -396,60 +430,57 @@ function Painel({ onSair }: { onSair: () => void }) {
         </div>
 
         {/* 5. Análise da IA */}
-        <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
-          <Link to="/atendimento" className="flex items-center gap-2 text-sm font-bold hover:text-primary transition-colors">
-            <Sparkles className="size-4 text-primary" /> Análise da IA
+        <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <Link to="/atendimento" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors">
+            <Sparkles className="size-4" /> Inteligência Analítica
           </Link>
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{analise.texto}</p>
+          <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">{analise.texto}</p>
 
-          <div className="mt-3 rounded-2xl bg-primary-soft p-3">
-            <p className="text-[11px] font-bold text-primary">💡 Recomendação</p>
-            <p className="mt-1 text-xs leading-relaxed">{analise.recomendacao}</p>
+          <div className="mt-4 rounded-lg border-l-4 border-primary bg-primary-soft/30 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">Diretriz Administrativa</p>
+            <p className="mt-2 text-xs font-medium leading-relaxed text-foreground">{analise.recomendacao}</p>
             {verRecomendacao && (
-              <ul className="mt-2 space-y-1 text-[11px] text-muted-foreground">
-                <li>1. Designar equipe de manutenção para {analise.bairroFoco}.</li>
-                <li>2. Revisar as {resumo.atrasadas} solicitações atrasadas por ordem de prioridade.</li>
-                <li>3. Reavaliar o indicador de {analise.categoriaFoco.toLowerCase()} em 7 dias.</li>
+              <ul className="mt-3 space-y-2 border-t border-primary/10 pt-3 text-[11px] text-muted-foreground">
+                <li className="flex gap-2">
+                  <span className="font-bold text-primary">01.</span>
+                  <span>Mobilizar unidade técnica para {analise.bairroFoco}.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-bold text-primary">02.</span>
+                  <span>Priorizar auditoria dos {resumo.atrasadas} processos em atraso.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-bold text-primary">03.</span>
+                  <span>Monitorar KPI de {analise.categoriaFoco.toLowerCase()} no próximo ciclo.</span>
+                </li>
               </ul>
             )}
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-1.5">
+          <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setVerRecomendacao((v) => !v)}
-              className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+              className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-secondary active:scale-95 transition-colors"
             >
-              {verRecomendacao ? "Ocultar recomendação" : "Ver recomendação"}
+              {verRecomendacao ? "Recolher Relatório" : "Ver Relatório"}
             </button>
             <button
               type="button"
               onClick={() =>
                 setDetalhe({
                   titulo: analise.categoriaFoco,
-                  nota: `${analise.pctCategoria}% das ocorrências ativas`,
+                  nota: `${analise.pctCategoria}% da demanda ativa`,
                   itens: ativos.filter((o) => o.categoria === analise.categoriaFoco),
                 })
               }
-              className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+              className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-secondary active:scale-95 transition-colors"
             >
-              Ver dados
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                irParaMapa(
-                  ativos.filter((o) => o.categoria === analise.categoriaFoco),
-                  metaCategoria(analise.categoriaFoco).filtro,
-                )
-              }
-              className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
-            >
-              Ver no mapa
+              Auditar Dados
             </button>
           </div>
 
-          <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="-mx-5 mt-4 flex gap-2 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {PERGUNTAS_IA.map((p) => (
               <button
                 key={p.id}
