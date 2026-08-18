@@ -87,35 +87,58 @@ export function MapaOcorrencias({
         ))}
       </div>
 
-      <div className="relative mt-3 aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border bg-secondary/50">
-        {/* malha viária esquemática */}
-        <svg viewBox="0 0 100 75" className="absolute inset-0 size-full" aria-hidden="true">
-          <rect width="100" height="75" className="fill-success/5" />
-          <path d="M0 26 H100 M0 50 H100 M28 0 V75 M62 0 V75" className="stroke-border" strokeWidth="1.6" />
-          <path d="M12 0 L44 75 M100 12 L40 75" className="stroke-border/60" strokeWidth="1" />
-          <path d="M0 62 C25 58 40 70 100 64" className="fill-none stroke-primary/25" strokeWidth="2.5" />
+      <div className="relative mt-3 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-muted/30">
+        {/* Camadas do Mapa com Profundidade */}
+        <div className="absolute inset-0 opacity-20">
+          <svg viewBox="0 0 100 56" className="size-full" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-border" />
+              </pattern>
+            </defs>
+            <rect width="100" height="56" fill="url(#grid)" />
+          </svg>
+        </div>
+
+        {/* Malha Viária Profissional */}
+        <svg viewBox="0 0 100 56" className="absolute inset-0 size-full" aria-hidden="true">
+          {/* Áreas Verdes / Parques */}
+          <path d="M10 10 Q 25 5 40 15 T 70 10 T 90 20 L 95 40 Q 80 50 60 45 T 30 50 T 5 35 Z" className="fill-success/5" />
+          
+          {/* Vias Principais */}
+          <g className="stroke-border/60" fill="none" strokeWidth="1.2" strokeLinecap="round">
+            <path d="M0 20 H100" />
+            <path d="M0 40 H100" />
+            <path d="M30 0 V56" />
+            <path d="M70 0 V56" />
+          </g>
+
+          {/* Vias Expressas / Eixo Principal */}
+          <path d="M0 28 C 30 25, 60 35, 100 30" className="fill-none stroke-primary/20" strokeWidth="3" strokeLinecap="round" />
         </svg>
 
-        {/* nomes dos bairros */}
+        {/* Nomes dos Bairros com Estética Clean */}
         {BAIRROS.map((b) => (
-          <span
+          <div
             key={b.nome}
             style={pos(b)}
-            className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-[9px] font-bold uppercase tracking-wide text-muted-foreground/70"
+            className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
           >
-            {b.nome}
-          </span>
+            <span className="whitespace-nowrap rounded-md bg-background/60 px-1.5 py-0.5 text-[8px] font-bold tracking-widest text-muted-foreground/80 backdrop-blur-[2px]">
+              {b.nome.toUpperCase()}
+            </span>
+          </div>
         ))}
 
-        {/* halo de concentração */}
+        {/* Halo de concentração (Heatmap effect) */}
         {conc && conc.qtd >= 3 && (
-          <span
+          <div
             style={pos(BAIRROS.find((b) => b.nome === conc.bairro) ?? BAIRROS[0]!)}
-            className="pointer-events-none absolute size-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-destructive/15 blur-[6px]"
+            className="pointer-events-none absolute size-32 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full bg-destructive/10 blur-xl"
           />
         )}
 
-        {/* marcadores */}
+        {/* Marcadores Estilizados */}
         {visiveis.map((o) => {
           const n = nivel(o);
           const realce = destaque?.includes(o.protocolo);
@@ -126,26 +149,37 @@ export function MapaOcorrencias({
               onClick={() => setSel(o)}
               aria-label={`${o.categoria} em ${o.bairro}`}
               style={pos(o)}
-              className={`absolute flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border text-[12px] shadow-card transition-transform duration-200 hover:scale-125 active:scale-95 ${
+              className={`absolute flex size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl border-2 shadow-lg transition-all duration-300 hover:scale-125 hover:z-10 active:scale-95 ${
                 o.status === "resolvido"
-                  ? "border-success bg-success/10 opacity-60"
+                  ? "border-success/50 bg-success/20 opacity-60"
                   : n === "critico"
-                    ? "border-destructive bg-destructive/15 animate-pulse"
+                    ? "border-destructive bg-destructive/20 animate-bounce shadow-destructive/20"
                     : n === "alta"
-                      ? "border-accent bg-accent-soft"
-                      : "border-border bg-card"
-              } ${realce ? "ring-2 ring-primary" : ""} ${sel?.protocolo === o.protocolo ? "scale-125 ring-2 ring-primary" : ""}`}
+                      ? "border-accent bg-accent/20"
+                      : "border-primary/40 bg-card/90"
+              } ${realce ? "ring-2 ring-primary ring-offset-2 ring-offset-background z-20" : ""} ${sel?.protocolo === o.protocolo ? "scale-125 ring-2 ring-primary z-20" : ""}`}
             >
-              {metaCategoria(o.categoria).emoji}
+              <span className="text-base">{metaCategoria(o.categoria).emoji}</span>
+              {n === "critico" && (
+                <span className="absolute -right-1 -top-1 flex size-3">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"></span>
+                  <span className="relative inline-flex size-3 rounded-full bg-destructive"></span>
+                </span>
+              )}
             </button>
           );
         })}
       </div>
 
       {conc && conc.qtd >= 2 && (
-        <p className="mt-2 rounded-2xl bg-secondary p-2.5 text-[11px] font-medium">
-          📍 {conc.bairro} — {conc.pct}% das ocorrências deste filtro ({conc.qtd} de {visiveis.length}).
-        </p>
+        <div className="mt-3 flex items-center gap-2 rounded-xl bg-secondary/50 p-2.5">
+          <div className="flex size-6 items-center justify-center rounded-lg bg-destructive/20 text-destructive text-[10px] font-bold">
+            !
+          </div>
+          <p className="text-[11px] font-semibold text-secondary-foreground">
+            Alta densidade em <span className="text-primary font-bold">{conc.bairro}</span> — {conc.pct}% do total filtrado.
+          </p>
+        </div>
       )}
 
       {sel && <DetalheMarcador ocorrencia={sel} onFechar={() => setSel(null)} />}

@@ -124,8 +124,8 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
           <div className="flex size-12 items-center justify-center rounded-lg bg-primary-soft">
             <Lock className="size-5 text-primary" />
           </div>
-          <h2 className="mt-4 text-lg font-bold tracking-tight">Autenticação Administrativa</h2>
-          <p className="text-xs text-muted-foreground">Sistema restrito. Insira suas credenciais oficiais.</p>
+          <h2 className="mt-4 text-xl font-bold tracking-tighter text-foreground uppercase">Autenticação Administrativa</h2>
+          <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">Acesso restrito a servidores autorizados da Cantuquiriguaçu.</p>
 
           <div className="mt-6 space-y-4">
             <div>
@@ -323,15 +323,19 @@ function Painel({ onSair }: { onSair: () => void }) {
         {/* 2. Central de atenção */}
         <section
           style={{ transitionDelay: "220ms" }}
-          className={`rounded-xl border border-destructive/20 bg-destructive/[0.02] p-5 shadow-sm transition-all duration-500 ease-out ${
+          className={`rounded-xl border border-destructive/20 bg-destructive/[0.03] p-6 shadow-sm transition-all duration-500 ease-out ${
             animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
           }`}
         >
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="size-4 text-destructive" />
-            <h2 className="text-xs font-bold uppercase tracking-widest text-destructive">Protocolos Prioritários</h2>
+          <div className="flex items-center gap-3">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-destructive/10">
+              <AlertTriangle className="size-5 text-destructive" />
+            </div>
+            <div>
+              <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-destructive">Protocolos Prioritários</h2>
+              <p className="text-[10px] font-bold text-destructive/70 uppercase tracking-wider mt-0.5">Demanda crítica com necessidade de despacho imediato.</p>
+            </div>
           </div>
-          <p className="mt-1 text-[11px] text-muted-foreground">Solicitações que requerem intervenção imediata da administração.</p>
           <ul className="mt-4 space-y-3">
             {alertasAtivos.map((a) => (
               <li key={a.id}>
@@ -430,11 +434,36 @@ function Painel({ onSair }: { onSair: () => void }) {
         </div>
 
         {/* 5. Análise da IA */}
-        <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-          <Link to="/atendimento" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors">
-            <Sparkles className="size-4" /> Inteligência Analítica
+        <section className="rounded-xl border border-border bg-card p-6 shadow-md relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-16 translate-x-16 blur-3xl pointer-events-none" />
+          
+          <Link to="/atendimento" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] text-primary hover:text-primary/80 transition-all group">
+            <Sparkles className="size-4 group-hover:rotate-12 transition-transform" /> 
+            <span>Inteligência Analítica Cantu</span>
           </Link>
-          <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">{analise.texto}</p>
+          
+          <div className="mt-4 flex flex-col gap-4">
+            <div className="relative">
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 rounded-full" />
+              <p className="pl-4 text-xs font-semibold leading-relaxed text-foreground/90 italic">
+                "{analise.texto}"
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              <div className="rounded-lg bg-muted/30 p-3 border border-border/40">
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Status Global</p>
+                <p className="text-xs font-bold text-success flex items-center gap-1.5">
+                  <span className="size-1.5 rounded-full bg-success animate-pulse" />
+                  Operação Estável
+                </p>
+              </div>
+              <div className="rounded-lg bg-muted/30 p-3 border border-border/40">
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Processamento IA</p>
+                <p className="text-xs font-bold text-primary">Tempo Real</p>
+              </div>
+            </div>
+          </div>
 
           <div className="mt-4 rounded-lg border-l-4 border-primary bg-primary-soft/30 p-4">
             <p className="text-[10px] font-bold uppercase tracking-wider text-primary">Diretriz Administrativa</p>
