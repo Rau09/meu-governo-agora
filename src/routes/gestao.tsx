@@ -115,7 +115,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
   return (
     <AppShell librasMensagem="Área restrita da prefeitura. Faça login para ver o painel de gestão.">
-      <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito da equipe da Prefeitura" />
+      <TopBar titulo="Painel Administrativo" subtitulo="Sistema oficial de gestão Cantu Conecta" />
       <div className="-mt-5 px-4">
         <form
           onSubmit={submit}
@@ -269,7 +269,7 @@ function Painel({ onSair }: { onSair: () => void }) {
 
   return (
     <AppShell librasMensagem="Painel de gestão regional, com alertas, prioridades, mapa e análise da inteligência artificial para a Cantuquiriguaçu.">
-      <TopBar titulo="Gestão Inteligente" subtitulo="Cantu Conecta · Regional · uso interno" />
+      <TopBar titulo="Painel Administrativo" subtitulo="Gestão Integrada · Cantu Conecta · Administração" />
 
       <div className="-mt-5 space-y-5 px-4">
         <div className="flex justify-end">
