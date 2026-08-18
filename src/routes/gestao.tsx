@@ -352,50 +352,57 @@ function Painel({ onSair }: { onSair: () => void }) {
 
         {/* 3. Prioridades */}
         <section>
-          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
-            Prioridades da semana
+          <h2 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/70">
+            Focos de Monitoramento Semanal
           </h2>
-          <ul className="space-y-3">
+          <ul className="space-y-4">
             {focos.map((p, i) => (
               <li
                 key={p.id}
                 style={{ animationDelay: `${i * 60}ms` }}
-                className="animate-in rounded-3xl border border-border bg-card p-3 shadow-card fade-in slide-in-from-bottom-2 duration-500"
+                className="animate-in rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:border-primary/30"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-bold leading-tight">
-                    {NIVEIS[p.nivel].emoji} {p.categoria} — {p.bairro}
-                  </p>
-                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${NIVEIS[p.nivel].classe}`}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <p className="text-sm font-bold text-foreground">
+                      {p.categoria} — {p.bairro}
+                    </p>
+                    <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                      <span className="font-bold text-foreground">{p.total}</span> registros · 
+                      <span className="mx-1 font-bold text-destructive">{p.atrasadas}</span> atrasos · 
+                      <span className="ml-1 font-bold text-primary">+{p.variacao}%</span> este mês
+                    </p>
+                  </div>
+                  <span className={`shrink-0 rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${NIVEIS[p.nivel].classe}`}>
                     {NIVEIS[p.nivel].rotulo}
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-muted-foreground">
-                  {p.total} ocorrências · {p.atrasadas} atrasadas · +{p.variacao}% neste mês ·{" "}
-                  {p.afetados.toLocaleString("pt-BR")} pessoas afetadas
-                </p>
-                <p className="mt-1 text-xs font-medium">“{p.resumo}”</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
+                
+                <div className="mt-3 rounded-lg bg-secondary/30 p-2.5 text-[11px] italic text-muted-foreground/90">
+                  “{p.resumo}”
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => setDetalhe({ titulo: `${p.categoria} — ${p.bairro}`, nota: p.resumo, itens: p.itens })}
-                    className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+                    className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-secondary active:scale-95 transition-colors"
                   >
-                    Ver ocorrências
+                    Detalhes
                   </button>
                   <button
                     type="button"
                     onClick={() => irParaMapa(p.itens, metaCategoria(p.categoria).filtro)}
-                    className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+                    className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-secondary active:scale-95 transition-colors"
                   >
-                    Ver no mapa
+                    Geolocalização
                   </button>
                   <button
                     type="button"
                     onClick={() => setAcao(`Ação criada para ${p.categoria} no bairro ${p.bairro}: equipe designada.`)}
-                    className="rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground active:scale-95"
+                    className="ml-auto rounded-lg bg-primary px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-primary-foreground hover:bg-primary/90 active:scale-95 shadow-sm transition-all"
                   >
-                    Criar ação
+                    Despachar Equipe
                   </button>
                 </div>
               </li>
