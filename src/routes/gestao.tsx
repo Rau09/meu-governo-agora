@@ -119,49 +119,60 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
       <div className="-mt-5 px-4">
         <form
           onSubmit={submit}
-          className="animate-in rounded-3xl border border-border bg-card p-5 shadow-card fade-in slide-in-from-bottom-3 duration-500"
+          className="animate-in rounded-xl border border-border bg-card p-6 shadow-sm fade-in slide-in-from-bottom-3 duration-500"
         >
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-primary-soft">
+          <div className="flex size-12 items-center justify-center rounded-lg bg-primary-soft">
             <Lock className="size-5 text-primary" />
           </div>
-          <h2 className="mt-3 text-base font-bold">Entrar no painel</h2>
-          <p className="text-xs text-muted-foreground">Use as credenciais fornecidas pela Prefeitura.</p>
+          <h2 className="mt-4 text-lg font-bold tracking-tight">Autenticação Administrativa</h2>
+          <p className="text-xs text-muted-foreground">Sistema restrito. Insira suas credenciais oficiais.</p>
 
-          <label className="mt-4 block text-xs font-semibold" htmlFor="usuario">
-            Usuário
-          </label>
-          <input
-            id="usuario"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
-            autoComplete="username"
-            className="mt-1 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
-            placeholder="prefeitura"
-          />
+          <div className="mt-6 space-y-4">
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground" htmlFor="usuario">
+                Identificador do Usuário
+              </label>
+              <input
+                id="usuario"
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                autoComplete="username"
+                className="mt-1.5 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
+                placeholder="Ex: prefeitura"
+              />
+            </div>
 
-          <label className="mt-3 block text-xs font-semibold" htmlFor="senha">
-            Senha
-          </label>
-          <input
-            id="senha"
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            autoComplete="current-password"
-            className="mt-1 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
-            placeholder="••••••••"
-          />
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground" htmlFor="senha">
+                Chave de Acesso
+              </label>
+              <input
+                id="senha"
+                type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                autoComplete="current-password"
+                className="mt-1.5 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
 
-          {erro && <p className="mt-2 text-xs font-medium text-destructive">{erro}</p>}
+          {erro && (
+            <div className="mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-xs font-bold text-destructive">
+              <AlertTriangle className="size-4" />
+              {erro}
+            </div>
+          )}
 
           <button
             type="submit"
-            className="mt-4 w-full rounded-2xl bg-primary py-3 text-sm font-bold text-primary-foreground transition-all duration-200 hover:shadow-float active:scale-[0.98]"
+            className="mt-6 w-full rounded-lg bg-primary py-3.5 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.98]"
           >
-            Entrar
+            Acessar Sistema
           </button>
-          <p className="mt-3 text-center text-[11px] text-muted-foreground">
-            Demonstração: prefeitura / quedas2026
+          <p className="mt-4 text-center text-[10px] font-medium text-muted-foreground/60">
+            Acesso monitorado · IP: 189.XXX.XXX.XXX
           </p>
         </form>
       </div>
