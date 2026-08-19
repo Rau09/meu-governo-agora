@@ -34,7 +34,7 @@ export function AppShell({
             className="fixed bottom-24 right-4 z-40 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-xl transition-all active:scale-95"
             aria-label="Ver tradução em Libras"
           >
-            <div className="font-black text-[10px] absolute -top-2 bg-primary px-2 py-0.5 rounded-full text-primary-foreground border-2 border-background">LIBRAS</div>
+            <div className="font-black text-[10px] absolute -top-2 bg-accent-gradient px-2 py-0.5 rounded-full text-accent-foreground border-2 border-background">LIBRAS</div>
             <Hand className="size-6" />
           </button>
         )}
