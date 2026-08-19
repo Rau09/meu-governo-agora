@@ -277,7 +277,7 @@ function Medicamentos() {
           <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">
             Fonte: Portal da Transparência · Quedas do Iguaçu
           </p>
-        </div>
+        </footer>
       </div>
 
       {/* Modal de Detalhes (Simulado) */}
