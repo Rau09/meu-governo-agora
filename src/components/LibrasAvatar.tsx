@@ -192,44 +192,21 @@ function SignerFigure({ pose }: { pose: Pose }) {
         
         {/* Tronco Humano Estilizado (SVG) */}
         <svg viewBox="0 0 120 150" className="relative w-full h-full z-10 drop-shadow-md">
-          {/* Cabeça */}
-          <circle cx="60" cy="35" r="18" fill="#FAD1AF" stroke="#C8855F" strokeWidth="0.5" />
+          {/* Cabeça e Cabelo (Assistente Digital Profissional) */}
+          <circle cx="60" cy="35" r="19" fill="#FAD1AF" />
+          <path d="M41 25 Q60 5 79 25 L83 40 Q60 30 37 40 Z" fill="#4E342E" />
           
-          {/* Cabelo Marrom com mais volume e estilo */}
-          <path d="M42 28 Q60 5 78 28 L82 38 Q60 30 38 38 Z" fill="#4E342E" />
-          <path d="M42 28 Q36 38 45 48" fill="none" stroke="#4E342E" strokeWidth="3" strokeLinecap="round" />
-          <path d="M78 28 Q84 38 75 48" fill="none" stroke="#4E342E" strokeWidth="3" strokeLinecap="round" />
-          
-          {/* Rosto expressivo e amigável */}
+          {/* Rosto */}
           <g>
-            {/* Olhos com brilho */}
-            <circle cx="53" cy="35" r="2.2" fill="#2C3E50" />
-            <circle cx="53.8" cy="34" r="0.8" fill="white" />
-            <circle cx="67" cy="35" r="2.2" fill="#2C3E50" />
-            <circle cx="67.8" cy="34" r="0.8" fill="white" />
-            
-            {/* Sobrancelhas suaves */}
-            <path d="M49 30 Q53 28 57 30" fill="none" stroke="#4E342E" strokeWidth="1" strokeLinecap="round" />
-            <path d="M63 30 Q67 28 71 30" fill="none" stroke="#4E342E" strokeWidth="1" strokeLinecap="round" />
+            <circle cx="53" cy="35" r="2.5" fill="#1A1A1A" />
+            <circle cx="67" cy="35" r="2.5" fill="#1A1A1A" />
+            <path d="M52 48 Q60 54 68 48" fill="none" stroke="#E74C3C" strokeWidth="1.5" strokeLinecap="round" />
           </g>
-          
-          {/* Nariz sutil */}
-          <path d="M60 37 L60 40" fill="none" stroke="#D35400" strokeWidth="1" strokeLinecap="round" opacity="0.4" />
-          
-          {/* Sorriso gentil e empático */}
-          <path d="M52 46 Q60 52 68 46" fill="none" stroke="#E74C3C" strokeWidth="1.2" strokeLinecap="round" opacity="0.8" />
 
-          {/* Pescoço */}
-          <rect x="54" y="50" width="12" height="12" rx="2" fill="#FAD1AF" />
+          {/* Roupa Profissional Verde */}
+          <path d="M25 60 Q60 55 95 60 L100 145 Q60 150 20 145 Z" fill="#2ECC71" />
+          <path d="M30 60 Q60 65 90 60" fill="none" stroke="#27AE60" strokeWidth="2" />
 
-          {/* Tronco / Camiseta - Verde Cantu Conecta */}
-          <path d="M30 62 Q60 58 90 62 L98 135 Q60 142 22 135 Z" fill="#2ECC71" />
-          {/* Detalhes da roupa para volume */}
-          <path d="M50 62 Q60 72 70 62" fill="none" stroke="#27AE60" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M30 85 Q60 88 90 85" fill="none" stroke="#27AE60" strokeWidth="0.5" opacity="0.3" />
-          
-          {/* Calça Sóbria */}
-          <path d="M32 132 L40 148 L80 148 L88 132 Z" fill="#273746" />
         </svg>
 
         {/* Braços e mãos articuladas sobrepostos */}
@@ -329,56 +306,51 @@ function Mao({ config, color = "#FAD1AF" }: { config: Configuracao; color?: stri
 
   return (
     <g style={{ transform: `scale(${escalaMao})` }}>
-      {/* Sombra da palma */}
-      <rect x={-7.5} y={-1.5} width={15} height={13} rx={6} fill="black" opacity="0.05" transform="translate(1, 1)" />
       {/* Palma da mão */}
-      <rect x={-7.5} y={-2} width={15} height={13} rx={6} fill={color} stroke={strokeColor} strokeWidth="0.6" />
+      <rect x={-8} y={-2} width={16} height={14} rx={7} fill={color} stroke={strokeColor} strokeWidth="0.8" />
       
       {/* Dedos (Indicador ao Mínimo) */}
       {dedos.map((d, i) => {
-        const h = 3.5 + d.ext * d.alturaMax;
+        const h = 4 + d.ext * 14;
         return (
           <g key={i} style={{ transform: `translate(${d.dx}px, 6px) rotate(${d.angulo * (1 - d.ext)}deg)`, transition: transicao }}>
             <rect
-              x={-1.6}
+              x={-2}
               y={-h}
-              width={3.2}
+              width={4}
               height={h}
-              rx={1.6}
+              rx={2}
               fill={color} 
               stroke={strokeColor} 
-              strokeWidth="0.5"
+              strokeWidth="0.7"
               style={{ transition: transicao }}
             />
-            {/* Detalhe da articulação do dedo (falange) */}
-            {d.ext > 0.5 && (
-              <line x1="-0.8" y1={-h/2} x2="0.8" y2={-h/2} stroke={strokeColor} strokeWidth="0.3" opacity="0.4" />
-            )}
           </g>
         );
       })}
 
-      {/* Polegar - Mais articulado e visível */}
+      {/* Polegar */}
       <g
         style={{
-          transform: `translate(-7.5px, 3px) rotate(${20 - polegar * 50}deg)`,
+          transform: `translate(-8px, 4px) rotate(${25 - polegar * 60}deg)`,
           transformOrigin: "center left",
           transition: transicao,
         }}
       >
         <rect
-          x={-1}
-          y={-1.8}
-          width={3.5}
-          height={4 + polegar * 9}
-          rx={1.75}
+          x={-1.5}
+          y={-2}
+          width={4}
+          height={6 + polegar * 7}
+          rx={2}
           fill={color} 
           stroke={strokeColor} 
-          strokeWidth="0.5"
+          strokeWidth="0.7"
           style={{ transition: transicao, transform: "rotate(-90deg)" }}
         />
       </g>
     </g>
+
   );
 }
 
