@@ -177,8 +177,8 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
       >
         <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg" preserveAspectRatio="xMidYMin slice">
           {/* Cabeça e Pescoço - Tons de pele profissionais */}
-          <rect x="74" y="65" width="12" height="20" fill="#D2B48C" />
-          <ellipse cx="80" cy="45" rx="22" ry="28" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
+          <rect x="75" y="68" width="10" height="20" fill="#D2B48C" />
+          <ellipse cx="80" cy="45" rx="20" ry="26" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
           
           {/* Cabelo Adulto Profissional */}
           <path d="M56 35 Q80 18 104 35 L108 50 Q80 42 52 50 Z" fill="#2C1810" />
