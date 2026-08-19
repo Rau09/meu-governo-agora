@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Stethoscope, PawPrint, MapPin, MessageCircle, UserRound, Building2 } from "lucide-react";
+import { Home, Stethoscope, PawPrint, MapPin, MessageCircle, UserRound, Building2, Hand } from "lucide-react";
 import { LibrasViewer } from "./LibrasAvatar";
 
 
