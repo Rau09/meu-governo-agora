@@ -187,7 +187,7 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           <g className="opacity-90">
             <ellipse cx="69" cy="66" rx="2" ry="2.5" fill="#1A1A1A" />
             <ellipse cx="91" cy="66" rx="2" ry="2.5" fill="#1A1A1A" />
-            <path d="M74 78 Q80 80 86 78" fill="none" stroke="#8B4513" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M74 82 Q80 84 86 82" fill="none" stroke="#8B4513" strokeWidth="1.5" strokeLinecap="round" />
             {/* Sobrancelhas sutis */}
             <path d="M64 52 Q69 49 74 51" fill="none" stroke="#2C1810" strokeWidth="1.2" opacity="0.6" />
             <path d="M86 51 Q91 49 96 52" fill="none" stroke="#2C1810" strokeWidth="1.2" opacity="0.6" />
