@@ -61,10 +61,13 @@ export function MapaOcorrencias({
   }, [visiveis, filtro]);
 
   return (
-    <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
+    <section className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-bold">🗺️ Mapa Regional</h2>
-        <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold">{visiveis.length}</span>
+        <div>
+          <h2 className="text-sm font-bold text-foreground">Mapa Regional de Operação</h2>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Visão Estratégica Cantuquiriguaçu</p>
+        </div>
+        <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-black">{visiveis.length}</span>
       </div>
 
       <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
