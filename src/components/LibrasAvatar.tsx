@@ -38,13 +38,11 @@ export function LibrasAvatar() {
               {/* Cabeça */}
               <circle cx="60" cy="35" r="18" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
               
-              {/* Cabelo */}
-              <path d="M45 25 Q60 15 75 25 Q75 35 60 40 Q45 35 45 25" fill="#4A3728" />
-              
-              {/* Cabelo Marrom */}
-              <path d="M42 28 Q60 12 78 28 L78 35 Q60 25 42 35 Z" fill="#4A3728" />
-              <path d="M42 28 Q40 35 45 42" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
-              <path d="M78 28 Q80 35 75 42" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+              {/* Cabelo Marrom Ajustado */}
+              <path d="M42 30 Q60 10 78 30 Q82 35 78 40 Q60 30 42 40 Q38 35 42 30" fill="#4A3728" />
+              <path d="M42 30 Q40 38 45 45" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+              <path d="M78 30 Q80 38 75 45" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+
 
               {/* Rosto */}
               <circle cx="53" cy="35" r="1.5" fill="#333" />
