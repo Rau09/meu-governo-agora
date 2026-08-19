@@ -262,7 +262,7 @@ function MaoLibras({ config, velocidade, lado }: { config: Configuracao; velocid
   return (
     <g style={{ transform: `scale(${escala}) rotate(${lado === "esq" ? 5 : -5}deg)` }}>
       {/* Palma Humana */}
-      <rect x={-9} y={-2} width={18} height={17} rx={6} fill={color} stroke={stroke} strokeWidth="1.2" />
+      <rect x={-9} y={-2} width={18} height={17} rx={4} fill={color} stroke={stroke} strokeWidth="1.2" />
       
       {/* Dedos Principais */}
       {[
