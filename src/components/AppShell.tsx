@@ -36,7 +36,7 @@ export function AppShell({
           whileTap={{ scale: 0.9 }}
           onClick={toggleAtivo}
           className={`fixed bottom-24 left-8 z-50 flex size-14 cursor-grab items-center justify-center rounded-full shadow-2xl transition-colors active:cursor-grabbing ${
-            ativo ? "bg-primary text-primary-foreground" : "bg-white text-primary"
+            ativo ? "hidden bg-primary text-primary-foreground" : "bg-white text-primary"
           }`}
           aria-label="Ativar intérprete de Libras"
         >

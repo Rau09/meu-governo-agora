@@ -1,28 +1,24 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { 
   OrbitControls, 
   PerspectiveCamera, 
   Environment,
-  Html,
-  useAnimations,
-  useGLTF
+  Html
 } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Play, Pause, RotateCcw, FastForward, Rewind } from "lucide-react";
+import { X, Play, Pause, RotateCcw } from "lucide-react";
 import { useLibras } from "@/lib/libras-translator";
 
-// Componente do Modelo 3D (Placeholder realista)
 function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
   const group = useRef<THREE.Group>(null);
   const [glosaAtual, setGlosaAtual] = useState("");
   const [hoveredPart, setHoveredPart] = useState<string | null>(null);
   
-  useFrame((state, delta) => {
+  useFrame((state) => {
     const tempoTotal = state.clock.getElapsedTime();
     
-    // Animação de interação manual (prioritária)
     if (hoveredPart && group.current) {
       const braçoDir = group.current.getObjectByName("BraçoDireito");
       const braçoEsq = group.current.getObjectByName("BraçoEsquerdo");
@@ -65,25 +61,19 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
     }
   });
 
-
   return (
     <group ref={group}>
-      {/* Corpo (Enquadramento da Cintura para cima) */}
       <mesh position={[0, -0.2, 0]}>
         <capsuleGeometry args={[0.25, 0.6, 4, 16]} />
         <meshStandardMaterial color="#1e293b" />
       </mesh>
-
       
-      {/* Cabeça Careca */}
       <mesh name="Cabeça" position={[0, 0.4, 0]}>
         <sphereGeometry args={[0.18, 32, 32]} />
         <meshStandardMaterial color="#fcd34d" />
       </mesh>
       
-      {/* Rosto Amigável (2D sobreposto) */}
       <group position={[0, 0.4, 0.18]}>
-        {/* Olhos */}
         <mesh position={[-0.05, 0.05, 0]}>
           <circleGeometry args={[0.015, 16]} />
           <meshBasicMaterial color="black" />
@@ -92,43 +82,35 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
           <circleGeometry args={[0.015, 16]} />
           <meshBasicMaterial color="black" />
         </mesh>
-        {/* Sorriso Amigável */}
         <mesh position={[0, -0.05, 0]} rotation={[0, 0, Math.PI]}>
           <ringGeometry args={[0.04, 0.05, 16, 1, 0, Math.PI]} />
           <meshBasicMaterial color="black" />
         </mesh>
       </group>
 
-
-      {/* Braço Direito Humanoide Interativo */}
       <group 
         name="BraçoDireito" 
         position={[0.25, 0.2, 0]}
         onPointerOver={() => setHoveredPart("BraçoDireito")}
         onPointerOut={() => setHoveredPart(null)}
       >
-        {/* Ombro */}
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.08, 16, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
-        {/* Braço Superior */}
         <mesh position={[0.15, -0.15, 0]} rotation={[0, 0, -Math.PI / 4]}>
           <capsuleGeometry args={[0.06, 0.3, 8, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
-        {/* Antebraço */}
         <mesh position={[0.3, -0.4, 0.05]} rotation={[0.2, 0, -Math.PI / 3]}>
           <capsuleGeometry args={[0.05, 0.3, 8, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
-        {/* Mão Direita Anatômica */}
         <group position={[0.45, -0.55, 0.1]} scale={1.2}>
           <mesh>
             <boxGeometry args={[0.08, 0.08, 0.03]} />
             <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
           </mesh>
-          {/* Dedos */}
           {[...Array(5)].map((_, i) => (
             <mesh key={i} position={[-0.03 + i * 0.015, 0.05, 0]}>
               <capsuleGeometry args={[0.006, 0.04, 4, 8]} />
@@ -138,35 +120,29 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
         </group>
       </group>
 
-      {/* Braço Esquerdo Humanoide Interativo */}
       <group 
         name="BraçoEsquerdo" 
         position={[-0.25, 0.2, 0]}
         onPointerOver={() => setHoveredPart("BraçoEsquerdo")}
         onPointerOut={() => setHoveredPart(null)}
       >
-        {/* Ombro */}
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.08, 16, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
-        {/* Braço Superior */}
         <mesh position={[-0.15, -0.15, 0]} rotation={[0, 0, Math.PI / 4]}>
           <capsuleGeometry args={[0.06, 0.3, 8, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
-        {/* Antebraço */}
         <mesh position={[-0.3, -0.4, 0.05]} rotation={[0.2, 0, Math.PI / 3]}>
           <capsuleGeometry args={[0.05, 0.3, 8, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
-        {/* Mão Esquerda Anatômica */}
         <group position={[-0.45, -0.55, 0.1]} scale={1.2}>
           <mesh>
             <boxGeometry args={[0.08, 0.08, 0.03]} />
             <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
           </mesh>
-          {/* Dedos */}
           {[...Array(5)].map((_, i) => (
             <mesh key={i} position={[-0.03 + i * 0.015, 0.05, 0]}>
               <capsuleGeometry args={[0.006, 0.04, 4, 8]} />
@@ -175,7 +151,6 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
           ))}
         </group>
       </group>
-
 
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={1} />
@@ -207,7 +182,6 @@ export function LibrasAvatar() {
         className="fixed bottom-24 right-4 z-50 flex flex-col gap-2 pointer-events-none"
       >
         <div className="w-64 h-80 bg-slate-900/95 backdrop-blur-xl border-2 border-primary/30 rounded-3xl overflow-hidden shadow-2xl pointer-events-auto flex flex-col">
-          {/* Header */}
           <div className="bg-primary/20 p-3 flex items-center justify-between border-b border-white/10">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary-foreground flex items-center gap-2">
               <div className="size-2 rounded-full bg-green-500 animate-pulse" />
@@ -221,7 +195,6 @@ export function LibrasAvatar() {
             </button>
           </div>
 
-          {/* Área 3D */}
           <div className="flex-1 relative bg-gradient-to-b from-slate-900 to-slate-800">
             <Canvas shadows className="cursor-grab active:cursor-grabbing" onClick={() => setReproduzindo(!reproduzindo)}>
               <PerspectiveCamera makeDefault position={[0, 0, 1.8]} />
@@ -238,10 +211,8 @@ export function LibrasAvatar() {
                 enablePan={false}
                 enableRotate={false}
               />
-
             </Canvas>
 
-            {/* Legenda das Glosas e Feedback Visual */}
             <div className="absolute bottom-4 left-0 right-0 px-4 space-y-2">
               <AnimatePresence mode="wait">
                 {glosas.length > 0 && reproduzindo && (
@@ -268,10 +239,8 @@ export function LibrasAvatar() {
                 </div>
               )}
             </div>
-
           </div>
 
-          {/* Controles */}
           <div className="p-3 bg-black/40 border-t border-white/10 grid grid-cols-4 gap-2">
             <button 
               onClick={() => setReproduzindo(!reproduzindo)}
@@ -281,7 +250,7 @@ export function LibrasAvatar() {
               {reproduzindo ? "PAUSAR" : "REPRODUZIR"}
             </button>
             <button 
-              onClick={() => setMensagem(mensagem)} // Reinicia
+              onClick={() => setMensagem(mensagem)} 
               className="flex items-center justify-center rounded-xl bg-white/10 text-white h-10 hover:bg-white/20 transition-colors"
             >
               <RotateCcw className="size-4" />
