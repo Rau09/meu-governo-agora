@@ -204,60 +204,52 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
 
 function SignerFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
   return (
-    <div className="relative h-56 w-44 drop-shadow-xl perspective-1000">
+    <div className="relative h-64 w-56 drop-shadow-2xl perspective-1000">
       <div 
         className="relative w-full h-full preserve-3d"
         style={{
           transform: `rotateY(${pose.tronco ?? 0}deg)`,
-          transition: `transform ${420 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+          transition: `transform ${480 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
         }}
       >
-        {/* Sombra no chão */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black/15 blur-xl rounded-[100%] z-0" />
         
-        {/* Tronco Humano Estilizado (SVG) */}
-        <svg viewBox="0 0 120 150" className="relative w-full h-full z-10 drop-shadow-md">
-          {/* Cabeça e Cabelo (Assistente Digital Profissional) */}
-          <circle cx="60" cy="35" r="19" fill="#FAD1AF" />
-          <path d="M41 25 Q60 5 79 25 L83 40 Q60 30 37 40 Z" fill="#4E342E" />
+        <svg viewBox="0 0 140 180" className="relative w-full h-full z-10 drop-shadow-lg">
+          <circle cx="70" cy="45" r="26" fill="#FAD1AF" />
+          <path d="M42 35 Q70 10 98 35 L102 55 Q70 40 38 55 Z" fill="#4E342E" />
           
-          {/* Rosto */}
           <g>
-            <circle cx="53" cy="35" r="2.5" fill="#1A1A1A" />
-            <circle cx="67" cy="35" r="2.5" fill="#1A1A1A" />
-            <path d="M52 48 Q60 54 68 48" fill="none" stroke="#E74C3C" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="60" cy="45" r="3.5" fill="#1A1A1A" />
+            <circle cx="80" cy="45" r="3.5" fill="#1A1A1A" />
+            <path d="M58 65 Q70 72 82 65" fill="none" stroke="#E74C3C" strokeWidth="2.5" strokeLinecap="round" />
           </g>
 
-          {/* Roupa Profissional Verde */}
-          <path d="M25 60 Q60 55 95 60 L100 145 Q60 150 20 145 Z" fill="#2ECC71" />
-          <path d="M30 60 Q60 65 90 60" fill="none" stroke="#27AE60" strokeWidth="2" />
+          <path d="M30 75 Q70 70 110 75 L120 175 Q70 180 20 175 Z" fill="#2ECC71" />
+          <path d="M35 75 Q70 85 105 75" fill="none" stroke="#27AE60" strokeWidth="3" />
         </svg>
 
-        {/* Braços e mãos articuladas sobrepostos */}
         <svg
-          viewBox="0 0 120 150"
+          viewBox="0 0 140 180"
           className="absolute inset-0 z-20 pointer-events-none"
         >
           <g
             style={{
-              transformOrigin: "60px 120px",
-              transition: `transform ${420 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+              transformOrigin: "70px 140px",
+              transition: `transform ${480 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
             }}
           >
-            {/* Braço esquerdo (à direita na tela) */}
             <Braco
-              x={90}
-              y={70}
+              x={105}
+              y={90}
               rotacao={pose.bracoEsq}
               cotovelo={pose.coveloEsq}
               config={pose.maoEsq}
               velocidade={velocidade}
               color="#F5D5B8"
             />
-            {/* Braço direito (à esquerda na tela) */}
             <Braco
-              x={30}
-              y={70}
+              x={35}
+              y={90}
               rotacao={pose.bracoDir}
               cotovelo={pose.coveloDir}
               config={pose.maoDir}
