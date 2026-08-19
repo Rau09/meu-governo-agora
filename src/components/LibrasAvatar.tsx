@@ -176,46 +176,51 @@ export function LibrasAvatar() {
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9, x: 20 }}
+        animate={{ opacity: 1, scale: 1, x: 0 }}
+        exit={{ opacity: 0, scale: 0.9, x: 20 }}
         className="fixed bottom-24 right-4 z-50 flex flex-col gap-2 pointer-events-none"
       >
-        <div className="w-72 h-[420px] bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-2xl pointer-events-auto flex flex-col">
-          <div className="p-4 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
+        <div className="w-64 h-[480px] bg-[#f8fafc] border-2 border-[#005fb8]/20 rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,95,184,0.3)] pointer-events-auto flex flex-col">
+          <div className="p-4 flex items-center justify-between border-b border-[#005fb8]/10 bg-[#005fb8] text-white">
             <div className="flex items-center gap-2">
-              <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <div className="size-8 rounded-lg bg-white/20 flex items-center justify-center text-white">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                  <path d="M10 18H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-5" />
-                  <path d="m8 22 4-4 4 4" />
+                  <path d="M7 10.5V6a2 2 0 0 1 4 0v7a3 3 0 0 1-6 0v-1.5" />
+                  <path d="M11 8V5a2 2 0 0 1 4 0v7a3 3 0 0 1-6 0" />
+                  <path d="M15 9.5V7a2 2 0 0 1 4 0v7a3 3 0 0 1-6 0" />
                 </svg>
               </div>
-              <span className="text-xs font-bold text-slate-800 tracking-tight">
-                Acessibilidade LIBRAS
-              </span>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black leading-none opacity-80">INTÉRPRETE</span>
+                <span className="text-xs font-bold leading-tight uppercase tracking-wide">
+                  Virtual Cantu
+                </span>
+              </div>
             </div>
             <button 
               onClick={toggleAtivo}
-              className="size-8 rounded-full bg-slate-200/50 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors"
+              className="size-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
             >
-              <X className="size-4" />
+              <X className="size-5" />
             </button>
           </div>
 
-          <div className="flex-1 relative bg-slate-50">
-            <div className="absolute inset-0 flex items-center justify-center opacity-10">
-              <div className="w-48 h-48 border-4 border-primary rounded-full" />
+          <div className="flex-1 relative bg-gradient-to-b from-[#e2e8f0] to-[#f8fafc]">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+               <div className="w-64 h-64 border-[1px] border-[#005fb8]/5 rounded-full" />
+               <div className="absolute w-48 h-48 border-[1px] border-[#005fb8]/10 rounded-full" />
             </div>
             
             <Canvas shadows className="cursor-grab active:cursor-grabbing" onClick={() => setReproduzindo(!reproduzindo)}>
               <PerspectiveCamera makeDefault position={[0, 0, 1.8]} />
-              <Suspense fallback={<Html center className="text-slate-400 text-xs font-medium">Iniciando...</Html>}>
+              <Suspense fallback={<Html center className="text-[#005fb8] text-[10px] font-black animate-pulse">CARREGANDO...</Html>}>
                 <AvatarModelo 
                   glosas={glosas} 
                   velocidade={velocidade} 
                   reproduzindo={reproduzindo} 
                 />
-                <Environment preset="studio" />
+                <Environment preset="apartment" />
               </Suspense>
               <OrbitControls 
                 enableZoom={false} 
@@ -229,13 +234,13 @@ export function LibrasAvatar() {
                 {glosas.length > 0 && reproduzindo && (
                   <motion.div 
                     key={glosas.join("-")}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    className="flex flex-wrap justify-center gap-1.5"
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    className="flex flex-wrap justify-center gap-1"
                   >
                     {glosas.map((g, i) => (
-                      <span key={i} className="text-[9px] px-2 py-1 rounded-full bg-primary text-white font-bold shadow-sm">
+                      <span key={i} className="text-[8px] px-2 py-0.5 rounded-md bg-[#005fb8] text-white font-black shadow-md border border-white/20">
                         {g}
                       </span>
                     ))}
@@ -243,37 +248,54 @@ export function LibrasAvatar() {
                 )}
               </AnimatePresence>
 
-              <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 text-center border border-slate-200 shadow-sm min-h-[72px] flex flex-col justify-center">
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Tradução</p>
-                <p className="text-sm font-semibold text-slate-700 leading-relaxed">
-                  {mensagem || "Pronto para traduzir..."}
+              <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-4 text-center border-t border-white shadow-xl min-h-[80px] flex flex-col justify-center">
+                <p className="text-[9px] text-[#005fb8] font-black uppercase tracking-[0.2em] mb-2 opacity-60 italic">Tradução em tempo real</p>
+                <p className="text-xs font-bold text-slate-800 leading-snug">
+                  {mensagem || "Toque em um texto ou botão para traduzir para LIBRAS"}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-3">
-            <button 
-              onClick={() => setReproduzindo(!reproduzindo)}
-              className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-primary text-white h-12 font-bold text-sm shadow-lg shadow-primary/20 transition-transform active:scale-95"
-            >
-              {reproduzindo ? <Pause className="size-5" /> : <Play className="size-5" fill="currentColor" />}
-              {reproduzindo ? "PAUSAR" : "REPRODUZIR"}
-            </button>
-            <div className="flex gap-2">
+          <div className="p-4 bg-white border-t border-slate-100 flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-3">
+              <button 
+                onClick={() => setReproduzindo(!reproduzindo)}
+                className="flex-1 flex items-center justify-center gap-3 rounded-2xl bg-[#005fb8] text-white h-14 font-black text-xs shadow-lg shadow-[#005fb8]/20 transition-all active:scale-95 hover:bg-[#004e9a]"
+              >
+                {reproduzindo ? <Pause className="size-6" fill="currentColor" /> : <Play className="size-6" fill="currentColor" />}
+                {reproduzindo ? "PAUSAR" : "REPRODUZIR"}
+              </button>
               <button 
                 onClick={() => setMensagem(mensagem)} 
-                className="size-12 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors shadow-sm"
+                className="size-14 flex items-center justify-center rounded-2xl bg-[#f1f5f9] text-[#005fb8] hover:bg-[#e2e8f0] transition-colors border border-slate-200"
               >
-                <RotateCcw className="size-5" />
-              </button>
-              <button 
-                onClick={() => setVelocidade(velocidade === 1.25 ? 0.75 : velocidade + 0.25)}
-                className="size-12 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors shadow-sm text-xs font-bold"
-              >
-                {velocidade}x
+                <RotateCcw className="size-6" />
               </button>
             </div>
+            
+            <div className="flex items-center gap-2 p-1 bg-[#f1f5f9] rounded-xl border border-slate-200">
+              <span className="text-[8px] font-black text-[#005fb8] px-2 uppercase opacity-60">Velocidade</span>
+              {[0.75, 1.0, 1.25].map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setVelocidade(v)}
+                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-black transition-all ${
+                    velocidade === v 
+                      ? "bg-white text-[#005fb8] shadow-sm" 
+                      : "text-slate-400 hover:text-slate-600"
+                  }`}
+                >
+                  {v}x
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <div className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border border-[#005fb8]/10 shadow-sm flex items-center gap-2">
+            <span className="text-[8px] font-bold text-slate-400">Powered by</span>
+            <span className="text-[9px] font-black text-[#005fb8] tracking-tighter">Cantu Cidadão</span>
           </div>
         </div>
       </motion.div>
