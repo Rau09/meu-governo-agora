@@ -285,7 +285,7 @@ function Painel({ onSair }: { onSair: () => void }) {
       <div className="-mt-6 space-y-6 px-4">
         <div className="flex items-center justify-between">
           <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
-            Sessão Administrativa · {new Date().toLocaleDateString('pt-BR')}
+            Portal da Gestão · {new Date().toLocaleDateString('pt-BR')}
           </p>
           <button
             onClick={onSair}
