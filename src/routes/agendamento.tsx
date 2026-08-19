@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CalendarCheck, CheckCircle2, Trash2, MapPin, Clock } from "lucide-react";
+import { CalendarCheck, CheckCircle2, Trash2, MapPin, Clock, Eye } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+import { useLibras } from "@/lib/libras-translator";
 import { AREAS, HORARIOS, useAgendamentos, useCidadao } from "@/lib/cantu-store";
+
 
 type Busca = { servico?: string };
 
@@ -26,7 +28,9 @@ export const Route = createFileRoute("/agendamento")({
 function Agendamento() {
   const { servico: servicoInicial } = Route.useSearch();
   const { cidadao } = useCidadao();
+  const { setMensagem } = useLibras();
   const { agendamentos, criar, cancelar } = useAgendamentos();
+
 
   const areaInicial = useMemo(
     () => AREAS.find((a) => a.servicos.some((s) => s === servicoInicial))?.id ?? AREAS[0].id,
@@ -82,7 +86,16 @@ function Agendamento() {
 
       <div className={`space-y-6 px-4 ${feito ? "mt-6" : "-mt-5"}`}>
         <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
-          <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">1. Área</h2>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">1. Área</h2>
+            <button 
+              onClick={() => setMensagem("Escolha a área do serviço: Saúde, Animal ou Serviços Urbanos.")}
+              className="size-6 rounded-full bg-primary-soft text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+            >
+              <Eye className="size-3" />
+            </button>
+          </div>
+
           <div className="mt-3 flex flex-wrap gap-2">
             {AREAS.map((a) => (
               <button
