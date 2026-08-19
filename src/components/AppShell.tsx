@@ -27,8 +27,7 @@ export function AppShell({
 
         <nav
           aria-label="Navegação principal"
-          className="fixed bottom-0 left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2 border-t border-border bg-card/95 backdrop-blur-xl"
-
+          className="fixed bottom-0 left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2 border-t border-border bg-card/95 backdrop-blur"
         >
           <ul className="grid grid-cols-5 px-1 pb-[env(safe-area-inset-bottom)] pt-1.5">
             {nav.map(({ to, label, icon: Icon }) => {
@@ -51,21 +50,6 @@ export function AppShell({
         </nav>
 
         <LibrasAvatar mensagem={librasMensagem} />
-
-        {pathname !== "/atendimento" && (
-          <Link
-            to="/atendimento"
-            className="fixed bottom-24 left-4 z-50 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-float transition-all hover:scale-110 active:scale-95 border-2 border-white/20"
-            aria-label="Abrir Assistente do Cidadão"
-          >
-            <MessageCircle className="size-7" />
-            <span className="absolute -top-1 -right-1 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-primary border-2 border-white"></span>
-            </span>
-          </Link>
-        )}
-
       </div>
     </div>
   );

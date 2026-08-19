@@ -1,20 +1,14 @@
-import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento, type Medicamento, type Ocorrencia } from "@/lib/cantu-store";
+import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento } from "@/lib/cantu-store";
 import { normalizar } from "@/lib/libras";
 
 /**
  * Inteligência Cantu Conecta.
- * IA Municipal Digital de Quedas do Iguaçu, PR.
+ *
+ * Especializada em triagem de saúde, causa animal e serviços urbanos regionais.
+ * Focada na região da Cantuquiriguaçu, PR.
  */
 
-export type TipoResposta = "texto" | "medicamento" | "protocolo" | "opcoes" | "servico";
-
-export type Resposta = {
-  tipo: TipoResposta;
-  texto: string;
-  dados?: any;
-  acao?: { rotulo: string; para: string };
-  opcoes?: { rotulo: string; valor: string }[];
-};
+export type Resposta = { texto: string; acao?: { rotulo: string; para: string } };
 
 function tokens(p: string) {
   return p
@@ -23,62 +17,77 @@ function tokens(p: string) {
     .filter((t) => t.length > 1);
 }
 
-const REGRAS: { chaves: string[]; resposta: Resposta }[] = [
+type Regra = {
+  chaves: string[];
+  resposta: Resposta;
+};
+
+const REGRAS: Regra[] = [
   {
-    chaves: ["saude", "ubs", "posto", "dentista", "exame", "medico"],
+    chaves: ["consulta", "consultar", "medico", "clinico", "saude", "ubs", "posto", "dentista", "odonto", "exame", "pediatra"],
     resposta: {
-      tipo: "servico",
-      texto: "Entendi que você precisa de serviços de saúde. Como posso ajudar?",
-      opcoes: [
-        { rotulo: "🏥 Unidades Próximas", valor: "Onde tem posto?" },
-        { rotulo: "📅 Agendar Consulta", valor: "Quero marcar consulta" },
-        { rotulo: "💊 Remédios", valor: "Tem remédio?" },
-      ],
-      acao: { rotulo: "Ver Área de Saúde", para: "/saude" }
-    }
+      texto:
+        "Consultas e exames ficam em Agendar > Saúde: você escolhe a UBS, o dia e o horário. Em caso de urgência, procure o Pronto Atendimento ou ligue 192.",
+      acao: { rotulo: "Agendar consulta", para: "/agendamento" },
+    },
   },
   {
-    chaves: ["buraco", "lixo", "iluminacao", "poste", "rua", "vazamento"],
+    chaves: ["vacina", "vacinacao", "imunizacao"],
     resposta: {
-      tipo: "servico",
-      texto: "Posso ajudar você a comunicar um problema na cidade. O que aconteceu?",
-      opcoes: [
-        { rotulo: "🕳️ Buraco na Via", valor: "Tem um buraco aqui" },
-        { rotulo: "💡 Poste sem Luz", valor: "Luz do poste queimou" },
-        { rotulo: "🗑️ Acúmulo de Lixo", valor: "Tem lixo na rua" },
-      ],
-      acao: { rotulo: "Abrir Ocorrência", para: "/ocorrencia" }
-    }
+      texto:
+        "A vacinação é por ordem de chegada nas UBS, das 08h às 16h. Você também pode reservar horário pelo app.",
+      acao: { rotulo: "Agendar vacinação", para: "/agendamento" },
+    },
   },
   {
-    chaves: ["animal", "cachorro", "gato", "maustratos", "adocao"],
+    chaves: ["iptu", "imposto", "boleto", "tributo", "segunda", "via", "alvara"],
     resposta: {
-      tipo: "servico",
-      texto: "A Causa Animal é prioridade em Quedas do Iguaçu. Como quer ajudar hoje?",
-      opcoes: [
-        { rotulo: "🐕 Quero Adotar", valor: "Como adotar um pet?" },
-        { rotulo: "🚨 Denunciar Maus-tratos", valor: "Maus-tratos animais" },
-        { rotulo: "📍 Mapa Animal", valor: "Onde estão os pets?" },
-      ],
-      acao: { rotulo: "Causa Animal", para: "/causa-animal" }
-    }
+      texto:
+        "Segunda via de IPTU, alvarás e protocolos ficam em Serviços > Cidadania e Tributos. Tenha em mãos o número do cadastro do imóvel.",
+      acao: { rotulo: "Ver serviços", para: "/servicos" },
+    },
   },
   {
-    chaves: ["transparencia", "gasto", "prefeitura", "contas", "dados"],
+    chaves: ["matricula", "escola", "creche", "transporte", "escolar", "cmei", "educacao", "historico"],
     resposta: {
-      tipo: "servico",
-      texto: "A transparência é fundamental. O que você deseja consultar?",
-      opcoes: [
-        { rotulo: "💰 Gastos Públicos", valor: "Quanto a prefeitura gastou?" },
-        { rotulo: "📄 Diário Oficial", valor: "Ver diário oficial" },
-        { rotulo: "📊 Dados Abertos", valor: "Portal da Transparência" },
-      ],
-      acao: { rotulo: "Portal da Transparência", para: "/transparencia" }
-    }
-  }
+      texto:
+        "Matrícula, vaga em creche e transporte escolar estão em Serviços > Educação. Leve RG, CPF e comprovante de residência no dia do atendimento.",
+      acao: { rotulo: "Ver serviços", para: "/servicos" },
+    },
+  },
+  {
+    chaves: ["horario", "funcionamento", "aberto", "atende", "expediente"],
+    resposta: {
+      texto: "O app funciona 24 horas por dia. O atendimento presencial no Paço Municipal é das 08h às 17h.",
+    },
+  },
+  {
+    chaves: ["cadastro", "acesso", "conta", "pin", "senha", "registrar", "cadastrar"],
+    resposta: {
+      texto:
+        "Seu acesso é criado em Meu Cadastro, com CPF, telefone e um PIN de 6 dígitos. O PIN fica guardado só em forma de código protegido no próprio aparelho.",
+      acao: { rotulo: "Meu cadastro", para: "/registro" },
+    },
+  },
+  {
+    chaves: ["agendamento", "agendar", "marcar", "remarcar", "cancelar", "horarios"],
+    resposta: {
+      texto:
+        "Para marcar, cancelar ou ver seus horários, use a aba Agendar. Ali aparecem também os atendimentos já confirmados.",
+      acao: { rotulo: "Ir para Agendar", para: "/agendamento" },
+    },
+  },
 ];
 
-const CHAVES_MEDICAMENTO = ["remedio", "remedios", "medicamento", "medicamentos", "farmacia", "estoque"];
+const CHAVES_MEDICAMENTO = [
+  "remedio", "remedios", "medicamento", "medicamentos", "farmacia", "estoque", "comprimido", "receita",
+];
+
+const CHAVES_PROBLEMA = [
+  "buraco", "lixo", "entulho", "poste", "lampada", "luz", "iluminacao", "poda", "arvore", "vazamento",
+  "esgoto", "rua", "via", "problema", "reclamar", "reclamacao", "denunciar", "comunicar", "asfalto",
+];
+
 const CHAVES_PROTOCOLO = ["protocolo", "solicitacao", "chamado", "andamento", "status", "acompanhar"];
 
 function buscarMedicamento(pergunta: string): Resposta | null {
@@ -92,12 +101,14 @@ function buscarMedicamento(pergunta: string): Resposta | null {
   if (!achado) return null;
 
   const itens = MEDICAMENTOS.filter((m) => m.nome === achado);
-  
+  const linhas = itens.map((m) => {
+    const st = statusMedicamento(m.quantidade);
+    return `${st.emoji} ${m.unidade}: ${st.rotulo} (${m.quantidade} unid.)`;
+  });
+
   return {
-    tipo: "medicamento",
-    texto: `Localizei a disponibilidade de ${achado} nas farmácias de Quedas do Iguaçu.`,
-    dados: itens,
-    acao: { rotulo: "Ver Detalhes", para: "/medicamentos" }
+    texto: `${achado} nas unidades de saúde:\n${linhas.join("\n")}`,
+    acao: { rotulo: "Ver medicamentos", para: "/medicamentos" },
   };
 }
 
@@ -109,14 +120,14 @@ function consultarProtocolo(pergunta: string): Resposta | null {
     const o = ocorrencias.find((x) => x.protocolo.toUpperCase() === codigo);
     if (!o) {
       return {
-        tipo: "texto",
-        texto: `Não encontrei o protocolo ${codigo} neste aparelho. Verifique se o código está correto.`,
+        texto: `Não encontrei o protocolo ${codigo} neste aparelho. Confira o número ou consulte a Central da Cantuquiriguaçu.`,
       };
     }
+    const st = STATUS_OCORRENCIA.find((s) => s.id === o.status)!;
     return {
-      tipo: "protocolo",
-      texto: `Aqui está o andamento da sua solicitação ${o.protocolo}:`,
-      dados: [o]
+      texto: `Protocolo ${o.protocolo} — ${o.categoria}. Status: ${st.emoji} ${st.rotulo}. Aberto em ${new Date(
+        o.criadoEm,
+      ).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}.`,
     };
   }
 
@@ -124,65 +135,63 @@ function consultarProtocolo(pergunta: string): Resposta | null {
 
   if (ocorrencias.length === 0) {
     return {
-      tipo: "texto",
-      texto: "Você ainda não possui solicitações registradas. Posso te ajudar a comunicar um problema agora.",
-      acao: { rotulo: "Comunicar Problema", para: "/ocorrencia" }
+      texto:
+        "Não tenho nenhuma solicitação registrada neste aparelho ainda. Assim que você comunicar um problema, o protocolo aparece aqui.",
+      acao: { rotulo: "Comunicar problema", para: "/ocorrencia" },
     };
   }
 
+  const linhas = ocorrencias.slice(0, 3).map((o) => {
+    const st = STATUS_OCORRENCIA.find((s) => s.id === o.status)!;
+    return `${st.emoji} ${o.protocolo} — ${o.categoria}: ${st.rotulo}`;
+  });
+
   return {
-    tipo: "protocolo",
-    texto: `Encontrei ${ocorrencias.length} ${ocorrencias.length === 1 ? 'solicitação vinculada' : 'solicitações vinculadas'} ao seu aparelho:`,
-    dados: ocorrencias.slice(0, 5)
+    texto: `Suas solicitações mais recentes:\n${linhas.join("\n")}`,
+    acao: { rotulo: "Comunicar problema", para: "/ocorrencia" },
   };
 }
 
 export function responder(pergunta: string): Resposta {
   const t = tokens(pergunta);
   if (t.length === 0) {
-    return { 
-      tipo: "texto",
-      texto: "Olá! Sou o Assistente do Cidadão. Como posso ajudar você hoje?",
-      opcoes: [
-        { rotulo: "💊 Medicamentos", valor: "Tem remédio?" },
-        { rotulo: "📍 Problemas Urbanos", valor: "Denunciar buraco" },
-        { rotulo: "🏥 Agendar Saúde", valor: "Marcar consulta" }
-      ]
-    };
+    return { texto: "Pode escrever sua dúvida com um pouco mais de detalhe? Assim consigo te ajudar melhor." };
   }
 
   const protocolo = consultarProtocolo(pergunta);
   if (protocolo) return protocolo;
 
-  const medicamento = buscarMedicamento(pergunta);
-  if (medicamento) return medicamento;
-
   if (t.some((x) => CHAVES_MEDICAMENTO.includes(x))) {
+    const especifico = buscarMedicamento(pergunta);
+    if (especifico) return especifico;
     return {
-      tipo: "texto",
-      texto: "Qual medicamento você está procurando? Posso verificar o estoque agora mesmo.",
-      opcoes: [
-        { rotulo: "Albendazol", valor: "Tem Albendazol?" },
-        { rotulo: "Amoxicilina", valor: "Tem Amoxicilina?" },
-        { rotulo: "Dipirona", valor: "Tem Dipirona?" }
-      ]
+      texto:
+        "Dá para consultar o estoque de medicamentos por unidade de saúde na tela Medicamentos. Se me disser o nome do remédio, eu verifico agora.",
+      acao: { rotulo: "Ver medicamentos", para: "/medicamentos" },
     };
   }
 
-  // Busca por regras de serviço
-  for (const regra of REGRAS) {
-    if (t.some((x) => regra.chaves.some((c) => x === c || (x.length > 4 && c.includes(x))))) {
-      return regra.resposta;
-    }
+  const medicamento = buscarMedicamento(pergunta);
+  if (medicamento) return medicamento;
+
+  if (t.some((x) => CHAVES_PROBLEMA.includes(x))) {
+    return {
+      texto:
+        "Use Comunicar Problema: escolha o tipo (buraco, poste, árvore caída, lixo, via, vazamento ou outro), tire uma foto, ative o GPS e descreva. Você recebe um protocolo na hora.",
+      acao: { rotulo: "Comunicar problema", para: "/ocorrencia" },
+    };
   }
 
+  // Melhor regra por número de palavras coincidentes.
+  let melhor: { regra: Regra; pontos: number } | null = null;
+  for (const regra of REGRAS) {
+    const pontos = t.filter((x) => regra.chaves.some((c) => x === c || (x.length > 4 && c.includes(x)))).length;
+    if (pontos > 0 && (!melhor || pontos > melhor.pontos)) melhor = { regra, pontos };
+  }
+  if (melhor) return melhor.regra.resposta;
+
   return {
-    tipo: "texto",
-    texto: "Ainda não tenho essa informação, mas posso te encaminhar para o atendimento responsável ou ajudar com outros serviços.",
-    opcoes: [
-      { rotulo: "🏛️ Contato Prefeitura", valor: "Falar com a prefeitura" },
-      { rotulo: "📊 Transparência", valor: "Portal da Transparência" },
-      { rotulo: "🔙 Voltar ao Início", valor: "Olá" }
-    ]
+    texto:
+      "Ainda estou aprendendo sobre este assunto. Posso te ajudar com agendamento de saúde, proteção animal, estoque de medicamentos e acompanhamento de protocolos na região Cantu.",
   };
 }
