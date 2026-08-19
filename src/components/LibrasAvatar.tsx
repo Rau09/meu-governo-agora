@@ -177,32 +177,32 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
       >
         <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg" preserveAspectRatio="xMidYMin slice">
           {/* Cabeça e Pescoço - Tons de pele profissionais */}
-          <rect x="75" y="108" width="10" height="20" fill="#D2B48C" />
-          <ellipse cx="80" cy="120" rx="20" ry="26" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
+          <rect x="75" y="98" width="10" height="20" fill="#D2B48C" />
+          <ellipse cx="80" cy="110" rx="20" ry="26" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
           
           {/* Cabelo Adulto Profissional */}
-          <path d="M58 95 Q80 80 102 95 L106 108 Q80 100 54 108 Z" fill="#2C1810" />
+          <path d="M58 85 Q80 70 102 85 L106 98 Q80 90 54 98 Z" fill="#2C1810" />
           
           {/* Rosto Sóbrio */}
           <g className="opacity-90">
-            <ellipse cx="72" cy="123" rx="1.8" ry="2.2" fill="#1A1A1A" />
-            <ellipse cx="88" cy="123" rx="1.8" ry="2.2" fill="#1A1A1A" />
-            <path d="M75 135 Q80 137 85 135" fill="none" stroke="#8B4513" strokeWidth="1.2" strokeLinecap="round" />
+            <ellipse cx="72" cy="113" rx="1.8" ry="2.2" fill="#1A1A1A" />
+            <ellipse cx="88" cy="113" rx="1.8" ry="2.2" fill="#1A1A1A" />
+            <path d="M75 125 Q80 127 85 125" fill="none" stroke="#8B4513" strokeWidth="1.2" strokeLinecap="round" />
             {/* Sobrancelhas sutis */}
-            <path d="M68 113 Q72 110 75 112" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
-            <path d="M85 112 Q88 110 92 113" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
+            <path d="M68 103 Q72 100 75 102" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
+            <path d="M85 102 Q88 100 92 103" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
           </g>
 
           {/* Tronco - Camisa Social Lisa (Azul Profissional) */}
-          <path d="M35 125 Q80 120 125 125 L140 220 Q80 220 20 220 Z" fill="#2E5077" />
-          <path d="M60 125 L80 145 L100 125" fill="none" stroke="#1B365D" strokeWidth="2.5" opacity="0.4" />
+          <path d="M35 115 Q80 110 125 115 L140 220 Q80 220 20 220 Z" fill="#2E5077" />
+          <path d="M60 115 L80 135 L100 115" fill="none" stroke="#1B365D" strokeWidth="2.5" opacity="0.4" />
         </svg>
 
         {/* Braços e Mãos - Articulados e em Camada Superior */}
         <svg viewBox="0 0 160 200" className="absolute inset-0" preserveAspectRatio="xMidYMin slice">
           <BracoArticulado
             x={112}
-            y={142}
+            y={132}
             rotacao={pose.bracoEsq}
             cotovelo={pose.coveloEsq}
             config={pose.maoEsq}
@@ -211,7 +211,7 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           />
           <BracoArticulado
             x={48}
-            y={142}
+            y={132}
             rotacao={pose.bracoDir}
             cotovelo={pose.coveloDir}
             config={pose.maoDir}
