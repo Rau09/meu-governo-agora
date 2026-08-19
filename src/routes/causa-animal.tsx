@@ -15,7 +15,7 @@ const animaisAdocao = [
 
 function CausaAnimalPage() {
   return (
-    <AppShell librasMensagem="Causa Animal. Proteja os animais da nossa região. Você pode denunciar maus-tratos, ver animais para adoção e saber como ajudar.">
+    <AppShell >
       <TopBar titulo="Causa Animal" subtitulo="Cuidado e proteção aos animais." />
       
       <div className="px-5 py-6 space-y-8">

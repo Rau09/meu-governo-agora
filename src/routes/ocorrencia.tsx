@@ -80,7 +80,7 @@ function ComunicarProblema() {
 
   if (enviada) {
     return (
-      <AppShell librasMensagem={`Solicitação enviada com sucesso. Anote o número do seu protocolo: ${enviada.protocolo}. Você pode acompanhar o andamento pelo Assistente do Cidadão.`}>
+      <AppShell  >
         <TopBar titulo="Solicitação enviada" subtitulo="A equipe Cantu Conecta já recebeu seu chamado" />
         <div className="-mt-5 space-y-4 px-4 pb-10">
           <div className="animate-in rounded-3xl border border-border bg-card p-5 text-center shadow-card fade-in zoom-in-95 duration-500">
@@ -117,7 +117,7 @@ function ComunicarProblema() {
   }
 
   return (
-    <AppShell librasMensagem="Comunicar Problema. Selecione a categoria, tire uma foto do local, informe sua localização pelo GPS e descreva a situação. Nossa equipe receberá seu chamado imediatamente.">
+    <AppShell >
       <TopBar titulo="Comunicar Problema" subtitulo="Foto, localização e envio em um minuto" />
 
       <form onSubmit={enviar} className="-mt-5 space-y-4 px-4">

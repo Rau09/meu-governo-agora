@@ -12,7 +12,7 @@ function ComunidadePage() {
   const { ocorrencias } = useOcorrencias();
 
   return (
-    <AppShell librasMensagem="Módulo Comunidade: registre problemas na sua rua, como iluminação ou buracos, e acompanhe a resolução pela prefeitura.">
+    <AppShell >
       <TopBar titulo="Comunidade" subtitulo="Cuide do seu bairro e da sua rua." />
       
       <div className="px-5 py-6 space-y-8">

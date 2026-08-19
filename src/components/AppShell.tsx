@@ -1,9 +1,6 @@
-import { useState, useRef, type ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Stethoscope, PawPrint, MapPin, MessageCircle, UserRound, Building2, Hand } from "lucide-react";
-import { motion, useDragControls } from "framer-motion";
-import { LibrasViewer } from "./LibrasAvatar";
-
+import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, Building2 } from "lucide-react";
 
 const nav = [
   { to: "/", label: "Início", icon: Home },
@@ -15,45 +12,16 @@ const nav = [
 
 export function AppShell({
   children,
-  librasMensagem,
 }: {
   children: ReactNode;
-  librasMensagem?: string;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const [librasAtivo, setLibrasAtivo] = useState(false);
-  const dragControls = useDragControls();
   const constraintsRef = useRef(null);
 
   return (
     <div className="min-h-dvh bg-secondary/40" ref={constraintsRef}>
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative">
         <main className="pb-28">{children}</main>
-
-        {/* Botão Flutuante de Acessibilidade (Libras) - Agora Móvel */}
-        {librasMensagem && (
-          <motion.button
-            drag
-            dragControls={dragControls}
-            dragConstraints={constraintsRef}
-            dragElastic={0.1}
-            dragMomentum={false}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setLibrasAtivo(true)}
-            className="fixed bottom-24 right-4 z-40 flex size-14 cursor-grab items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-2xl transition-shadow active:cursor-grabbing hover:shadow-primary/20"
-            aria-label="Ver tradução em Libras"
-          >
-            <div className="font-black text-[10px] absolute -top-2 bg-accent-gradient px-2 py-0.5 rounded-full text-accent-foreground border-2 border-background pointer-events-none">LIBRAS</div>
-            <Hand className="size-6 pointer-events-none" />
-          </motion.button>
-        )}
-
-        {librasAtivo && librasMensagem && (
-          <LibrasViewer 
-            mensagem={librasMensagem} 
-            onClose={() => setLibrasAtivo(false)} 
-          />
-        )}
 
         <nav
           aria-label="Navegação principal"
@@ -78,8 +46,6 @@ export function AppShell({
             })}
           </ul>
         </nav>
-
-        
       </div>
     </div>
   );

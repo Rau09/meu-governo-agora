@@ -1,10 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight, Hand } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { LibrasViewer } from "@/components/LibrasAvatar";
 import { responder } from "@/lib/cantu-ia";
-
 
 type Busca = { protocolo?: string };
 export const Route = createFileRoute("/atendimento")({
@@ -44,7 +42,6 @@ const atalhos = [
   { icon: GraduationCap, titulo: "Escola", texto: "Vaga em creche" },
 ];
 
-
 function Atendimento() {
   const { protocolo } = Route.useSearch();
   const [msgs, setMsgs] = useState<Msg[]>([
@@ -61,7 +58,6 @@ function Atendimento() {
     }
   }, [protocolo]);
   const [texto, setTexto] = useState("");
-  const [librasMensagem, setLibrasMensagem] = useState<string | null>(null);
   const fim = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -80,7 +76,7 @@ function Atendimento() {
   }
 
   return (
-    <AppShell librasMensagem="Atendimento 24 horas. Escreva sua dúvida e a assistente responde na hora.">
+    <AppShell>
       <TopBar titulo="Atendimento 24/7" subtitulo="Assistente virtual sempre disponível" />
 
       <div className="-mt-5 space-y-3 px-4">
@@ -154,12 +150,6 @@ function Atendimento() {
                 {m.texto}
               </p>
               <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setLibrasMensagem(m.texto)}
-                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-primary/10 px-3 text-[10px] font-black text-primary transition-all active:scale-95"
-                >
-                  <Hand className="size-3.5" /> VER EM LIBRAS
-                </button>
                 {m.acao && (
                   <Link
                     to={m.acao.para}
@@ -175,13 +165,6 @@ function Atendimento() {
         <div ref={fim} />
       </div>
 
-      {librasMensagem && (
-        <LibrasViewer 
-          mensagem={librasMensagem} 
-          onClose={() => setLibrasMensagem(null)} 
-        />
-      )}
-
       <div className="fixed bottom-[8.5rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 overflow-x-auto px-4 pb-2 [scrollbar-width:none]">
         <div className="flex w-max gap-2">
           {sugestoes.map((s) => (
@@ -196,7 +179,6 @@ function Atendimento() {
           ))}
         </div>
       </div>
-
 
       <form
         onSubmit={(e) => {
