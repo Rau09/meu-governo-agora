@@ -55,7 +55,7 @@ function Medicamentos() {
   }, [busca, filtro]);
 
   return (
-    <AppShell librasMensagem="Central de medicamentos. Consulte a disponibilidade, veja estatísticas de distribuição e localize a farmácia mais próxima.">
+    <AppShell librasMensagem="Medicamentos. Consulte se o seu remédio está disponível nas farmácias municipais e veja os dados de transparência do estoque.">
       <TopBar titulo="Medicamentos" subtitulo="Consulta de disponibilidade e transparência" />
 
       <div className="-mt-6 space-y-6 px-4 pb-12">
