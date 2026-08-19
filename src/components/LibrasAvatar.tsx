@@ -177,7 +177,7 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
       >
         <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg" preserveAspectRatio="xMidYMin slice">
           {/* Cabeça e Pescoço - Tons de pele profissionais */}
-          <rect x="75" y="63" width="10" height="20" fill="#D2B48C" />
+          <rect x="75" y="73" width="10" height="20" fill="#D2B48C" />
           <ellipse cx="80" cy="75" rx="20" ry="26" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
           
           {/* Cabelo Adulto Profissional */}
@@ -194,15 +194,15 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           </g>
 
           {/* Tronco - Camisa Social Lisa (Azul Profissional) */}
-          <path d="M35 80 Q80 75 125 80 L140 220 Q80 220 20 220 Z" fill="#2E5077" />
-          <path d="M60 80 L80 100 L100 80" fill="none" stroke="#1B365D" strokeWidth="2.5" opacity="0.4" />
+          <path d="M35 90 Q80 85 125 90 L140 220 Q80 220 20 220 Z" fill="#2E5077" />
+          <path d="M60 90 L80 110 L100 90" fill="none" stroke="#1B365D" strokeWidth="2.5" opacity="0.4" />
         </svg>
 
         {/* Braços e Mãos - Articulados e em Camada Superior */}
         <svg viewBox="0 0 160 200" className="absolute inset-0" preserveAspectRatio="xMidYMin slice">
           <BracoArticulado
             x={112}
-            y={97}
+            y={107}
             rotacao={pose.bracoEsq}
             cotovelo={pose.coveloEsq}
             config={pose.maoEsq}
@@ -211,7 +211,7 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           />
           <BracoArticulado
             x={48}
-            y={97}
+            y={107}
             rotacao={pose.bracoDir}
             cotovelo={pose.coveloDir}
             config={pose.maoDir}
