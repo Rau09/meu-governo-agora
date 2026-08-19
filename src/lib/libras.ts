@@ -28,13 +28,14 @@ export const DEDOS: Record<Configuracao, [number, number, number, number, number
   punho: [0, 0, 0, 0, 0],
   apontar: [0, 1, 0, 0, 0],
   dois: [0, 1, 1, 0, 0],
-  tres: [0, 1, 1, 1, 0], // Refinado para o sinal '3' tradicional (indicador, médio, anelar)
+  tres: [0, 1, 1, 1, 0],
   joia: [1, 0, 0, 0, 0],
   garra: [0.6, 0.6, 0.6, 0.6, 0.6],
   c: [0.8, 0.8, 0.8, 0.8, 0.8],
-  pinca: [0.4, 0.4, 0, 0, 0],
+  pinca: [0.8, 0.8, 0, 0, 0],
   mindinho: [0, 0, 0, 0, 1],
-  ok: [0.2, 0.2, 1, 1, 1], // Polegar e indicador unidos, outros estendidos
+  ok: [0.3, 0.3, 1, 1, 1],
+
 };
 
 export type Pose = {
