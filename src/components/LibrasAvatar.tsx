@@ -185,9 +185,12 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           
           {/* Rosto Sóbrio */}
           <g className="opacity-90">
-            <circle cx="70" cy="50" r="2.5" fill="#1A1A1A" />
-            <circle cx="90" cy="50" r="2.5" fill="#1A1A1A" />
-            <path d="M72 65 Q80 68 88 65" fill="none" stroke="#8B4513" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="70" cy="50" r="2" fill="#1A1A1A" />
+            <circle cx="90" cy="50" r="2" fill="#1A1A1A" />
+            <path d="M74 65 Q80 67 86 65" fill="none" stroke="#8B4513" strokeWidth="1.5" strokeLinecap="round" />
+            {/* Sobrancelhas sutis */}
+            <path d="M65 42 Q70 40 75 43" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.5" />
+            <path d="M85 43 Q90 40 95 42" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.5" />
           </g>
 
           {/* Tronco - Camisa Social Lisa (Azul Profissional) */}
