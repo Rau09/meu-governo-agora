@@ -158,7 +158,14 @@ function Atendimento() {
                     {m.acao.rotulo} <ArrowRight className="size-3" />
                   </Link>
                 )}
+                <button
+                  onClick={() => setMensagem(m.texto)}
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-secondary px-3 text-[10px] font-black text-muted-foreground hover:bg-primary-soft hover:text-primary transition-colors"
+                >
+                  <Eye className="size-3" /> VER EM LIBRAS
+                </button>
               </div>
+
             </div>
           </div>
         ))}
