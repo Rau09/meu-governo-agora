@@ -1,6 +1,10 @@
 import { type ReactNode, useRef } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, Building2 } from "lucide-react";
+import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, LayoutPanelLeft, Building2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { LibrasAvatar } from "./LibrasAvatar";
+import { useLibras } from "@/lib/libras-translator";
+
 
 const nav = [
   { to: "/", label: "Início", icon: Home },
@@ -17,11 +21,33 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const constraintsRef = useRef(null);
+  const { ativo, toggleAtivo } = useLibras();
 
   return (
     <div className="min-h-dvh bg-secondary/40" ref={constraintsRef}>
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative">
         <main className="pb-28">{children}</main>
+
+        <LibrasAvatar />
+
+        <motion.button
+          drag
+          dragConstraints={constraintsRef}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleAtivo}
+          className={`fixed bottom-24 left-8 z-50 flex size-14 cursor-grab items-center justify-center rounded-full shadow-2xl transition-colors active:cursor-grabbing ${
+            ativo ? "bg-primary text-primary-foreground" : "bg-white text-primary"
+          }`}
+          aria-label="Ativar intérprete de Libras"
+        >
+          <LayoutPanelLeft className="size-7" />
+          {!ativo && (
+            <span className="absolute -right-1 -top-1 flex size-5 animate-bounce items-center justify-center rounded-full bg-destructive text-[10px] font-black text-white">
+              !
+            </span>
+          )}
+        </motion.button>
+
 
         <nav
           aria-label="Navegação principal"

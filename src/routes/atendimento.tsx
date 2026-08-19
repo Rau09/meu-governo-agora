@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight, Eye } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+import { useLibras } from "@/lib/libras-translator";
 import { responder } from "@/lib/cantu-ia";
+
 
 type Busca = { protocolo?: string };
 export const Route = createFileRoute("/atendimento")({
@@ -44,7 +46,9 @@ const atalhos = [
 
 function Atendimento() {
   const { protocolo } = Route.useSearch();
+  const { setMensagem } = useLibras();
   const [msgs, setMsgs] = useState<Msg[]>([
+
     {
       de: "bot",
       texto:
@@ -158,7 +162,14 @@ function Atendimento() {
                     {m.acao.rotulo} <ArrowRight className="size-3" />
                   </Link>
                 )}
+                <button
+                  onClick={() => setMensagem(m.texto)}
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-secondary px-3 text-[10px] font-black text-muted-foreground hover:bg-primary-soft hover:text-primary transition-colors"
+                >
+                  <Eye className="size-3" /> VER EM LIBRAS
+                </button>
               </div>
+
             </div>
           </div>
         ))}

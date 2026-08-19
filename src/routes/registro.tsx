@@ -88,7 +88,8 @@ function Registro() {
 
   if (cidadao) {
     return (
-      <AppShell >
+      <AppShell>
+
         <TopBar titulo="Meu acesso" subtitulo="Cadastro protegido por PIN" />
         <div className="-mt-5 space-y-4 px-4">
           <div className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card relative overflow-hidden">
@@ -208,7 +209,7 @@ function Registro() {
   }
 
   return (
-    <AppShell  >
+    <AppShell>
       <TopBar 
         titulo="Criar meu acesso" 
         subtitulo={`Passo ${passo} de 4 — ${passo === 1 ? 'Identificação' : passo === 2 ? 'Localização' : passo === 3 ? 'Segurança' : 'Privacidade'}`} 
