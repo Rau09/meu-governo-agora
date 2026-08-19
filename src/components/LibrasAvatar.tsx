@@ -57,8 +57,8 @@ export function LibrasViewer({
       </header>
 
       {/* Área do Intérprete - Fundo Limpo e Focado */}
-      <div className="relative flex flex-1 flex-col items-center justify-center bg-linear-to-b from-primary/5 via-background to-secondary/20 overflow-hidden px-6">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--color-primary-soft)_0%,_transparent_70%)] opacity-30" />
+      <div className="relative flex flex-1 flex-col items-center justify-center bg-[#E8EDF2] overflow-hidden px-6">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.8)_0%,_transparent_100%)] opacity-50" />
         
         {/* Personagem de Libras */}
         <div className="relative z-10 w-full max-w-xs aspect-square flex items-center justify-center">
@@ -167,39 +167,43 @@ export function LibrasViewer({
 
 function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
   return (
-    <div className="relative h-80 w-72 drop-shadow-2xl">
+    <div className="relative h-full w-full max-w-[400px] drop-shadow-2xl flex items-center justify-center translate-y-16">
       <div 
-        className="relative w-full h-full"
+        className="relative w-full aspect-[4/5]"
         style={{
-          transform: `rotateY(${pose.tronco ?? 0}deg)`,
+          transform: `rotateY(${pose.tronco ?? 0}deg) scale(1.5)`,
           transition: `transform ${600 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+          transformOrigin: 'top center'
         }}
       >
-        <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg">
-          {/* Cabeça e Pescoço */}
-          <rect x="74" y="65" width="12" height="15" fill="#FAD1AF" />
-          <circle cx="80" cy="50" r="28" fill="#FAD1AF" />
+        <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg" preserveAspectRatio="xMidYMin meet">
+          {/* Cabeça e Pescoço - Tons de pele profissionais */}
+          <rect x="75" y="73" width="10" height="20" fill="#D2B48C" />
+          <ellipse cx="80" cy="75" rx="20" ry="26" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
           
-          {/* Cabelo Profissional */}
-          <path d="M52 45 Q80 15 108 45 L112 55 Q80 40 48 55 Z" fill="#3E2723" />
+          {/* Cabelo Adulto Profissional */}
+          <path d="M58 50 Q80 35 102 50 L106 63 Q80 55 54 63 Z" fill="#2C1810" />
           
-          {/* Rosto Amigável */}
-          <g className="opacity-80">
-            <circle cx="70" cy="50" r="3" fill="#1A1A1A" />
-            <circle cx="90" cy="50" r="3" fill="#1A1A1A" />
-            <path d="M72 65 Q80 70 88 65" fill="none" stroke="#E67E22" strokeWidth="2" strokeLinecap="round" />
+          {/* Rosto Sóbrio */}
+          <g className="opacity-90">
+            <ellipse cx="72" cy="78" rx="1.8" ry="2.2" fill="#1A1A1A" />
+            <ellipse cx="88" cy="78" rx="1.8" ry="2.2" fill="#1A1A1A" />
+            <path d="M75 90 Q80 92 85 90" fill="none" stroke="#8B4513" strokeWidth="1.2" strokeLinecap="round" />
+            {/* Sobrancelhas sutis */}
+            <path d="M68 68 Q72 65 75 67" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
+            <path d="M85 67 Q88 65 92 68" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
           </g>
 
-          {/* Tronco - Roupa Verde Lisa Profissional */}
-          <path d="M40 80 Q80 75 120 80 L135 200 Q80 200 25 200 Z" fill="#27AE60" />
-          <path d="M60 80 L80 100 L100 80" fill="none" stroke="#1E8449" strokeWidth="2" opacity="0.3" />
+          {/* Tronco - Camisa Social Lisa (Azul Profissional) */}
+          <path d="M35 90 Q80 85 125 90 L140 220 Q80 220 20 220 Z" fill="#2E5077" />
+          <path d="M60 90 L80 110 L100 90" fill="none" stroke="#1B365D" strokeWidth="2.5" opacity="0.4" />
         </svg>
 
         {/* Braços e Mãos - Articulados e em Camada Superior */}
-        <svg viewBox="0 0 160 200" className="absolute inset-0">
+        <svg viewBox="0 0 160 200" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMin meet">
           <BracoArticulado
-            x={115}
-            y={95}
+            x={112}
+            y={107}
             rotacao={pose.bracoEsq}
             cotovelo={pose.coveloEsq}
             config={pose.maoEsq}
@@ -207,8 +211,8 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
             lado="esq"
           />
           <BracoArticulado
-            x={45}
-            y={95}
+            x={48}
+            y={107}
             rotacao={pose.bracoDir}
             cotovelo={pose.coveloDir}
             config={pose.maoDir}
@@ -233,11 +237,11 @@ function BracoArticulado({
   return (
     <g style={{ transform: `translate(${x}px, ${y}px) rotate(${anguloOmbro}deg)`, transition: transicao }}>
       {/* Braço superior */}
-      <rect x={-8} y={-5} width={16} height={35} rx={8} fill="#FAD1AF" stroke="#E59866" strokeWidth="0.5" />
+      <rect x={-8} y={-5} width={16} height={35} rx={8} fill="#D2B48C" stroke="#A68966" strokeWidth="0.5" />
       
       <g style={{ transform: `translate(0px, 28px) rotate(${anguloCotovelo}deg)`, transition: transicao }}>
-        {/* Antebraço */}
-        <rect x={-7} y={-4} width={14} height={32} rx={7} fill="#FAD1AF" stroke="#E59866" strokeWidth="0.5" />
+        {/* Antebraço Humano Definido */}
+        <rect x={-7} y={-4} width={14} height={32} rx={7} fill="#D2B48C" stroke="#A68966" strokeWidth="0.5" />
         
         <g style={{ transform: "translate(0px, 28px)" }}>
           <MaoLibras config={config} velocidade={velocidade} lado={lado} />
@@ -249,17 +253,17 @@ function BracoArticulado({
 
 function MaoLibras({ config, velocidade, lado }: { config: Configuracao; velocidade: number; lado: "dir" | "esq" }) {
   const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
-  const transicao = `transform ${550 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1), height ${550 / velocidade}ms ease-in-out`;
+  const transicao = `transform ${550 / velocidade}ms cubic-bezier(0.4, 0, 0.2, 1), height ${550 / velocidade}ms ease-in-out`;
   
-  // Mãos ainda maiores para clareza absoluta
-  const escala = 1.6; 
-  const color = "#FAD1AF";
-  const stroke = "#B87550";
+  // Mãos ainda maiores e anatomicamente detalhadas para clareza absoluta
+  const escala = 1.8; 
+  const color = "#D2B48C";
+  const stroke = "#8B6B4A";
 
   return (
     <g style={{ transform: `scale(${escala}) rotate(${lado === "esq" ? 5 : -5}deg)` }}>
-      {/* Palma */}
-      <rect x={-9} y={-2} width={18} height={16} rx={8} fill={color} stroke={stroke} strokeWidth="1.2" />
+      {/* Palma Humana */}
+      <rect x={-9} y={-2} width={18} height={17} rx={4} fill={color} stroke={stroke} strokeWidth="1.2" />
       
       {/* Dedos Principais */}
       {[
