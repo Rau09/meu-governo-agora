@@ -167,12 +167,13 @@ export function LibrasViewer({
 
 function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
   return (
-    <div className="relative h-full w-full max-w-[400px] drop-shadow-2xl flex items-center justify-center translate-y-8">
+    <div className="relative h-full w-full max-w-[400px] drop-shadow-2xl flex items-center justify-center translate-y-16">
       <div 
-        className="relative w-full aspect-[4/5] scale-125 origin-top"
+        className="relative w-full aspect-[4/5]"
         style={{
-          transform: `rotateY(${pose.tronco ?? 0}deg) scale(1.25)`,
+          transform: `rotateY(${pose.tronco ?? 0}deg) scale(1.5)`,
           transition: `transform ${600 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+          transformOrigin: 'top center'
         }}
       >
         <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg" preserveAspectRatio="xMidYMin meet">
