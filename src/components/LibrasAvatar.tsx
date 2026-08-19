@@ -17,14 +17,31 @@ import { useLibras } from "@/lib/libras-translator";
 function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
   const group = useRef<THREE.Group>(null);
   const [glosaAtual, setGlosaAtual] = useState("");
-  const tempoInicioRef = useRef(0);
+  const [hoveredPart, setHoveredPart] = useState<string | null>(null);
   
   useFrame((state, delta) => {
+    const tempoTotal = state.clock.getElapsedTime();
+    
+    // Animação de interação manual (prioritária)
+    if (hoveredPart && group.current) {
+      const braçoDir = group.current.getObjectByName("BraçoDireito");
+      const braçoEsq = group.current.getObjectByName("BraçoEsquerdo");
+      
+      if (hoveredPart === "BraçoDireito" && braçoDir) {
+        braçoDir.rotation.z = Math.sin(tempoTotal * 10) * 0.2;
+        braçoDir.rotation.x = -1.2 + Math.cos(tempoTotal * 5) * 0.1;
+      } else if (hoveredPart === "BraçoEsquerdo" && braçoEsq) {
+        braçoEsq.rotation.z = -Math.sin(tempoTotal * 10) * 0.2;
+        braçoEsq.rotation.x = -1.2 + Math.cos(tempoTotal * 5) * 0.1;
+      }
+      return;
+    }
+
     if (!reproduzindo || glosas.length === 0) return;
 
-    const tempoTotal = state.clock.getElapsedTime() * velocidade;
-    const duracaoPorGlosa = 1.2; // Segundos por sinal
-    const indice = Math.floor(tempoTotal / duracaoPorGlosa) % glosas.length;
+    const tempoAnim = tempoTotal * velocidade;
+    const duracaoPorGlosa = 1.2; 
+    const indice = Math.floor(tempoAnim / duracaoPorGlosa) % glosas.length;
     const glosa = glosas[indice];
     
     if (glosa !== glosaAtual) {
@@ -37,17 +54,13 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
       const cabeça = group.current.getObjectByName("Cabeça");
       
       if (braçoDir && braçoEsq && cabeça) {
-        // Oscilação baseada na glosa (simulação de sinais diferentes)
         const seed = glosa.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
         const freq = 3 + (seed % 5);
         
-        braçoDir.rotation.x = -0.5 + Math.sin(tempoTotal * freq) * 0.8;
-        braçoDir.rotation.y = Math.cos(tempoTotal * freq * 0.5) * 0.4;
-        braçoEsq.rotation.x = -0.5 + Math.cos(tempoTotal * freq * 0.8) * 0.6;
-
-        
-        // Pequena inclinação da cabeça acompanhando
-        cabeça.rotation.y = Math.sin(tempoTotal * 2) * 0.1;
+        braçoDir.rotation.x = -0.5 + Math.sin(tempoAnim * freq) * 0.8;
+        braçoDir.rotation.y = Math.cos(tempoAnim * freq * 0.5) * 0.4;
+        braçoEsq.rotation.x = -0.5 + Math.cos(tempoAnim * freq * 0.8) * 0.6;
+        cabeça.rotation.y = Math.sin(tempoAnim * 2) * 0.1;
       }
     }
   });
