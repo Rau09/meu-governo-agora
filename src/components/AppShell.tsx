@@ -1,6 +1,6 @@
 import { type ReactNode, useRef } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, LayoutPanelLeft } from "lucide-react";
+import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, LayoutPanelLeft, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { LibrasAvatar } from "./LibrasAvatar";
 import { useLibras } from "@/lib/libras-translator";
