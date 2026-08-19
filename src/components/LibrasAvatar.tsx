@@ -119,10 +119,17 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
               : "bottom-[72px]"
           }`}
         >
-          <div className="flex items-center justify-between bg-primary-soft px-4 py-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
+          <div className="flex flex-col border-b border-border bg-primary-soft/50 px-4 py-3">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-primary">
               Intérprete de Libras
-            </span>
+            </h2>
+            <p className="text-[10px] text-muted-foreground">
+              Entenda os conteúdos do Cantu Conecta em Libras.
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between border-b border-border bg-card px-4 py-2">
+
             <div className="flex items-center gap-2">
               <div className="flex items-center rounded-lg bg-card/70 px-1.5 py-0.5">
                 {[0.75, 1, 1.25].map((v) => (
@@ -162,21 +169,23 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
           </div>
 
           <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-8 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_70%)]" />
+            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_80%)]" />
             
             <SignerFigure pose={pose} velocidade={velocidade} />
           </div>
 
           {passo && (
-            <div className="border-t border-border px-4 py-2 text-center">
-              <p className="font-display text-base font-bold leading-none text-primary">{passo.glosa}</p>
-              <p className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-                {passo.datilologia ? `soletrando "${passo.palavra}"` : `sinal de "${passo.palavra}"`}
-              </p>
+            <div className="bg-primary-soft/30 border-b border-border px-4 py-3 text-center">
+              <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold text-primary mb-1 uppercase tracking-tighter">
+                {passo.datilologia ? "Soletrando" : "Sinal de"}
+              </span>
+              <p className="font-display text-2xl font-black text-primary leading-none">{passo.glosa}</p>
             </div>
           )}
 
-          <p className="px-4 py-3 text-sm leading-snug text-muted-foreground">
+          <div className="max-h-32 overflow-y-auto px-4 py-3 bg-secondary/20">
+            <p className="text-xs leading-relaxed text-muted-foreground">
+
             {texto.split(/\s+/).map((p, i) => {
               const ativo = passo ? p.replace(/[^\p{L}\p{N}]/gu, "") === passo.palavra : false;
               return (
