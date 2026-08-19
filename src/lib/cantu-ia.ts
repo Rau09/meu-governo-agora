@@ -1,5 +1,4 @@
 import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento } from "@/lib/cantu-store";
-import { normalizar } from "@/lib/libras";
 
 /**
  * Inteligência Cantu Conecta.
@@ -9,6 +8,14 @@ import { normalizar } from "@/lib/libras";
  */
 
 export type Resposta = { texto: string; acao?: { rotulo: string; para: string } };
+
+function normalizar(p: string) {
+  return p
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
 
 function tokens(p: string) {
   return p
