@@ -297,7 +297,7 @@ export function montarSequencia(texto: string): Passo[] {
     const sinal = chave ? SINAIS[chave] : undefined;
 
     if (sinal) {
-      const ritmo = sinal.ritmo ?? 580;
+      const ritmo = sinal.ritmo ?? 650; // Aumentado de 580 para 650 para clareza
       for (const pose of sinal.poses) {
         passos.push({ palavra, glosa: sinal.glosa, datilologia: false, pose, duracao: ritmo });
       }
@@ -313,7 +313,7 @@ export function montarSequencia(texto: string): Passo[] {
         palavra,
         glosa: l.toUpperCase(),
         datilologia: true,
-        duracao: 420,
+        duracao: 480, // Aumentado de 420 para 480 para clareza
         pose: {
           ...repouso,
           bracoDir: -58 + (i % 2 === 0 ? 0 : 4),
