@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Hand, X, Play, Pause, RotateCcw, ChevronLeft, ChevronRight, Zap } from "lucide-react";
-import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } from "@/lib/libras";
+import { useEffect, useRef, useState } from "react";
+import { Hand, X, Play, Pause, RotateCcw, Volume2, Info } from "lucide-react";
 
 /**
  * LibrasViewer: O componente principal de acessibilidade que exibe o intérprete
