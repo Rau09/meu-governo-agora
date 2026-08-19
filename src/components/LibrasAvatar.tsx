@@ -274,6 +274,7 @@ function Braco({
   rotacao,
   cotovelo,
   config,
+  velocidade,
   color = "#F5D5B8",
 }: {
   x: number;
@@ -284,6 +285,7 @@ function Braco({
   velocidade: number;
   color?: string;
 }) {
+
 
   const ombro = rotacao * 1.6;
   const flexao = cotovelo * 1.1;
