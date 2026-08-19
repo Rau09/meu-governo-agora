@@ -325,40 +325,40 @@ function Painel({ onSair }: { onSair: () => void }) {
         {/* 2. Central de atenção */}
         <section
           style={{ transitionDelay: "220ms" }}
-          className={`rounded-xl border border-destructive/20 bg-destructive/[0.03] p-6 shadow-sm transition-all duration-500 ease-out ${
+          className={`rounded-3xl border border-warning/20 bg-warning/5 p-6 shadow-card transition-all duration-500 ease-out ${
             animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-destructive/10">
-              <AlertTriangle className="size-5 text-destructive" />
+            <div className="flex size-10 items-center justify-center rounded-2xl bg-warning/10">
+              <AlertTriangle className="size-5 text-warning" />
             </div>
             <div>
-              <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-destructive">Protocolos Prioritários</h2>
-              <p className="text-[10px] font-bold text-destructive/70 uppercase tracking-wider mt-0.5">Demanda crítica com necessidade de despacho imediato.</p>
+              <h2 className="text-base font-bold text-foreground">Atenção Necessária</h2>
+              <p className="text-[11px] font-medium text-muted-foreground">Protocolos que requerem despacho ou análise imediata.</p>
             </div>
           </div>
-          <ul className="mt-4 space-y-3">
+          <ul className="mt-5 space-y-3">
             {alertasAtivos.map((a) => (
               <li key={a.id}>
                 <button
                   type="button"
                   onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })}
-                  className="w-full rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:border-destructive/30 hover:shadow-md active:scale-[0.99]"
+                  className="w-full rounded-2xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:border-primary/30 hover:shadow-float active:scale-[0.99]"
                 >
                   <div className="flex items-start gap-3">
-                    <span className="text-lg leading-none grayscale opacity-80">{a.emoji}</span>
+                    <span className="text-xl leading-none">{a.emoji}</span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-bold text-foreground">{a.titulo}</p>
-                        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                        <ChevronRight className="size-4 shrink-0 text-muted-foreground/50" />
                       </div>
                       <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">{a.detalhe}</p>
                       <div className="mt-3 flex items-center gap-2">
-                        <span className={`rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${NIVEIS[a.nivel].classe}`}>
+                        <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${NIVEIS[a.nivel].classe}`}>
                           {NIVEIS[a.nivel].rotulo}
                         </span>
-                        <span className="text-[9px] font-bold text-muted-foreground/60">
+                        <span className="text-[10px] font-semibold text-muted-foreground">
                           {a.acao}
                         </span>
                       </div>
@@ -372,55 +372,56 @@ function Painel({ onSair }: { onSair: () => void }) {
 
         {/* 3. Prioridades */}
         <section>
-          <h2 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/70">
-            Focos de Monitoramento Semanal
-          </h2>
+          <div className="mb-4 flex items-center justify-between px-1">
+            <h2 className="text-sm font-bold text-foreground">Focos de Monitoramento</h2>
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Semanal</span>
+          </div>
           <ul className="space-y-4">
             {focos.map((p, i) => (
               <li
                 key={p.id}
                 style={{ animationDelay: `${i * 60}ms` }}
-                className="animate-in rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:border-primary/30"
+                className="animate-in rounded-3xl border border-border bg-card p-5 shadow-card transition-all duration-300 hover:border-primary/30"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
-                    <p className="text-sm font-bold text-foreground">
+                    <p className="text-base font-bold text-foreground">
                       {p.categoria} — {p.bairro}
                     </p>
-                    <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
-                      <span className="font-bold text-foreground">{p.total}</span> registros · 
-                      <span className="mx-1 font-bold text-destructive">{p.atrasadas}</span> atrasos · 
-                      <span className="ml-1 font-bold text-primary">+{p.variacao}%</span> este mês
-                    </p>
+                    <div className="mt-2 flex items-center gap-3 text-[11px] font-medium text-muted-foreground">
+                       <span className="flex items-center gap-1"><Inbox className="size-3" /> {p.total} total</span>
+                       <span className="flex items-center gap-1 text-destructive"><Clock3 className="size-3" /> {p.atrasadas} atrasos</span>
+                       <span className="flex items-center gap-1 text-primary"><Sparkles className="size-3" /> +{p.variacao}%</span>
+                    </div>
                   </div>
-                  <span className={`shrink-0 rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${NIVEIS[p.nivel].classe}`}>
+                  <span className={`shrink-0 rounded-full px-3 py-1 text-[9px] font-bold uppercase tracking-wider ${NIVEIS[p.nivel].classe}`}>
                     {NIVEIS[p.nivel].rotulo}
                   </span>
                 </div>
                 
-                <div className="mt-3 rounded-lg bg-secondary/30 p-2.5 text-[11px] italic text-muted-foreground/90">
+                <div className="mt-4 rounded-2xl bg-secondary/50 p-4 text-[12px] font-medium leading-relaxed text-muted-foreground italic">
                   “{p.resumo}”
                 </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => setDetalhe({ titulo: `${p.categoria} — ${p.bairro}`, nota: p.resumo, itens: p.itens })}
-                    className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-secondary active:scale-95 transition-colors"
+                    className="rounded-full border border-border bg-background px-4 py-2 text-[10px] font-bold text-foreground hover:bg-secondary active:scale-95 transition-all"
                   >
                     Detalhes
                   </button>
                   <button
                     type="button"
                     onClick={() => irParaMapa(p.itens, metaCategoria(p.categoria).filtro)}
-                    className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-secondary active:scale-95 transition-colors"
+                    className="rounded-full border border-border bg-background px-4 py-2 text-[10px] font-bold text-foreground hover:bg-secondary active:scale-95 transition-all"
                   >
-                    Geolocalização
+                    Localização
                   </button>
                   <button
                     type="button"
-                    onClick={() => setAcao(`Ação criada para ${p.categoria} no bairro ${p.bairro}: equipe designada.`)}
-                    className="ml-auto rounded-lg bg-primary px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-primary-foreground hover:bg-primary/90 active:scale-95 shadow-sm transition-all"
+                    onClick={() => setAcao(`Equipe designada para ${p.categoria} em ${p.bairro}.`)}
+                    className="ml-auto rounded-full bg-primary px-5 py-2 text-[10px] font-bold text-primary-foreground hover:bg-primary/90 active:scale-95 shadow-float transition-all"
                   >
                     Despachar Equipe
                   </button>
