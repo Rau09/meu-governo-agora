@@ -73,9 +73,9 @@ export function LibrasViewer({
                 <Hand className="size-10" />
               </div>
               <div>
-                <p className="text-white font-bold text-lg">Intérprete de Libras</p>
-                <p className="text-white/40 text-sm leading-relaxed mt-2">
-                  Área reservada para o vídeo da interpretação humana profissional.
+                <p className="text-white font-bold text-lg uppercase tracking-tighter">VÍDEO DO INTÉRPRETE</p>
+                <p className="text-white/40 text-sm leading-relaxed mt-2 font-medium">
+                  intérprete humano real
                 </p>
               </div>
               
@@ -98,10 +98,10 @@ export function LibrasViewer({
           <div className="mt-8 space-y-6">
             <div className="flex flex-col items-center gap-2">
                <div className="flex items-center gap-2">
-                 <Info className="size-3 text-primary" />
-                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                   Tradução em tempo real
-                 </span>
+                  <Info className="size-3 text-primary" />
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                    Veja esta informação em Libras
+                  </span>
                </div>
                <p className="text-2xl font-black text-white tracking-tighter uppercase text-center">
                  Sinal de: {mensagem.split(' ')[0]}
@@ -110,7 +110,7 @@ export function LibrasViewer({
             
             <div className="rounded-[2.5rem] bg-white/5 p-8 border border-white/10 backdrop-blur-md">
               <p className="text-center text-lg font-medium leading-relaxed text-white/80">
-                {mensagem}
+                “{mensagem}”
               </p>
             </div>
           </div>
