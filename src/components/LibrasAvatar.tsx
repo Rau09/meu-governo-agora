@@ -176,35 +176,46 @@ export function LibrasAvatar() {
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.8, y: 20 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
         className="fixed bottom-24 right-4 z-50 flex flex-col gap-2 pointer-events-none"
       >
-        <div className="w-64 h-80 bg-slate-900/95 backdrop-blur-xl border-2 border-primary/30 rounded-3xl overflow-hidden shadow-2xl pointer-events-auto flex flex-col">
-          <div className="bg-primary/20 p-3 flex items-center justify-between border-b border-white/10">
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary-foreground flex items-center gap-2">
-              <div className="size-2 rounded-full bg-green-500 animate-pulse" />
-              Intérprete Digital
-            </span>
+        <div className="w-72 h-[420px] bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-2xl pointer-events-auto flex flex-col">
+          <div className="p-4 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="size-5">
+                  <path d="M10 18H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-5" />
+                  <path d="m8 22 4-4 4 4" />
+                </svg>
+              </div>
+              <span className="text-xs font-bold text-slate-800 tracking-tight">
+                Acessibilidade LIBRAS
+              </span>
+            </div>
             <button 
               onClick={toggleAtivo}
-              className="size-6 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-destructive transition-colors"
+              className="size-8 rounded-full bg-slate-200/50 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors"
             >
               <X className="size-4" />
             </button>
           </div>
 
-          <div className="flex-1 relative bg-gradient-to-b from-slate-900 to-slate-800">
+          <div className="flex-1 relative bg-slate-50">
+            <div className="absolute inset-0 flex items-center justify-center opacity-10">
+              <div className="w-48 h-48 border-4 border-primary rounded-full" />
+            </div>
+            
             <Canvas shadows className="cursor-grab active:cursor-grabbing" onClick={() => setReproduzindo(!reproduzindo)}>
               <PerspectiveCamera makeDefault position={[0, 0, 1.8]} />
-              <Suspense fallback={<Html center className="text-white text-xs font-bold">Carregando Avatar...</Html>}>
+              <Suspense fallback={<Html center className="text-slate-400 text-xs font-medium">Iniciando...</Html>}>
                 <AvatarModelo 
                   glosas={glosas} 
                   velocidade={velocidade} 
                   reproduzindo={reproduzindo} 
                 />
-                <Environment preset="city" />
+                <Environment preset="studio" />
               </Suspense>
               <OrbitControls 
                 enableZoom={false} 
@@ -213,18 +224,18 @@ export function LibrasAvatar() {
               />
             </Canvas>
 
-            <div className="absolute bottom-4 left-0 right-0 px-4 space-y-2">
+            <div className="absolute bottom-4 left-0 right-0 px-4 space-y-3">
               <AnimatePresence mode="wait">
                 {glosas.length > 0 && reproduzindo && (
                   <motion.div 
                     key={glosas.join("-")}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="flex justify-center gap-1 overflow-hidden"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="flex flex-wrap justify-center gap-1.5"
                   >
                     {glosas.map((g, i) => (
-                      <span key={i} className="text-[8px] px-1.5 py-0.5 rounded-md bg-primary/20 text-primary-foreground font-black">
+                      <span key={i} className="text-[9px] px-2 py-1 rounded-full bg-primary text-white font-bold shadow-sm">
                         {g}
                       </span>
                     ))}
@@ -232,35 +243,37 @@ export function LibrasAvatar() {
                 )}
               </AnimatePresence>
 
-              {mensagem && (
-                <div className="bg-black/60 backdrop-blur-md rounded-xl p-2 text-center border border-white/10 shadow-lg">
-                  <p className="text-[9px] text-primary-foreground/60 uppercase font-black mb-1">Tradução em tempo real</p>
-                  <p className="text-xs font-bold text-white line-clamp-2 leading-tight">{mensagem}</p>
-                </div>
-              )}
+              <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 text-center border border-slate-200 shadow-sm min-h-[72px] flex flex-col justify-center">
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Tradução</p>
+                <p className="text-sm font-semibold text-slate-700 leading-relaxed">
+                  {mensagem || "Pronto para traduzir..."}
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="p-3 bg-black/40 border-t border-white/10 grid grid-cols-4 gap-2">
+          <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-3">
             <button 
               onClick={() => setReproduzindo(!reproduzindo)}
-              className="col-span-2 flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-10 font-bold text-xs transition-transform active:scale-95"
+              className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-primary text-white h-12 font-bold text-sm shadow-lg shadow-primary/20 transition-transform active:scale-95"
             >
-              {reproduzindo ? <Pause className="size-4" /> : <Play className="size-4" />}
+              {reproduzindo ? <Pause className="size-5" /> : <Play className="size-5" fill="currentColor" />}
               {reproduzindo ? "PAUSAR" : "REPRODUZIR"}
             </button>
-            <button 
-              onClick={() => setMensagem(mensagem)} 
-              className="flex items-center justify-center rounded-xl bg-white/10 text-white h-10 hover:bg-white/20 transition-colors"
-            >
-              <RotateCcw className="size-4" />
-            </button>
-            <button 
-              onClick={() => setVelocidade(velocidade === 1.25 ? 0.75 : velocidade + 0.25)}
-              className="flex items-center justify-center rounded-xl bg-white/10 text-white h-10 hover:bg-white/20 transition-colors text-[10px] font-black"
-            >
-              {velocidade}x
-            </button>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => setMensagem(mensagem)} 
+                className="size-12 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors shadow-sm"
+              >
+                <RotateCcw className="size-5" />
+              </button>
+              <button 
+                onClick={() => setVelocidade(velocidade === 1.25 ? 0.75 : velocidade + 0.25)}
+                className="size-12 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors shadow-sm text-xs font-bold"
+              >
+                {velocidade}x
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>

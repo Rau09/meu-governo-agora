@@ -35,15 +35,23 @@ export function AppShell({
           dragConstraints={constraintsRef}
           whileTap={{ scale: 0.9 }}
           onClick={toggleAtivo}
-          className={`fixed bottom-24 left-8 z-50 flex size-14 cursor-grab items-center justify-center rounded-full shadow-2xl transition-colors active:cursor-grabbing ${
-            ativo ? "hidden bg-primary text-primary-foreground" : "bg-white text-primary"
+          className={`fixed bottom-24 right-8 z-50 flex size-14 cursor-grab items-center justify-center rounded-full shadow-2xl transition-all active:cursor-grabbing ${
+            ativo ? "hidden bg-primary text-primary-foreground" : "bg-primary text-white"
           }`}
           aria-label="Ativar intérprete de Libras"
         >
-          <LayoutPanelLeft className="size-7" />
+          <div className="relative">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-7">
+              <path d="M10 18H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-5" />
+              <path d="m8 22 4-4 4 4" />
+              <path d="M16 8h.01" />
+              <path d="M8 8h.01" />
+              <path d="M12 12h.01" />
+            </svg>
+          </div>
           {!ativo && (
-            <span className="absolute -right-1 -top-1 flex size-5 animate-bounce items-center justify-center rounded-full bg-destructive text-[10px] font-black text-white">
-              !
+            <span className="absolute -right-1 -top-1 flex size-5 animate-pulse items-center justify-center rounded-full bg-white text-[10px] font-black text-primary border-2 border-primary">
+              L
             </span>
           )}
         </motion.button>
