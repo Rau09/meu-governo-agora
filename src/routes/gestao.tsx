@@ -700,20 +700,20 @@ function DetalheLista({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 p-0 sm:items-center">
-      <div className="animate-in max-h-[80vh] w-full max-w-md overflow-y-auto rounded-t-3xl border border-border bg-background p-4 shadow-float slide-in-from-bottom-4 duration-300 sm:rounded-3xl">
-        <div className="flex items-start justify-between gap-2">
+      <div className="animate-in max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-[2.5rem] border border-border bg-background p-6 shadow-float slide-in-from-bottom-4 duration-300 sm:rounded-[2.5rem]">
+        <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-sm font-bold">{titulo}</h3>
-            {nota && <p className="text-[11px] text-muted-foreground">{nota}</p>}
-            <p className="text-[11px] font-semibold text-primary">{itens.length} registros</p>
+            <h3 className="text-lg font-bold text-foreground">{titulo}</h3>
+            {nota && <p className="mt-0.5 text-xs font-medium text-muted-foreground">{nota}</p>}
+            <p className="mt-2 text-[11px] font-bold text-primary uppercase tracking-wider">{itens.length} registros encontrados</p>
           </div>
           <button
             type="button"
             onClick={onFechar}
             aria-label="Fechar"
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-secondary transition-transform active:scale-90"
           >
-            <X className="size-4" />
+            <X className="size-5" />
           </button>
         </div>
 
@@ -721,9 +721,9 @@ function DetalheLista({
           <button
             type="button"
             onClick={() => onMapa(itens)}
-            className="mt-3 w-full rounded-2xl bg-primary py-2.5 text-xs font-bold text-primary-foreground active:scale-[0.98]"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-4 text-sm font-bold text-primary-foreground shadow-float transition-all hover:bg-primary/90 active:scale-[0.98]"
           >
-            🗺️ Ver no mapa
+            <MapPin className="size-4" /> Ver Geocalização
           </button>
         )}
 
