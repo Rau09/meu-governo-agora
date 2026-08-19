@@ -71,7 +71,7 @@ function Gestao() {
 
   if (!pronto) {
     return (
-      <AppShell>
+      <AppShell librasMensagem="Carregando Painel de Gestão Cantu Conecta. Por favor, aguarde um momento.">
         <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito" />
       </AppShell>
     );
