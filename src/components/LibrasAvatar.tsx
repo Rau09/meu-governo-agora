@@ -87,31 +87,42 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
       </group>
 
 
-      {/* Braço Direito (Nomeado para animação) */}
-      <group name="BraçoDireito" position={[0.25, 0.2, 0]}>
+      {/* Braço Direito Interativo */}
+      <group 
+        name="BraçoDireito" 
+        position={[0.25, 0.2, 0]}
+        onPointerOver={() => setHoveredPart("BraçoDireito")}
+        onPointerOut={() => setHoveredPart(null)}
+      >
         <mesh position={[0.2, -0.2, 0]}>
           <capsuleGeometry args={[0.06, 0.4, 4, 8]} />
-          <meshStandardMaterial color="#fcd34d" />
+          <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
         {/* Mão Direita Aumentada */}
         <mesh position={[0.4, -0.4, 0]} scale={1.8}>
           <sphereGeometry args={[0.04, 8, 8]} />
-          <meshStandardMaterial color="#fcd34d" />
+          <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
       </group>
 
-      {/* Braço Esquerdo */}
-      <group name="BraçoEsquerdo" position={[-0.25, 0.2, 0]}>
+      {/* Braço Esquerdo Interativo */}
+      <group 
+        name="BraçoEsquerdo" 
+        position={[-0.25, 0.2, 0]}
+        onPointerOver={() => setHoveredPart("BraçoEsquerdo")}
+        onPointerOut={() => setHoveredPart(null)}
+      >
         <mesh position={[-0.2, -0.2, 0]}>
           <capsuleGeometry args={[0.06, 0.4, 4, 8]} />
-          <meshStandardMaterial color="#fcd34d" />
+          <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
         {/* Mão Esquerda Aumentada */}
         <mesh position={[-0.4, -0.4, 0]} scale={1.8}>
           <sphereGeometry args={[0.04, 8, 8]} />
-          <meshStandardMaterial color="#fcd34d" />
+          <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
       </group>
+
 
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={1} />
