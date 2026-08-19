@@ -4,6 +4,7 @@ import {
   PawPrint,
   MapPin,
   MessageCircle,
+  Hand,
   CalendarPlus,
   ArrowRight,
   UserRound,
