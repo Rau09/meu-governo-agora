@@ -605,7 +605,7 @@ function Painel({ onSair }: { onSair: () => void }) {
               Nenhum problema comunicado até o momento.
             </p>
           ) : (
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {ocorrencias.map((o, i) => (
                 <CardOcorrencia key={o.protocolo} ocorrencia={o} indice={i} onStatus={atualizarStatus} />
               ))}
@@ -642,12 +642,12 @@ function Painel({ onSair }: { onSair: () => void }) {
               Nenhum agendamento nesta fila.
             </p>
           ) : (
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {fila.map((a, i) => (
                 <li
                   key={a.id}
                   style={{ animationDelay: `${i * 45}ms` }}
-                  className="flex animate-in items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-card fade-in slide-in-from-bottom-2 duration-500 transition-transform hover:-translate-y-0.5"
+                  className="flex animate-in items-center gap-4 rounded-3xl border border-border bg-card p-4 shadow-card fade-in slide-in-from-bottom-2 duration-500 transition-transform hover:-translate-y-0.5"
                 >
                   <CheckCircle2 className="size-5 text-success" />
                   <div className="flex-1">
