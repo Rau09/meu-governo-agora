@@ -314,14 +314,14 @@ function Mao({ config, velocidade, color = "#FAD1AF" }: { config: Configuracao; 
   const transicao = `transform ${450 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1), height ${450 / velocidade}ms ease-in-out`;
 
   // Aumentamos o tamanho base da mão para melhor legibilidade
-  const escalaMao = 1.15;
-  const strokeColor = "#C8855F";
+  const escalaMao = 1.35;
+  const strokeColor = "#B87550";
 
   const dedos: { dx: number; ext: number; alturaMax: number; angulo: number }[] = [
-    { dx: -4.5, ext: indicador, alturaMax: 11, angulo: -2 },
-    { dx: -1.5, ext: medio, alturaMax: 12, angulo: 0 },
-    { dx: 1.5, ext: anelar, alturaMax: 11, angulo: 2 },
-    { dx: 4.5, ext: minimo, alturaMax: 9, angulo: 5 },
+    { dx: -6, ext: indicador, alturaMax: 16, angulo: -4 },
+    { dx: -2, ext: medio, alturaMax: 18, angulo: 0 },
+    { dx: 2, ext: anelar, alturaMax: 16, angulo: 4 },
+    { dx: 6, ext: minimo, alturaMax: 13, angulo: 8 },
   ];
 
   return (
