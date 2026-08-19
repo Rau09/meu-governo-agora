@@ -47,8 +47,13 @@ export function LibrasAvatar() {
               {/* Rosto */}
               <circle cx="53" cy="35" r="1.5" fill="#333" />
               <circle cx="67" cy="35" r="1.5" fill="#333" />
-              <path d="M60 37 L60 40" fill="none" stroke="#D4A373" strokeWidth="1" strokeLinecap="round" />
-              <path d="M54 44 Q60 48 66 44" fill="none" stroke="#D4A373" strokeWidth="1.2" strokeLinecap="round" />
+              <path d="M60 37 L60 39" fill="none" stroke="#D4A373" strokeWidth="1" strokeLinecap="round" />
+              {/* Sorriso Gentil */}
+              <path d="M52 45 Q60 50 68 45" fill="none" stroke="#D4A373" strokeWidth="1.2" strokeLinecap="round" />
+              {/* Covinhas */}
+              <circle cx="50" cy="44" r="0.5" fill="#D4A373" opacity="0.5" />
+              <circle cx="70" cy="44" r="0.5" fill="#D4A373" opacity="0.5" />
+
 
               {/* Tronco */}
               <path d="M35 60 Q60 55 85 60 L90 130 Q60 135 30 130 Z" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
