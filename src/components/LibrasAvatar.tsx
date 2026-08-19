@@ -198,8 +198,8 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
         {/* Braços e Mãos - Articulados e em Camada Superior */}
         <svg viewBox="0 0 160 200" className="absolute inset-0" preserveAspectRatio="xMidYMin slice">
           <BracoArticulado
-            x={115}
-            y={95}
+            x={112}
+            y={102}
             rotacao={pose.bracoEsq}
             cotovelo={pose.coveloEsq}
             config={pose.maoEsq}
@@ -207,8 +207,8 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
             lado="esq"
           />
           <BracoArticulado
-            x={45}
-            y={95}
+            x={48}
+            y={102}
             rotacao={pose.bracoDir}
             cotovelo={pose.coveloDir}
             config={pose.maoDir}
