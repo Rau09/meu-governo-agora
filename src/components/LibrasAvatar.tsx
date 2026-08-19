@@ -100,40 +100,80 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
       </group>
 
 
-      {/* Braço Direito Interativo */}
+      {/* Braço Direito Humanoide Interativo */}
       <group 
         name="BraçoDireito" 
         position={[0.25, 0.2, 0]}
         onPointerOver={() => setHoveredPart("BraçoDireito")}
         onPointerOut={() => setHoveredPart(null)}
       >
-        <mesh position={[0.2, -0.2, 0]}>
-          <capsuleGeometry args={[0.06, 0.4, 4, 8]} />
+        {/* Ombro */}
+        <mesh position={[0, 0, 0]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
-        {/* Mão Direita Aumentada */}
-        <mesh position={[0.4, -0.4, 0]} scale={1.8}>
-          <sphereGeometry args={[0.04, 8, 8]} />
+        {/* Braço Superior */}
+        <mesh position={[0.15, -0.15, 0]} rotation={[0, 0, -Math.PI / 4]}>
+          <capsuleGeometry args={[0.06, 0.3, 8, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
+        {/* Antebraço */}
+        <mesh position={[0.3, -0.4, 0.05]} rotation={[0.2, 0, -Math.PI / 3]}>
+          <capsuleGeometry args={[0.05, 0.3, 8, 16]} />
+          <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
+        </mesh>
+        {/* Mão Direita Anatômica */}
+        <group position={[0.45, -0.55, 0.1]} scale={1.2}>
+          <mesh>
+            <boxGeometry args={[0.08, 0.08, 0.03]} />
+            <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
+          </mesh>
+          {/* Dedos */}
+          {[...Array(5)].map((_, i) => (
+            <mesh key={i} position={[-0.03 + i * 0.015, 0.05, 0]}>
+              <capsuleGeometry args={[0.006, 0.04, 4, 8]} />
+              <meshStandardMaterial color={hoveredPart === "BraçoDireito" ? "#3b82f6" : "#fcd34d"} />
+            </mesh>
+          ))}
+        </group>
       </group>
 
-      {/* Braço Esquerdo Interativo */}
+      {/* Braço Esquerdo Humanoide Interativo */}
       <group 
         name="BraçoEsquerdo" 
         position={[-0.25, 0.2, 0]}
         onPointerOver={() => setHoveredPart("BraçoEsquerdo")}
         onPointerOut={() => setHoveredPart(null)}
       >
-        <mesh position={[-0.2, -0.2, 0]}>
-          <capsuleGeometry args={[0.06, 0.4, 4, 8]} />
+        {/* Ombro */}
+        <mesh position={[0, 0, 0]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
-        {/* Mão Esquerda Aumentada */}
-        <mesh position={[-0.4, -0.4, 0]} scale={1.8}>
-          <sphereGeometry args={[0.04, 8, 8]} />
+        {/* Braço Superior */}
+        <mesh position={[-0.15, -0.15, 0]} rotation={[0, 0, Math.PI / 4]}>
+          <capsuleGeometry args={[0.06, 0.3, 8, 16]} />
           <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
         </mesh>
+        {/* Antebraço */}
+        <mesh position={[-0.3, -0.4, 0.05]} rotation={[0.2, 0, Math.PI / 3]}>
+          <capsuleGeometry args={[0.05, 0.3, 8, 16]} />
+          <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
+        </mesh>
+        {/* Mão Esquerda Anatômica */}
+        <group position={[-0.45, -0.55, 0.1]} scale={1.2}>
+          <mesh>
+            <boxGeometry args={[0.08, 0.08, 0.03]} />
+            <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
+          </mesh>
+          {/* Dedos */}
+          {[...Array(5)].map((_, i) => (
+            <mesh key={i} position={[-0.03 + i * 0.015, 0.05, 0]}>
+              <capsuleGeometry args={[0.006, 0.04, 4, 8]} />
+              <meshStandardMaterial color={hoveredPart === "BraçoEsquerdo" ? "#3b82f6" : "#fcd34d"} />
+            </mesh>
+          ))}
+        </group>
       </group>
 
 
