@@ -780,7 +780,7 @@ function CardOcorrencia({
   return (
     <li
       style={{ animationDelay: `${indice * 45}ms` }}
-      className="animate-in rounded-3xl border border-border bg-card p-3 shadow-card fade-in slide-in-from-bottom-2 duration-500"
+      className="animate-in rounded-[2rem] border border-border bg-card p-5 shadow-card fade-in slide-in-from-bottom-2 duration-500"
     >
       <div className="flex items-start justify-between gap-2">
         <div>
