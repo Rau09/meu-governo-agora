@@ -129,7 +129,6 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
           </div>
 
           <div className="flex items-center justify-between border-b border-border bg-card px-4 py-2">
-
             <div className="flex items-center gap-2">
               <div className="flex items-center rounded-lg bg-card/70 px-1.5 py-0.5">
                 {[0.75, 1, 1.25].map((v) => (
@@ -165,7 +164,6 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
                 <RotateCcw className="size-4" />
               </button>
             </div>
-
           </div>
 
           <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-8 relative overflow-hidden">
@@ -185,19 +183,19 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
 
           <div className="max-h-32 overflow-y-auto px-4 py-3 bg-secondary/20">
             <p className="text-xs leading-relaxed text-muted-foreground">
-
-            {texto.split(/\s+/).map((p, i) => {
-              const ativo = passo ? p.replace(/[^\p{L}\p{N}]/gu, "") === passo.palavra : false;
-              return (
-                <span
-                  key={`${p}-${i}`}
-                  className={ativo ? "rounded bg-primary-soft px-1 font-semibold text-primary" : undefined}
-                >
-                  {p}{" "}
-                </span>
-              );
-            })}
-          </p>
+              {texto.split(/\s+/).map((p, i) => {
+                const ativo = passo ? p.replace(/[^\p{L}\p{N}]/gu, "") === passo.palavra : false;
+                return (
+                  <span
+                    key={`${p}-${i}`}
+                    className={ativo ? "rounded bg-primary-soft px-1 font-semibold text-primary" : undefined}
+                  >
+                    {p}{" "}
+                  </span>
+                );
+              })}
+            </p>
+          </div>
         </div>
       )}
     </div>
@@ -212,7 +210,6 @@ function SignerFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
         style={{
           transform: `rotateY(${pose.tronco ?? 0}deg)`,
           transition: `transform ${420 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
-
         }}
       >
         {/* Sombra no chão */}
@@ -234,7 +231,6 @@ function SignerFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           {/* Roupa Profissional Verde */}
           <path d="M25 60 Q60 55 95 60 L100 145 Q60 150 20 145 Z" fill="#2ECC71" />
           <path d="M30 60 Q60 65 90 60" fill="none" stroke="#27AE60" strokeWidth="2" />
-
         </svg>
 
         {/* Braços e mãos articuladas sobrepostos */}
@@ -257,7 +253,6 @@ function SignerFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
               config={pose.maoEsq}
               velocidade={velocidade}
               color="#F5D5B8"
-
             />
             {/* Braço direito (à esquerda na tela) */}
             <Braco
@@ -268,7 +263,6 @@ function SignerFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
               config={pose.maoDir}
               velocidade={velocidade}
               color="#F5D5B8"
-
             />
           </g>
         </svg>
@@ -294,8 +288,6 @@ function Braco({
   velocidade: number;
   color?: string;
 }) {
-
-
   const ombro = rotacao * 1.6;
   const flexao = cotovelo * 1.1;
   const transicao = `transform ${500 / velocidade}ms cubic-bezier(0.4, 0, 0.2, 1)`;
@@ -386,8 +378,5 @@ function Mao({ config, velocidade, color = "#FAD1AF" }: { config: Configuracao; 
         />
       </g>
     </g>
-
   );
 }
-
-
