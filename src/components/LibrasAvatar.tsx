@@ -38,26 +38,31 @@ export function LibrasAvatar() {
               {/* Cabeça */}
               <circle cx="60" cy="35" r="18" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
               
-              {/* Cabelo */}
-              <path d="M45 25 Q60 15 75 25 Q75 35 60 40 Q45 35 45 25" fill="#4A3728" />
-              
-              {/* Cabelo Marrom */}
-              <path d="M42 28 Q60 12 78 28 L78 35 Q60 25 42 35 Z" fill="#4A3728" />
-              <path d="M42 28 Q40 35 45 42" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
-              <path d="M78 28 Q80 35 75 42" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+              {/* Cabelo Marrom Ajustado */}
+              <path d="M42 30 Q60 10 78 30 Q82 35 78 40 Q60 30 42 40 Q38 35 42 30" fill="#4A3728" />
+              <path d="M42 30 Q40 38 45 45" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+              <path d="M78 30 Q80 38 75 45" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+
 
               {/* Rosto */}
               <circle cx="53" cy="35" r="1.5" fill="#333" />
               <circle cx="67" cy="35" r="1.5" fill="#333" />
-              <path d="M60 37 L60 40" fill="none" stroke="#D4A373" strokeWidth="1" strokeLinecap="round" />
-              <path d="M54 44 Q60 48 66 44" fill="none" stroke="#D4A373" strokeWidth="1.2" strokeLinecap="round" />
+              <path d="M60 37 L60 39" fill="none" stroke="#D4A373" strokeWidth="1" strokeLinecap="round" />
+              {/* Sorriso Gentil */}
+              <path d="M52 45 Q60 50 68 45" fill="none" stroke="#D4A373" strokeWidth="1.2" strokeLinecap="round" />
+              {/* Covinhas */}
+              <circle cx="50" cy="44" r="0.5" fill="#D4A373" opacity="0.5" />
+              <circle cx="70" cy="44" r="0.5" fill="#D4A373" opacity="0.5" />
+
 
               {/* Tronco */}
               <path d="M35 60 Q60 55 85 60 L90 130 Q60 135 30 130 Z" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
 
-              {/* Roupas Verdes */}
+              {/* Roupas Verde e Branco */}
+              <path d="M35 60 Q60 55 85 60 L88 130 Q60 135 32 130 Z" fill="white" stroke="#22C55E" strokeWidth="0.5" />
               <path d="M35 60 Q60 55 85 60 L88 95 Q60 100 32 95 Z" fill="#22C55E" />
-              <path d="M38 95 L42 128 L78 128 L82 95 Z" fill="#16A34A" />
+              <path d="M50 60 L60 95 L70 60" fill="white" opacity="0.3" /> {/* Detalhe gola V */}
+
 
               {/* Braços e mãos articuladas sobrepostos */}
               <motion.g
