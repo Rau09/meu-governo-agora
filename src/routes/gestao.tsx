@@ -114,37 +114,37 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
   }
 
   return (
-    <AppShell librasMensagem="Área restrita da prefeitura. Faça login para ver o painel de gestão.">
-      <TopBar titulo="Painel Administrativo" subtitulo="Sistema oficial de gestão Cantu Conecta" />
-      <div className="-mt-5 px-4">
+    <AppShell librasMensagem="Área restrita da prefeitura. Faça login para acessar o Portal de Gestão Cantu Conecta.">
+      <TopBar titulo="Portal da Gestão" subtitulo="Espaço administrativo Cantu Conecta" />
+      <div className="-mt-6 px-4">
         <form
           onSubmit={submit}
-          className="animate-in rounded-xl border border-border bg-card p-6 shadow-sm fade-in slide-in-from-bottom-3 duration-500"
+          className="animate-in rounded-3xl border border-border bg-card p-8 shadow-card fade-in slide-in-from-bottom-3 duration-500"
         >
-          <div className="flex size-12 items-center justify-center rounded-lg bg-primary-soft">
-            <Lock className="size-5 text-primary" />
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-primary-soft">
+            <Lock className="size-6 text-primary" />
           </div>
-          <h2 className="mt-4 text-xl font-bold tracking-tighter text-foreground uppercase">Autenticação Administrativa</h2>
-          <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">Acesso restrito a servidores autorizados da Cantuquiriguaçu.</p>
+          <h2 className="mt-5 text-2xl font-bold tracking-tight text-foreground">Acesso Administrativo</h2>
+          <p className="mt-1 text-sm font-medium text-muted-foreground">Bem-vindo à área de gestão regional.</p>
 
-          <div className="mt-6 space-y-4">
+          <div className="mt-8 space-y-5">
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground" htmlFor="usuario">
-                Identificador do Usuário
+              <label className="text-xs font-bold text-muted-foreground" htmlFor="usuario">
+                Usuário
               </label>
               <input
                 id="usuario"
                 value={usuario}
                 onChange={(e) => setUsuario(e.target.value)}
                 autoComplete="username"
-                className="mt-1.5 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
-                placeholder="Ex: prefeitura"
+                className="mt-2 w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-sm outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10"
+                placeholder="Identificador do servidor"
               />
             </div>
 
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground" htmlFor="senha">
-                Chave de Acesso
+              <label className="text-xs font-bold text-muted-foreground" htmlFor="senha">
+                Senha de Acesso
               </label>
               <input
                 id="senha"
@@ -152,14 +152,14 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 autoComplete="current-password"
-                className="mt-1.5 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary/20"
+                className="mt-2 w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-sm outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10"
                 placeholder="••••••••"
               />
             </div>
           </div>
 
           {erro && (
-            <div className="mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-xs font-bold text-destructive">
+            <div className="mt-5 flex items-center gap-2 rounded-2xl bg-destructive/10 p-4 text-xs font-bold text-destructive">
               <AlertTriangle className="size-4" />
               {erro}
             </div>
@@ -167,12 +167,12 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
           <button
             type="submit"
-            className="mt-6 w-full rounded-lg bg-primary py-3.5 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.98]"
+            className="mt-8 w-full rounded-2xl bg-primary py-4 text-sm font-bold text-primary-foreground shadow-float transition-all hover:bg-primary/90 active:scale-[0.98]"
           >
-            Acessar Sistema
+            Entrar no Sistema
           </button>
-          <p className="mt-4 text-center text-[10px] font-medium text-muted-foreground/60">
-            Acesso monitorado · IP: 189.XXX.XXX.XXX
+          <p className="mt-5 text-center text-[11px] font-medium text-muted-foreground/60 italic">
+            Acesso restrito a servidores autorizados da Cantuquiriguaçu.
           </p>
         </form>
       </div>
