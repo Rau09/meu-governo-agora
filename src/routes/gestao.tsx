@@ -437,51 +437,51 @@ function Painel({ onSair }: { onSair: () => void }) {
         </div>
 
         {/* 5. Análise da IA */}
-        <section className="rounded-xl border border-border bg-card p-6 shadow-md relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-16 translate-x-16 blur-3xl pointer-events-none" />
+        <section className="rounded-3xl border border-border bg-card p-6 shadow-card relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -translate-y-16 translate-x-16 blur-3xl pointer-events-none" />
           
-          <Link to="/atendimento" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] text-primary hover:text-primary/80 transition-all group">
-            <Sparkles className="size-4 group-hover:rotate-12 transition-transform" /> 
+          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] text-primary">
+            <Sparkles className="size-4 animate-pulse" /> 
             <span>Inteligência Analítica Cantu</span>
-          </Link>
+          </div>
           
-          <div className="mt-4 flex flex-col gap-4">
+          <div className="mt-5 flex flex-col gap-5">
             <div className="relative">
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 rounded-full" />
-              <p className="pl-4 text-xs font-semibold leading-relaxed text-foreground/90 italic">
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary/20 rounded-full" />
+              <p className="pl-5 text-sm font-medium leading-relaxed text-foreground italic">
                 "{analise.texto}"
               </p>
             </div>
             
-            <div className="grid grid-cols-2 gap-3 mt-2">
-              <div className="rounded-lg bg-muted/30 p-3 border border-border/40">
-                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Status Global</p>
-                <p className="text-xs font-bold text-success flex items-center gap-1.5">
-                  <span className="size-1.5 rounded-full bg-success animate-pulse" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-2xl bg-success/5 p-4 border border-success/10">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-success/70 mb-1">Status Global</p>
+                <p className="text-xs font-bold text-success flex items-center gap-2">
+                  <span className="size-2 rounded-full bg-success animate-pulse" />
                   Operação Estável
                 </p>
               </div>
-              <div className="rounded-lg bg-muted/30 p-3 border border-border/40">
-                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Processamento IA</p>
-                <p className="text-xs font-bold text-primary">Tempo Real</p>
+              <div className="rounded-2xl bg-primary/5 p-4 border border-primary/10">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 mb-1">Processamento</p>
+                <p className="text-xs font-bold text-primary">Inteligência em Tempo Real</p>
               </div>
             </div>
           </div>
 
-          <div className="mt-4 rounded-lg border-l-4 border-primary bg-primary-soft/30 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">Diretriz Administrativa</p>
-            <p className="mt-2 text-xs font-medium leading-relaxed text-foreground">{analise.recomendacao}</p>
+          <div className="mt-5 rounded-2xl border-l-4 border-primary bg-primary-soft p-5">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">Recomendação Estratégica</p>
+            <p className="mt-2 text-sm font-semibold leading-relaxed text-foreground">{analise.recomendacao}</p>
             {verRecomendacao && (
-              <ul className="mt-3 space-y-2 border-t border-primary/10 pt-3 text-[11px] text-muted-foreground">
-                <li className="flex gap-2">
+              <ul className="mt-4 space-y-3 border-t border-primary/10 pt-4 text-[12px] font-medium text-muted-foreground">
+                <li className="flex gap-3">
                   <span className="font-bold text-primary">01.</span>
                   <span>Mobilizar unidade técnica para {analise.bairroFoco}.</span>
                 </li>
-                <li className="flex gap-2">
+                <li className="flex gap-3">
                   <span className="font-bold text-primary">02.</span>
                   <span>Priorizar auditoria dos {resumo.atrasadas} processos em atraso.</span>
                 </li>
-                <li className="flex gap-2">
+                <li className="flex gap-3">
                   <span className="font-bold text-primary">03.</span>
                   <span>Monitorar KPI de {analise.categoriaFoco.toLowerCase()} no próximo ciclo.</span>
                 </li>
@@ -489,11 +489,11 @@ function Painel({ onSair }: { onSair: () => void }) {
             )}
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setVerRecomendacao((v) => !v)}
-              className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-secondary active:scale-95 transition-colors"
+              className="rounded-full border border-border bg-background px-4 py-2 text-[10px] font-bold hover:bg-secondary active:scale-95 transition-all"
             >
               {verRecomendacao ? "Recolher Relatório" : "Ver Relatório"}
             </button>
@@ -506,19 +506,19 @@ function Painel({ onSair }: { onSair: () => void }) {
                   itens: ativos.filter((o) => o.categoria === analise.categoriaFoco),
                 })
               }
-              className="rounded-lg border border-border bg-background px-3 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-secondary active:scale-95 transition-colors"
+              className="rounded-full border border-border bg-background px-4 py-2 text-[10px] font-bold hover:bg-secondary active:scale-95 transition-all"
             >
               Auditar Dados
             </button>
           </div>
 
-          <div className="-mx-5 mt-4 flex gap-2 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="-mx-6 mt-6 flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {PERGUNTAS_IA.map((p) => (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => setRespostaIA(responderIA(p.id, lista))}
-                className="shrink-0 rounded-full border border-border bg-background px-3 py-1.5 text-[11px] font-semibold active:scale-95"
+                className="shrink-0 rounded-full border border-border bg-background px-4 py-2 text-[11px] font-bold text-muted-foreground transition-all hover:border-primary/30 hover:text-primary active:scale-95"
               >
                 {p.texto}
               </button>
@@ -526,9 +526,9 @@ function Painel({ onSair }: { onSair: () => void }) {
           </div>
 
           {respostaIA && (
-            <p className="animate-in mt-3 rounded-2xl bg-secondary p-3 text-xs leading-relaxed fade-in slide-in-from-bottom-2 duration-300">
+            <div className="animate-in mt-4 rounded-3xl bg-primary-soft p-5 text-sm font-medium leading-relaxed text-primary-foreground/90 shadow-sm fade-in slide-in-from-bottom-2 duration-300">
               🤖 {respostaIA}
-            </p>
+            </div>
           )}
         </section>
 
