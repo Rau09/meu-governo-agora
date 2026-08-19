@@ -185,8 +185,8 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           
           {/* Rosto Sóbrio */}
           <g className="opacity-90">
-            <ellipse cx="72" cy="55" rx="1.8" ry="2.2" fill="#1A1A1A" />
-            <ellipse cx="88" cy="55" rx="1.8" ry="2.2" fill="#1A1A1A" />
+            <ellipse cx="72" cy="58" rx="1.8" ry="2.2" fill="#1A1A1A" />
+            <ellipse cx="88" cy="58" rx="1.8" ry="2.2" fill="#1A1A1A" />
             <path d="M75 67 Q80 69 85 67" fill="none" stroke="#8B4513" strokeWidth="1.2" strokeLinecap="round" />
             {/* Sobrancelhas sutis */}
             <path d="M68 45 Q72 42 75 44" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
