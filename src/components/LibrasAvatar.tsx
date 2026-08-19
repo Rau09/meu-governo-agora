@@ -176,23 +176,23 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
         }}
       >
         <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg">
-          {/* Cabeça e Pescoço */}
-          <rect x="74" y="65" width="12" height="15" fill="#FAD1AF" />
-          <circle cx="80" cy="50" r="28" fill="#FAD1AF" />
+          {/* Cabeça e Pescoço - Tons de pele profissionais */}
+          <rect x="74" y="65" width="12" height="15" fill="#D2B48C" />
+          <circle cx="80" cy="50" r="28" fill="#D2B48C" />
           
-          {/* Cabelo Profissional */}
-          <path d="M52 45 Q80 15 108 45 L112 55 Q80 40 48 55 Z" fill="#3E2723" />
+          {/* Cabelo Adulto Profissional */}
+          <path d="M52 45 Q80 20 108 45 L112 58 Q80 45 48 58 Z" fill="#2C1810" />
           
-          {/* Rosto Amigável */}
-          <g className="opacity-80">
-            <circle cx="70" cy="50" r="3" fill="#1A1A1A" />
-            <circle cx="90" cy="50" r="3" fill="#1A1A1A" />
-            <path d="M72 65 Q80 70 88 65" fill="none" stroke="#E67E22" strokeWidth="2" strokeLinecap="round" />
+          {/* Rosto Sóbrio */}
+          <g className="opacity-90">
+            <circle cx="70" cy="50" r="2.5" fill="#1A1A1A" />
+            <circle cx="90" cy="50" r="2.5" fill="#1A1A1A" />
+            <path d="M72 65 Q80 68 88 65" fill="none" stroke="#8B4513" strokeWidth="1.5" strokeLinecap="round" />
           </g>
 
-          {/* Tronco - Roupa Verde Lisa Profissional */}
-          <path d="M40 80 Q80 75 120 80 L135 200 Q80 200 25 200 Z" fill="#27AE60" />
-          <path d="M60 80 L80 100 L100 80" fill="none" stroke="#1E8449" strokeWidth="2" opacity="0.3" />
+          {/* Tronco - Camisa Social Lisa (Azul Profissional) */}
+          <path d="M40 80 Q80 75 120 80 L135 200 Q80 200 25 200 Z" fill="#2E5077" />
+          <path d="M60 80 L80 100 L100 80" fill="none" stroke="#1B365D" strokeWidth="2" opacity="0.4" />
         </svg>
 
         {/* Braços e Mãos - Articulados e em Camada Superior */}
