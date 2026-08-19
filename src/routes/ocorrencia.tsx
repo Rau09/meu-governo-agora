@@ -80,7 +80,7 @@ function ComunicarProblema() {
 
   if (enviada) {
     return (
-      <AppShell  >
+      <AppShell>
         <TopBar titulo="Solicitação enviada" subtitulo="A equipe Cantu Conecta já recebeu seu chamado" />
         <div className="-mt-5 space-y-4 px-4 pb-10">
           <div className="animate-in rounded-3xl border border-border bg-card p-5 text-center shadow-card fade-in zoom-in-95 duration-500">
@@ -117,7 +117,7 @@ function ComunicarProblema() {
   }
 
   return (
-    <AppShell >
+    <AppShell>
       <TopBar titulo="Comunicar Problema" subtitulo="Foto, localização e envio em um minuto" />
 
       <form onSubmit={enviar} className="-mt-5 space-y-4 px-4">
