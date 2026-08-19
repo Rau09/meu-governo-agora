@@ -191,8 +191,8 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           </g>
 
           {/* Tronco - Camisa Social Lisa (Azul Profissional) */}
-          <path d="M40 80 Q80 75 120 80 L135 200 Q80 200 25 200 Z" fill="#2E5077" />
-          <path d="M60 80 L80 100 L100 80" fill="none" stroke="#1B365D" strokeWidth="2" opacity="0.4" />
+          <path d="M40 85 Q80 82 120 85 L135 220 Q80 220 25 220 Z" fill="#2E5077" />
+          <path d="M60 85 L80 102 L100 85" fill="none" stroke="#1B365D" strokeWidth="2" opacity="0.4" />
         </svg>
 
         {/* Braços e Mãos - Articulados e em Camada Superior */}
