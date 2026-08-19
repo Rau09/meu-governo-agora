@@ -103,9 +103,9 @@ export function LibrasViewer({
                    Tradução em tempo real
                  </span>
                </div>
-                <p className="text-2xl font-black text-white tracking-tighter uppercase text-center">
-                  Intérprete Humano Realista
-                </p>
+               <p className="text-2xl font-black text-white tracking-tighter uppercase text-center">
+                 Sinal de: {mensagem.split(' ')[0]}
+               </p>
             </div>
             
             <div className="rounded-[2.5rem] bg-white/5 p-8 border border-white/10 backdrop-blur-md">
