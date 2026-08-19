@@ -44,10 +44,12 @@ export function traduzirParaLibras(texto: string): string[] {
     } else if (palavra.length > 3) {
       // Para palavras longas não mapeadas, tenta encontrar substrings ou simplifica
       const radical = palavra.substring(0, 4);
-      const match = Object.keys(dicionarioGlosas).find(k => k.startsWith(radical));
-      if (match && dicionarioGlosas[match]) {
+      const keys = Object.keys(dicionarioGlosas);
+      const match = keys.find(k => k.startsWith(radical));
+      if (match) {
         glosas.push(dicionarioGlosas[match]);
       } else {
+
 
         // Soletra as 3 primeiras letras se for desconhecida
         palavra.substring(0, 3).split("").forEach(l => glosas.push(l.toUpperCase()));
