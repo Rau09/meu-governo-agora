@@ -167,7 +167,7 @@ export function LibrasViewer({
 
 function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
   return (
-    <div className="relative h-80 w-72 drop-shadow-2xl">
+    <div className="relative h-[450px] w-96 drop-shadow-2xl translate-y-12">
       <div 
         className="relative w-full h-full"
         style={{
