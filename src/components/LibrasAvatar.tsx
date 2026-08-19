@@ -178,19 +178,19 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
         <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg" preserveAspectRatio="xMidYMin slice">
           {/* Cabeça e Pescoço - Tons de pele profissionais */}
           <rect x="74" y="65" width="12" height="20" fill="#D2B48C" />
-          <ellipse cx="80" cy="65" rx="24" ry="34" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
+          <ellipse cx="80" cy="45" rx="22" ry="28" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
           
           {/* Cabelo Adulto Profissional */}
-          <path d="M52 48 Q80 28 108 48 L112 65 Q80 60 48 65 Z" fill="#2C1810" />
+          <path d="M56 35 Q80 18 104 35 L108 50 Q80 42 52 50 Z" fill="#2C1810" />
           
           {/* Rosto Sóbrio */}
           <g className="opacity-90">
-            <ellipse cx="69" cy="68" rx="2" ry="2.5" fill="#1A1A1A" />
-            <ellipse cx="91" cy="68" rx="2" ry="2.5" fill="#1A1A1A" />
-            <path d="M74 84 Q80 86 86 84" fill="none" stroke="#8B4513" strokeWidth="1.5" strokeLinecap="round" />
+            <ellipse cx="71" cy="48" rx="2" ry="2.5" fill="#1A1A1A" />
+            <ellipse cx="89" cy="48" rx="2" ry="2.5" fill="#1A1A1A" />
+            <path d="M74 62 Q80 64 86 62" fill="none" stroke="#8B4513" strokeWidth="1.5" strokeLinecap="round" />
             {/* Sobrancelhas sutis */}
-            <path d="M64 58 Q69 55 74 57" fill="none" stroke="#2C1810" strokeWidth="1.2" opacity="0.6" />
-            <path d="M86 57 Q91 55 96 58" fill="none" stroke="#2C1810" strokeWidth="1.2" opacity="0.6" />
+            <path d="M66 38 Q71 35 76 37" fill="none" stroke="#2C1810" strokeWidth="1.2" opacity="0.6" />
+            <path d="M84 37 Q89 35 94 38" fill="none" stroke="#2C1810" strokeWidth="1.2" opacity="0.6" />
           </g>
 
           {/* Tronco - Camisa Social Lisa (Azul Profissional) */}
