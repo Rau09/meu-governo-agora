@@ -534,8 +534,8 @@ function Painel({ onSair }: { onSair: () => void }) {
 
         {/* 6. Indicadores */}
         <section>
-          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">📊 Indicadores</h2>
-          <ul className="grid grid-cols-2 gap-3">
+          <h2 className="mb-4 text-sm font-bold text-foreground px-1">📊 Indicadores Regionais</h2>
+          <ul className="grid grid-cols-2 gap-4">
             {indices.map((ind) => (
               <li key={ind.grupo}>
                 <button
@@ -547,20 +547,23 @@ function Painel({ onSair }: { onSair: () => void }) {
                       itens: ind.itens,
                     })
                   }
-                  className="h-full w-full rounded-3xl border border-border bg-card p-3 text-left shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-float active:scale-[0.98]"
+                  className="h-full w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-float active:scale-[0.98]"
                 >
-                  <p className="text-[11px] font-extrabold uppercase tracking-wide">{ind.grupo}</p>
-                  <p className="mt-1 font-display text-xl font-bold">{ind.abertas}</p>
-                  <p className="text-[10px] text-muted-foreground">abertas</p>
-                  <p className="mt-1 text-[10px] text-muted-foreground">
-                    {ind.execucao} em execução · {ind.resolvidas} resolvidas
-                  </p>
-                  <p className={`text-[10px] font-semibold ${ind.atrasadas > 0 ? "text-destructive" : "text-success"}`}>
-                    {ind.atrasadas} atrasadas
-                  </p>
-                  <p className={`mt-1 text-[10px] font-bold ${ind.tendencia >= 0 ? "text-destructive" : "text-success"}`}>
-                    {ind.tendencia >= 0 ? "↑" : "↓"} {Math.abs(ind.tendencia)}% vs. mês anterior
-                  </p>
+                  <p className="text-[11px] font-extrabold uppercase tracking-wider text-muted-foreground">{ind.grupo}</p>
+                  <p className="mt-2 font-display text-2xl font-bold text-foreground">{ind.abertas}</p>
+                  <p className="text-[10px] font-bold text-muted-foreground/60 uppercase">Solicitações</p>
+                  
+                  <div className="mt-4 space-y-1.5">
+                    <p className="text-[10px] font-semibold text-muted-foreground">
+                      {ind.execucao} em execução
+                    </p>
+                    <p className={`text-[10px] font-bold ${ind.atrasadas > 0 ? "text-destructive" : "text-success"}`}>
+                      {ind.atrasadas} em atraso
+                    </p>
+                    <p className={`text-[10px] font-black ${ind.tendencia >= 0 ? "text-destructive" : "text-success"}`}>
+                      {ind.tendencia >= 0 ? "↑" : "↓"} {Math.abs(ind.tendencia)}% vs. anterior
+                    </p>
+                  </div>
                 </button>
               </li>
             ))}
