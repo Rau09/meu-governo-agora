@@ -44,6 +44,7 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
         braçoDir.rotation.x = -0.5 + Math.sin(tempoTotal * freq) * 0.8;
         braçoDir.rotation.y = Math.cos(tempoTotal * freq * 0.5) * 0.4;
         braçoEsq.rotation.x = -0.5 + Math.cos(tempoTotal * freq * 0.8) * 0.6;
+
         
         // Pequena inclinação da cabeça acompanhando
         cabeça.rotation.y = Math.sin(tempoTotal * 2) * 0.1;
