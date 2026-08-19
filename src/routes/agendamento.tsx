@@ -65,11 +65,14 @@ function Agendamento() {
   }
 
   return (
-    <AppShell librasMensagem="Tela de agendamento. Escolha a área, o serviço, a data e o horário desejado.">
+    <AppShell librasMensagem="Agendar Atendimento. Escolha a área de serviço, o tipo de atendimento, a unidade mais próxima, a data e o horário. Sua confirmação será gerada instantaneamente.">
       <TopBar titulo="Agendar" subtitulo="Escolha o serviço e o melhor horário para você" />
 
       {feito && (
-        <div className="mx-4 -mt-5 flex items-start gap-3 rounded-3xl border border-success/30 bg-card p-4 shadow-card">
+        <div 
+          className="mx-4 -mt-5 flex items-start gap-3 rounded-3xl border border-success/30 bg-card p-4 shadow-card"
+          onMouseEnter={() => {}} // Hook to trigger screen reader if needed, but AppShell level is fine
+        >
           <CheckCircle2 className="size-6 text-success" />
           <div>
             <p className="text-sm font-semibold">Agendamento confirmado!</p>
