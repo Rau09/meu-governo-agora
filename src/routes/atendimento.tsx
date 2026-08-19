@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle, CalendarPlus, Pill, Camera, ArrowRight, MapPin, Activity, CheckCircle2, AlertTriangle, Building2, Search, Info } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, Pill, Camera, ArrowRight, MapPin, Activity, CheckCircle2, AlertTriangle, Building2, Search, Info, Ambulance } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { responder, type Resposta } from "@/lib/cantu-ia";
 import { statusMedicamento, STATUS_OCORRENCIA, type Medicamento, type Ocorrencia } from "@/lib/cantu-store";
@@ -78,9 +78,10 @@ function Atendimento() {
         texto: r.texto, 
         tipo: r.tipo,
         dados: r.dados,
-        acao: r.acao,
-        opcoes: r.opcoes
+        acao: r.acao ?? undefined,
+        opcoes: r.opcoes ?? undefined
       }]);
+
       setEstaDigitando(false);
     }, 800);
   }
