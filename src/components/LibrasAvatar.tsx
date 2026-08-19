@@ -175,7 +175,7 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           transition: `transform ${600 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
         }}
       >
-        <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg">
+        <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg" preserveAspectRatio="xMidYMin slice">
           {/* Cabeça e Pescoço - Tons de pele profissionais */}
           <rect x="74" y="65" width="12" height="15" fill="#D2B48C" />
           <circle cx="80" cy="50" r="28" fill="#D2B48C" />
