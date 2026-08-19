@@ -199,7 +199,7 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
         </svg>
 
         {/* Braços e Mãos - Articulados e em Camada Superior */}
-        <svg viewBox="0 0 160 200" className="absolute inset-0" preserveAspectRatio="xMidYMin slice">
+        <svg viewBox="0 0 160 200" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMin meet">
           <BracoArticulado
             x={112}
             y={107}
