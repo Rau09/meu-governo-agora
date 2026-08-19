@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight, Hand } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+import { LibrasViewer } from "@/components/LibrasAvatar";
 import { responder } from "@/lib/cantu-ia";
 
 
@@ -60,6 +61,7 @@ function Atendimento() {
     }
   }, [protocolo]);
   const [texto, setTexto] = useState("");
+  const [librasMensagem, setLibrasMensagem] = useState<string | null>(null);
   const fim = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -151,19 +153,34 @@ function Atendimento() {
               >
                 {m.texto}
               </p>
-              {m.acao && (
-                <Link
-                  to={m.acao.para}
-                  className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-primary-soft px-4 text-xs font-bold text-primary"
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setLibrasMensagem(m.texto)}
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-primary/10 px-3 text-[10px] font-black text-primary transition-all active:scale-95"
                 >
-                  {m.acao.rotulo} <ArrowRight className="size-3.5" />
-                </Link>
-              )}
+                  <Hand className="size-3.5" /> VER EM LIBRAS
+                </button>
+                {m.acao && (
+                  <Link
+                    to={m.acao.para}
+                    className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-primary-soft px-3 text-[10px] font-black text-primary"
+                  >
+                    {m.acao.rotulo} <ArrowRight className="size-3" />
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         ))}
         <div ref={fim} />
       </div>
+
+      {librasMensagem && (
+        <LibrasViewer 
+          mensagem={librasMensagem} 
+          onClose={() => setLibrasMensagem(null)} 
+        />
+      )}
 
       <div className="fixed bottom-[8.5rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 overflow-x-auto px-4 pb-2 [scrollbar-width:none]">
         <div className="flex w-max gap-2">
