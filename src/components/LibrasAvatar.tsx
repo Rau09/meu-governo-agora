@@ -166,7 +166,7 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             </div>
           </div>
 
-          <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-8 relative overflow-hidden">
+          <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-12 relative overflow-hidden">
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_80%)]" />
             
             <SignerFigure pose={pose} velocidade={velocidade} />
