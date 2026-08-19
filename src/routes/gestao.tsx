@@ -334,8 +334,8 @@ function Painel({ onSair }: { onSair: () => void }) {
               <AlertTriangle className="size-5 text-warning" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-foreground">Atenção Necessária</h2>
-              <p className="text-[11px] font-medium text-muted-foreground">Protocolos que requerem despacho ou análise imediata.</p>
+              <h2 className="text-base font-bold text-foreground">Alertas de Prioridade</h2>
+              <p className="text-[11px] font-medium text-muted-foreground mt-0.5">Situações críticas com necessidade de despacho imediato.</p>
             </div>
           </div>
           <ul className="mt-5 space-y-3">
@@ -442,7 +442,7 @@ function Painel({ onSair }: { onSair: () => void }) {
           
           <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] text-primary">
             <Sparkles className="size-4 animate-pulse" /> 
-            <span>Inteligência Analítica Cantu</span>
+            <span>Inteligência Cantu Conecta</span>
           </div>
           
           <div className="mt-5 flex flex-col gap-5">
@@ -534,7 +534,7 @@ function Painel({ onSair }: { onSair: () => void }) {
 
         {/* 6. Indicadores */}
         <section>
-          <h2 className="mb-4 text-sm font-bold text-foreground px-1">📊 Indicadores Regionais</h2>
+          <h2 className="mb-4 text-sm font-bold text-foreground px-1">Indicadores de Desempenho</h2>
           <ul className="grid grid-cols-2 gap-4">
             {indices.map((ind) => (
               <li key={ind.grupo}>
@@ -571,7 +571,7 @@ function Painel({ onSair }: { onSair: () => void }) {
         </section>
 
         <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
-          <h2 className="text-sm font-bold">Demanda por área (agendamentos)</h2>
+          <h2 className="text-sm font-bold">Demanda por Área</h2>
           <ul className="mt-3 space-y-3">
             {porArea.map((a, i) => (
               <li key={a.nome}>
