@@ -13,6 +13,8 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
 
   const [indice, setIndice] = useState(0);
   const [tocando, setTocando] = useState(true);
+  const [velocidade, setVelocidade] = useState(1);
+
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -30,11 +32,12 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
     const atual = passos[indice] ?? passos[0]!;
     timer.current = setTimeout(() => {
       setIndice((i) => (i + 1) % passos.length);
-    }, atual.duracao);
+    }, atual.duracao / velocidade);
+
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
-  }, [aberto, tocando, indice, passos]);
+  }, [aberto, tocando, indice, passos, velocidade]);
 
   const passo = passos[indice];
   const pose = passo?.pose ?? POSE_REPOUSO;
@@ -120,14 +123,28 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             <span className="text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
               Intérprete de Libras
             </span>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center rounded-lg bg-card/70 px-1.5 py-0.5">
+                {[0.75, 1, 1.25].map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setVelocidade(v)}
+                    className={`px-1.5 py-0.5 text-[9px] font-bold transition-colors ${
+                      velocidade === v ? "text-primary" : "text-muted-foreground"
+                    }`}
+                  >
+                    {v}x
+                  </button>
+                ))}
+              </div>
               <button
                 type="button"
                 onClick={() => setTocando((v) => !v)}
                 aria-label={tocando ? "Pausar sinalização" : "Continuar sinalização"}
-                className="flex size-7 items-center justify-center rounded-full bg-card/70 text-secondary-foreground"
+                className="flex size-8 items-center justify-center rounded-full bg-card/70 text-secondary-foreground transition-transform active:scale-90"
               >
-                {tocando ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
+                {tocando ? <Pause className="size-4" /> : <Play className="size-4" />}
               </button>
               <button
                 type="button"
@@ -136,11 +153,12 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
                   setTocando(true);
                 }}
                 aria-label="Repetir do início"
-                className="flex size-7 items-center justify-center rounded-full bg-card/70 text-secondary-foreground"
+                className="flex size-8 items-center justify-center rounded-full bg-card/70 text-secondary-foreground transition-transform active:scale-90"
               >
-                <RotateCcw className="size-3.5" />
+                <RotateCcw className="size-4" />
               </button>
             </div>
+
           </div>
 
           <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-8 relative overflow-hidden">
