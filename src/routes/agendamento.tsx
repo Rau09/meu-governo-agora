@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CalendarCheck, CheckCircle2, Trash2, MapPin, Clock, Eye } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { useLibras } from "@/lib/libras-translator";
+
 import { AREAS, HORARIOS, useAgendamentos, useCidadao } from "@/lib/cantu-store";
 
 
@@ -13,12 +13,12 @@ export const Route = createFileRoute("/agendamento")({
     typeof search['servico'] === "string" ? { servico: search['servico'] } : {},
   head: () => ({
     meta: [
-      { title: "Agendar Atendimento — Cantu Conecta" },
+      { title: "Agendar Atendimento — NexLine" },
       {
         name: "description",
         content: "Agende consultas de saúde, serviços para animais e solicitações urbanas na região Cantuquiriguaçu.",
       },
-      { property: "og:title", content: "Agendar Atendimento — Cantu Conecta" },
+      { property: "og:title", content: "Agendar Atendimento — NexLine" },
       { property: "og:description", content: "Escolha o serviço, a unidade e o horário. Sem fila, sem espera na sua cidade." },
     ],
   }),
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/agendamento")({
 function Agendamento() {
   const { servico: servicoInicial } = Route.useSearch();
   const { cidadao } = useCidadao();
-  const { setMensagem } = useLibras();
+  
   const { agendamentos, criar, cancelar } = useAgendamentos();
 
 
@@ -88,12 +88,6 @@ function Agendamento() {
         <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">1. Área</h2>
-            <button 
-              onClick={() => setMensagem("Escolha a área do serviço: Saúde, Animal ou Serviços Urbanos.")}
-              className="size-6 rounded-full bg-primary-soft text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
-            >
-              <Eye className="size-3" />
-            </button>
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">

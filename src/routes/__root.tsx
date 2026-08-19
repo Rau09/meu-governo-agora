@@ -77,12 +77,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Cantu Conecta — Inovação Cívica Cantuquiriguaçu" },
+      { title: "NexLine — Inovação Cívica Cantuquiriguaçu" },
       {
         name: "description",
         content: "Plataforma integrada de atendimento ao cidadão da região Cantuquiriguaçu: saúde, causa animal e serviços urbanos.",
       },
-      { property: "og:title", content: "Cantu Conecta — Inovação Cívica Cantuquiriguaçu" },
+      { property: "og:title", content: "NexLine — Inovação Cívica Cantuquiriguaçu" },
       {
         property: "og:description",
         content: "O Futuro do Atendimento Público na Cantuquiriguaçu chegou.",

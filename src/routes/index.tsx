@@ -18,13 +18,13 @@ import { useAgendamentos, useCidadao, useOcorrencias } from "@/lib/cantu-store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Cantu Conecta — Saúde e Causa Animal na Cantuquiriguaçu" },
+      { title: "NexLine — Saúde e Causa Animal na Cantuquiriguaçu" },
       {
         name: "description",
         content:
           "Sua cidade, sua saúde, seu cuidado. Plataforma de tecnologia cívica para aproximar o cidadão do poder público.",
       },
-      { property: "og:title", content: "Cantu Conecta — Sua cidade, sua saúde, seu cuidado" },
+      { property: "og:title", content: "NexLine — Sua cidade, sua saúde, seu cuidado" },
       {
         property: "og:description",
         content: "Agende consultas, acompanhe a causa animal e participe da sua comunidade.",
@@ -57,8 +57,8 @@ function Inicio() {
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-             <div className="size-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-lg">C</div>
-             <span className="font-display text-xl font-bold tracking-tight">Cantu Conecta</span>
+             <div className="size-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-lg">N</div>
+             <span className="font-display text-xl font-bold tracking-tight">NexLine</span>
           </div>
           <button 
             type="button"
