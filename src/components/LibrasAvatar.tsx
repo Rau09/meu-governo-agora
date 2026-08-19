@@ -38,10 +38,11 @@ export function LibrasAvatar() {
               {/* Cabeça */}
               <circle cx="60" cy="35" r="18" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
               
-              {/* Cabelo Marrom Ajustado */}
-              <path d="M42 30 Q60 10 78 30 Q82 35 78 40 Q60 30 42 40 Q38 35 42 30" fill="#4A3728" />
-              <path d="M42 30 Q40 38 45 45" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
-              <path d="M78 30 Q80 38 75 45" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+              {/* Cabelo Marrom Ajustado (Ligeiramente para cima) */}
+              <path d="M42 28 Q60 8 78 28 Q82 33 78 38 Q60 28 42 38 Q38 33 42 28" fill="#4A3728" />
+              <path d="M42 28 Q40 36 45 43" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+              <path d="M78 28 Q80 36 75 43" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+
 
 
               {/* Rosto */}
@@ -58,10 +59,11 @@ export function LibrasAvatar() {
               {/* Tronco */}
               <path d="M35 60 Q60 55 85 60 L90 130 Q60 135 30 130 Z" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
 
-              {/* Roupas Verde e Branco */}
-              <path d="M35 60 Q60 55 85 60 L88 130 Q60 135 32 130 Z" fill="white" stroke="#22C55E" strokeWidth="0.5" />
+              {/* Roupas Verde e Azul */}
+              <path d="M35 60 Q60 55 85 60 L88 130 Q60 135 32 130 Z" fill="#3B82F6" stroke="#22C55E" strokeWidth="0.5" />
               <path d="M35 60 Q60 55 85 60 L88 95 Q60 100 32 95 Z" fill="#22C55E" />
-              <path d="M50 60 L60 95 L70 60" fill="white" opacity="0.3" /> {/* Detalhe gola V */}
+              <path d="M50 60 L60 95 L70 60" fill="#3B82F6" opacity="0.3" /> {/* Detalhe gola V Azul */}
+
 
 
               {/* Braços e mãos articuladas sobrepostos */}
