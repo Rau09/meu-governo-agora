@@ -57,8 +57,8 @@ export function LibrasViewer({
       </header>
 
       {/* Área do Intérprete - Fundo Limpo e Focado */}
-      <div className="relative flex flex-1 flex-col items-center justify-center bg-linear-to-b from-primary/5 via-background to-secondary/20 overflow-hidden px-6">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--color-primary-soft)_0%,_transparent_70%)] opacity-30" />
+      <div className="relative flex flex-1 flex-col items-center justify-center bg-[#E8EDF2] overflow-hidden px-6">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.8)_0%,_transparent_100%)] opacity-50" />
         
         {/* Personagem de Libras */}
         <div className="relative z-10 w-full max-w-xs aspect-square flex items-center justify-center">
