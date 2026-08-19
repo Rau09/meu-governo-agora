@@ -71,7 +71,7 @@ function Gestao() {
 
   if (!pronto) {
     return (
-      <AppShell librasMensagem="Carregando Painel de Gestão Cantu Conecta. Por favor, aguarde um momento.">
+      <AppShell >
         <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito" />
       </AppShell>
     );
@@ -114,7 +114,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
   }
 
   return (
-    <AppShell librasMensagem="Área restrita da prefeitura. Faça login para acessar o Portal de Gestão Cantu Conecta.">
+    <AppShell >
       <TopBar titulo="Portal da Gestão" subtitulo="Espaço administrativo Cantu Conecta" />
       <div className="-mt-6 px-4">
         <form
@@ -279,7 +279,7 @@ function Painel({ onSair }: { onSair: () => void }) {
   ];
 
   return (
-    <AppShell librasMensagem="Painel de gestão estratégica Cantu Conecta. Visualize indicadores, alertas críticos, mapa de calor regional e inteligência de dados para tomada de decisão imediata.">
+    <AppShell >
       <TopBar titulo="Painel de Gestão Pública" subtitulo="Inteligência Regional Cantuquiriguaçu" />
 
       <div className="-mt-6 space-y-6 px-4 pb-12">

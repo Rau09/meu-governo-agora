@@ -117,7 +117,7 @@ function ComunicarProblema() {
   }
 
   return (
-    <AppShell librasMensagem="Comunicar Problema. Selecione a categoria, tire uma foto do local, informe sua localização pelo GPS e descreva a situação. Nossa equipe receberá seu chamado imediatamente.">
+    <AppShell >
       <TopBar titulo="Comunicar Problema" subtitulo="Foto, localização e envio em um minuto" />
 
       <form onSubmit={enviar} className="-mt-5 space-y-4 px-4">

@@ -12,7 +12,7 @@ function SaudePage() {
   const { agendamentos } = useAgendamentos();
 
   return (
-    <AppShell librasMensagem="Minha Saúde. Aqui você gerencia seus agendamentos de consultas e exames, além de consultar a disponibilidade de medicamentos na rede municipal.">
+    <AppShell >
       <TopBar titulo="Minha Saúde" subtitulo="Agendamentos, exames e vacinação." />
       
       <div className="px-5 py-6 space-y-8">

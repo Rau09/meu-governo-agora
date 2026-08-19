@@ -65,7 +65,7 @@ function Agendamento() {
   }
 
   return (
-    <AppShell librasMensagem="Agendar Atendimento. Escolha a área de serviço, o tipo de atendimento, a unidade mais próxima, a data e o horário. Sua confirmação será gerada instantaneamente.">
+    <AppShell >
       <TopBar titulo="Agendar" subtitulo="Escolha o serviço e o melhor horário para você" />
 
       {feito && (

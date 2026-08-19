@@ -88,7 +88,7 @@ function Registro() {
 
   if (cidadao) {
     return (
-      <AppShell librasMensagem="Você já possui acesso criado. Seus dados aparecem protegidos nesta tela.">
+      <AppShell >
         <TopBar titulo="Meu acesso" subtitulo="Cadastro protegido por PIN" />
         <div className="-mt-5 space-y-4 px-4">
           <div className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card relative overflow-hidden">
@@ -478,7 +478,7 @@ function TelaPin({
   const bloqueado = bloqueadoAte > Date.now();
 
   return (
-    <AppShell librasMensagem="Digite seu PIN de 6 dígitos para acessar seus dados.">
+    <AppShell >
       <TopBar titulo="Acesso protegido" subtitulo={`Olá, ${nome.split(" ")[0]}`} />
       <form
         onSubmit={async (e) => {

@@ -80,7 +80,7 @@ function Atendimento() {
   }
 
   return (
-    <AppShell librasMensagem="Atendimento 24 horas. Escreva sua dúvida e a assistente responde na hora.">
+    <AppShell >
       <TopBar titulo="Atendimento 24/7" subtitulo="Assistente virtual sempre disponível" />
 
       <div className="-mt-5 space-y-3 px-4">

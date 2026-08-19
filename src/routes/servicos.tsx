@@ -27,7 +27,7 @@ function Servicos() {
   const termo = busca.trim().toLowerCase();
 
   return (
-    <AppShell librasMensagem="Lista de serviços da cidade. Toque em um serviço para agendar ou solicitar.">
+    <AppShell >
       <TopBar titulo="Serviços" subtitulo="Tudo que a prefeitura oferece, sem sair de casa" />
 
       <div className="-mt-5 px-4">
