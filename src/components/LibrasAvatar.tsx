@@ -249,17 +249,17 @@ function BracoArticulado({
 
 function MaoLibras({ config, velocidade, lado }: { config: Configuracao; velocidade: number; lado: "dir" | "esq" }) {
   const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
-  const transicao = `transform ${550 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1), height ${550 / velocidade}ms ease-in-out`;
+  const transicao = `transform ${550 / velocidade}ms cubic-bezier(0.4, 0, 0.2, 1), height ${550 / velocidade}ms ease-in-out`;
   
-  // Mãos ainda maiores para clareza absoluta
-  const escala = 1.6; 
-  const color = "#FAD1AF";
-  const stroke = "#B87550";
+  // Mãos ainda maiores e anatomicamente detalhadas para clareza absoluta
+  const escala = 1.8; 
+  const color = "#D2B48C";
+  const stroke = "#8B6B4A";
 
   return (
     <g style={{ transform: `scale(${escala}) rotate(${lado === "esq" ? 5 : -5}deg)` }}>
-      {/* Palma */}
-      <rect x={-9} y={-2} width={18} height={16} rx={8} fill={color} stroke={stroke} strokeWidth="1.2" />
+      {/* Palma Humana */}
+      <rect x={-9} y={-2} width={18} height={17} rx={6} fill={color} stroke={stroke} strokeWidth="1.2" />
       
       {/* Dedos Principais */}
       {[
