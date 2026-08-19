@@ -1,34 +1,26 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Hand, X, Play, Pause, RotateCcw } from "lucide-react";
+import { Hand, X, Play, Pause, RotateCcw, ChevronLeft, ChevronRight, Zap } from "lucide-react";
 import { DEDOS, POSE_REPOUSO, montarSequencia, type Configuracao, type Pose } from "@/lib/libras";
 
-
 /**
- * Avatar de Libras: assistente de acessibilidade para pessoas surdas.
+ * LibrasViewer: O componente principal de acessibilidade que exibe o intérprete
+ * e os controles de tradução sincronizada.
  */
-export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
-  const [aberto, setAberto] = useState(false);
-  const texto = mensagem ?? "Estou traduzindo esta tela em Libras para você.";
-  const passos = useMemo(() => montarSequencia(texto), [texto]);
-
+export function LibrasViewer({ 
+  mensagem, 
+  onClose 
+}: { 
+  mensagem: string; 
+  onClose: () => void;
+}) {
+  const passos = useMemo(() => montarSequencia(mensagem), [mensagem]);
   const [indice, setIndice] = useState(0);
   const [tocando, setTocando] = useState(true);
   const [velocidade, setVelocidade] = useState(1);
-
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [arrastado, setArrastado] = useState(false);
-  const arrastando = useRef(false);
-  const inicio = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
-
   useEffect(() => {
-    setIndice(0);
-    setTocando(true);
-  }, [texto, aberto]);
-
-  useEffect(() => {
-    if (!aberto || !tocando || passos.length === 0) return;
+    if (!tocando || passos.length === 0) return;
     const atual = passos[indice] ?? passos[0]!;
     timer.current = setTimeout(() => {
       setIndice((i) => (i + 1) % passos.length);
@@ -37,158 +29,67 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
-  }, [aberto, tocando, indice, passos, velocidade]);
+  }, [tocando, indice, passos, velocidade]);
 
   const passo = passos[indice];
   const pose = passo?.pose ?? POSE_REPOUSO;
 
-  function clamp(n: number, min: number, max: number) {
-    return Math.max(min, Math.min(max, n));
-  }
-
-  function onPointerDown(e: React.PointerEvent<HTMLButtonElement>) {
-    inicio.current = { x: e.clientX, y: e.clientY, posX: pos.x, posY: pos.y };
-    arrastando.current = true;
-    setArrastado(false);
-    e.currentTarget.setPointerCapture(e.pointerId);
-  }
-
-  function onPointerMove(e: React.PointerEvent<HTMLButtonElement>) {
-    if (!arrastando.current) return;
-    const dx = e.clientX - inicio.current.x;
-    const dy = e.clientY - inicio.current.y;
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setArrastado(true);
-
-    const maxX = typeof window !== "undefined" ? window.innerWidth - 56 - 16 : 0;
-    const minX = typeof window !== "undefined" ? -window.innerWidth + 56 + 16 : 0;
-    
-    const currentFromTop = typeof window !== "undefined" ? window.innerHeight - 96 - 56 : 0;
-    const minY = -currentFromTop + 16;
-    const maxY = 96 - 16;
-
-    setPos({
-      x: clamp(inicio.current.posX + dx, minX, 16),
-      y: clamp(inicio.current.posY + dy, minY, maxY),
-    });
-  }
-
-  function onPointerUp(e: React.PointerEvent<HTMLButtonElement>) {
-    arrastando.current = false;
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {}
-  }
-
-  function onClick() {
-    if (arrastado) {
-      setArrastado(false);
-      return;
-    }
-    setAberto((v) => !v);
-  }
-
   return (
-    <div
-      className="fixed bottom-24 right-4 z-50"
-      style={{
-        transform: `translate3d(${pos.x}px, ${pos.y}px, 0)`,
-      }}
-    >
-      <button
-        type="button"
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onClick={onClick}
-        aria-label={aberto ? "Fechar intérprete de Libras" : "Abrir intérprete de Libras"}
-        className="flex size-14 items-center justify-center rounded-full bg-accent-gradient text-accent-foreground shadow-float transition-transform cursor-grab active:cursor-grabbing active:scale-95"
-        style={{ touchAction: "none" }}
-      >
-        {aberto ? <X className="size-6" /> : <Hand className="size-6" />}
-      </button>
-
-      {aberto && (
-        <div 
-          className={`absolute z-50 w-64 overflow-hidden rounded-3xl border border-border bg-card shadow-float ${
-            typeof window !== 'undefined' && (window.innerWidth - 16 + pos.x) < window.innerWidth / 2
-              ? "left-0" 
-              : "right-0"
-          } ${
-            typeof window !== 'undefined' && (window.innerHeight - 96 + pos.y) < window.innerHeight / 2
-              ? "top-[72px]" 
-              : "bottom-[72px]"
-          }`}
+    <div className="fixed inset-0 z-[60] flex flex-col bg-background animate-in fade-in duration-300">
+      {/* Header Profissional */}
+      <header className="flex items-center justify-between border-b border-border bg-card px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+            <Hand className="size-6" />
+          </div>
+          <div>
+            <h2 className="text-sm font-black uppercase tracking-widest text-primary">Libras</h2>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase opacity-70">Cantu Conecta Acessível</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex size-10 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground shadow-sm active:scale-90 transition-transform"
         >
-          <div className="flex flex-col border-b border-border bg-primary-soft/50 px-4 py-3">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-primary">
-              Intérprete de Libras
-            </h2>
-            <p className="text-[10px] text-muted-foreground">
-              Entenda os conteúdos do Cantu Conecta em Libras.
-            </p>
-          </div>
+          <X className="size-5" />
+        </button>
+      </header>
 
-          <div className="flex items-center justify-between border-b border-border bg-card px-4 py-2">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center rounded-lg bg-card/70 px-1.5 py-0.5">
-                {[0.75, 1, 1.25].map((v) => (
-                  <button
-                    key={v}
-                    type="button"
-                    onClick={() => setVelocidade(v)}
-                    className={`px-1.5 py-0.5 text-[9px] font-bold transition-colors ${
-                      velocidade === v ? "text-primary" : "text-muted-foreground"
-                    }`}
-                  >
-                    {v}x
-                  </button>
-                ))}
+      {/* Área do Intérprete - Fundo Limpo e Focado */}
+      <div className="relative flex flex-1 flex-col items-center justify-center bg-linear-to-b from-primary/5 via-background to-secondary/20 overflow-hidden px-6">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--color-primary-soft)_0%,_transparent_70%)] opacity-30" />
+        
+        {/* Personagem de Libras */}
+        <div className="relative z-10 w-full max-w-xs aspect-square flex items-center justify-center">
+          <LibrasFigure pose={pose} velocidade={velocidade} />
+        </div>
+
+        {/* Texto Sincronizado */}
+        <div className="relative z-20 w-full max-w-sm mt-8 space-y-4">
+          <div className="flex flex-col items-center gap-2">
+            {passo && (
+              <div className="flex items-center gap-2 animate-in slide-in-from-bottom-2 duration-300">
+                <span className="rounded-full bg-primary px-3 py-1 text-[10px] font-black text-primary-foreground uppercase tracking-widest">
+                  {passo.datilologia ? "Soletrando" : "Sinal"}
+                </span>
+                <span className="text-2xl font-black text-primary tracking-tighter uppercase">{passo.glosa}</span>
               </div>
-              <button
-                type="button"
-                onClick={() => setTocando((v) => !v)}
-                aria-label={tocando ? "Pausar sinalização" : "Continuar sinalização"}
-                className="flex size-8 items-center justify-center rounded-full bg-card/70 text-secondary-foreground transition-transform active:scale-90"
-              >
-                {tocando ? <Pause className="size-4" /> : <Play className="size-4" />}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setIndice(0);
-                  setTocando(true);
-                }}
-                aria-label="Repetir do início"
-                className="flex size-8 items-center justify-center rounded-full bg-card/70 text-secondary-foreground transition-transform active:scale-90"
-              >
-                <RotateCcw className="size-4" />
-              </button>
-            </div>
+            )}
           </div>
-
-          <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-12 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_80%)]" />
-            
-            <SignerFigure pose={pose} velocidade={velocidade} />
-          </div>
-
-          {passo && (
-            <div className="bg-primary-soft/30 border-b border-border px-4 py-3 text-center">
-              <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold text-primary mb-1 uppercase tracking-tighter">
-                {passo.datilologia ? "Soletrando" : "Sinal de"}
-              </span>
-              <p className="font-display text-2xl font-black text-primary leading-none">{passo.glosa}</p>
-            </div>
-          )}
-
-          <div className="max-h-32 overflow-y-auto px-4 py-3 bg-secondary/20">
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              {texto.split(/\s+/).map((p, i) => {
+          
+          <div className="rounded-[2.5rem] bg-card/80 p-6 shadow-float border border-border/50 backdrop-blur-sm">
+            <p className="text-center text-lg font-medium leading-relaxed text-muted-foreground">
+              {mensagem.split(/\s+/).map((p, i) => {
                 const ativo = passo ? p.replace(/[^\p{L}\p{N}]/gu, "") === passo.palavra : false;
                 return (
                   <span
                     key={`${p}-${i}`}
-                    className={ativo ? "rounded bg-primary-soft px-1 font-semibold text-primary" : undefined}
+                    className={`inline-block transition-all duration-300 ${
+                      ativo 
+                        ? "text-primary scale-110 font-bold mx-1" 
+                        : "opacity-40"
+                    }`}
                   >
                     {p}{" "}
                   </span>
@@ -197,183 +98,204 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             </p>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Controles de Reprodução */}
+      <footer className="border-t border-border bg-card px-6 py-8 pb-12">
+        <div className="mx-auto flex max-w-md flex-col gap-6">
+          <div className="flex items-center justify-between">
+            {/* Velocidade */}
+            <div className="flex items-center gap-1 rounded-2xl bg-secondary/50 p-1">
+              {[0.75, 1, 1.25].map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setVelocidade(v)}
+                  className={`flex min-w-[50px] items-center justify-center rounded-xl py-2 text-[10px] font-black transition-all ${
+                    velocidade === v ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {v}x
+                </button>
+              ))}
+            </div>
+
+            {/* Navegação de Sinais */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIndice((i) => (i - 1 + passos.length) % passos.length)}
+                className="flex size-10 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground shadow-sm active:scale-90"
+              >
+                <ChevronLeft className="size-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setIndice((i) => (i + 1) % passos.length)}
+                className="flex size-10 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground shadow-sm active:scale-90"
+              >
+                <ChevronRight className="size-5" />
+              </button>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => {
+                setIndice(0);
+                setTocando(true);
+              }}
+              className="flex size-14 items-center justify-center rounded-[1.5rem] bg-secondary text-secondary-foreground shadow-sm active:scale-95 transition-transform"
+            >
+              <RotateCcw className="size-6" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setTocando((t) => !t)}
+              className="flex size-20 items-center justify-center rounded-[2rem] bg-primary text-primary-foreground shadow-xl active:scale-95 transition-transform"
+            >
+              {tocando ? <Pause className="size-8 fill-current" /> : <Play className="size-8 fill-current translate-x-0.5" />}
+            </button>
+            <div className="size-14" /> {/* Espaçador para equilíbrio visual */}
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
 
-function SignerFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
+function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
   return (
-    <div className="relative h-64 w-56 drop-shadow-2xl perspective-1000">
+    <div className="relative h-80 w-72 drop-shadow-2xl">
       <div 
-        className="relative w-full h-full preserve-3d"
+        className="relative w-full h-full"
         style={{
           transform: `rotateY(${pose.tronco ?? 0}deg)`,
-          transition: `transform ${480 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+          transition: `transform ${600 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
         }}
       >
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black/15 blur-xl rounded-[100%] z-0" />
-        
-        <svg viewBox="0 0 140 180" className="relative w-full h-full z-10 drop-shadow-lg">
-          <circle cx="70" cy="45" r="26" fill="#FAD1AF" />
-          <path d="M42 35 Q70 10 98 35 L102 55 Q70 40 38 55 Z" fill="#4E342E" />
+        <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg">
+          {/* Cabeça e Pescoço */}
+          <rect x="74" y="65" width="12" height="15" fill="#FAD1AF" />
+          <circle cx="80" cy="50" r="28" fill="#FAD1AF" />
           
-          <g>
-            <circle cx="60" cy="45" r="3.5" fill="#1A1A1A" />
-            <circle cx="80" cy="45" r="3.5" fill="#1A1A1A" />
-            <path d="M58 65 Q70 72 82 65" fill="none" stroke="#E74C3C" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Cabelo Profissional */}
+          <path d="M52 45 Q80 15 108 45 L112 55 Q80 40 48 55 Z" fill="#3E2723" />
+          
+          {/* Rosto Amigável */}
+          <g className="opacity-80">
+            <circle cx="70" cy="50" r="3" fill="#1A1A1A" />
+            <circle cx="90" cy="50" r="3" fill="#1A1A1A" />
+            <path d="M72 65 Q80 70 88 65" fill="none" stroke="#E67E22" strokeWidth="2" strokeLinecap="round" />
           </g>
 
-          <path d="M30 75 Q70 70 110 75 L120 175 Q70 180 20 175 Z" fill="#2ECC71" />
-          <path d="M35 75 Q70 85 105 75" fill="none" stroke="#27AE60" strokeWidth="3" />
+          {/* Tronco - Roupa Verde Lisa Profissional */}
+          <path d="M40 80 Q80 75 120 80 L135 200 Q80 200 25 200 Z" fill="#27AE60" />
+          <path d="M60 80 L80 100 L100 80" fill="none" stroke="#1E8449" strokeWidth="2" opacity="0.3" />
         </svg>
 
-        <svg
-          viewBox="0 0 140 180"
-          className="absolute inset-0 z-20 pointer-events-none"
-        >
-          <g
-            style={{
-              transformOrigin: "70px 140px",
-              transition: `transform ${480 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
-            }}
-          >
-            <Braco
-              x={105}
-              y={90}
-              rotacao={pose.bracoEsq}
-              cotovelo={pose.coveloEsq}
-              config={pose.maoEsq}
-              velocidade={velocidade}
-              color="#F5D5B8"
-            />
-            <Braco
-              x={35}
-              y={90}
-              rotacao={pose.bracoDir}
-              cotovelo={pose.coveloDir}
-              config={pose.maoDir}
-              velocidade={velocidade}
-              color="#F5D5B8"
-            />
-          </g>
+        {/* Braços e Mãos - Articulados e em Camada Superior */}
+        <svg viewBox="0 0 160 200" className="absolute inset-0">
+          <BracoArticulado
+            x={115}
+            y={95}
+            rotacao={pose.bracoEsq}
+            cotovelo={pose.coveloEsq}
+            config={pose.maoEsq}
+            velocidade={velocidade}
+            lado="esq"
+          />
+          <BracoArticulado
+            x={45}
+            y={95}
+            rotacao={pose.bracoDir}
+            cotovelo={pose.coveloDir}
+            config={pose.maoDir}
+            velocidade={velocidade}
+            lado="dir"
+          />
         </svg>
       </div>
     </div>
   );
 }
 
-function Braco({
-  x,
-  y,
-  rotacao,
-  cotovelo,
-  config,
-  velocidade,
-  color = "#F5D5B8",
-}: {
-  x: number;
-  y: number;
-  rotacao: number;
-  cotovelo: number;
-  config: Configuracao;
-  velocidade: number;
-  color?: string;
+function BracoArticulado({ 
+  x, y, rotacao, cotovelo, config, velocidade, lado 
+}: { 
+  x: number; y: number; rotacao: number; cotovelo: number; config: Configuracao; velocidade: number; lado: "dir" | "esq" 
 }) {
-  const ombro = rotacao * 1.6;
-  const flexao = cotovelo * 1.1;
-  const transicao = `transform ${500 / velocidade}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+  const anguloOmbro = rotacao * 1.6;
+  const anguloCotovelo = cotovelo * 1.1;
+  const transicao = `transform ${650 / velocidade}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+
   return (
-    <g
-      style={{
-        transform: `translate(${x}px, ${y}px) rotate(${ombro}deg)`,
-        transition: transicao,
-      }}
-    >
-      {/* ombro → cotovelo */}
-      <rect x={-7} y={-4} width={14} height={32} rx={7} fill={color} stroke="#E59866" strokeWidth="0.5" />
-      <g
-        style={{
-          transform: `translate(0px, 24px) rotate(${flexao}deg)`,
-          transition: transicao,
-        }}
-      >
-        {/* antebraço */}
-        <rect x={-6} y={-3} width={12} height={26} rx={6} fill={color} stroke="#E59866" strokeWidth="0.5" />
-        <g style={{ transform: "translate(0px, 22px)" }}>
-          <Mao config={config} velocidade={velocidade} color={color} />
+    <g style={{ transform: `translate(${x}px, ${y}px) rotate(${anguloOmbro}deg)`, transition: transicao }}>
+      {/* Braço superior */}
+      <rect x={-8} y={-5} width={16} height={35} rx={8} fill="#FAD1AF" stroke="#E59866" strokeWidth="0.5" />
+      
+      <g style={{ transform: `translate(0px, 28px) rotate(${anguloCotovelo}deg)`, transition: transicao }}>
+        {/* Antebraço */}
+        <rect x={-7} y={-4} width={14} height={32} rx={7} fill="#FAD1AF" stroke="#E59866" strokeWidth="0.5" />
+        
+        <g style={{ transform: "translate(0px, 28px)" }}>
+          <MaoLibras config={config} velocidade={velocidade} lado={lado} />
         </g>
       </g>
     </g>
   );
 }
 
-/** Mão com palma e cinco dedos detalhados que abrem/fecham conforme a configuração. */
-function Mao({ config, velocidade, color = "#FAD1AF" }: { config: Configuracao; velocidade: number; color?: string }) {
+function MaoLibras({ config, velocidade, lado }: { config: Configuracao; velocidade: number; lado: "dir" | "esq" }) {
   const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
-  const transicao = `transform ${450 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1), height ${450 / velocidade}ms ease-in-out`;
-
-  // Aumentamos o tamanho base da mão para melhor legibilidade
-  const escalaMao = 1.35;
-  const strokeColor = "#B87550";
-
-  const dedos: { dx: number; ext: number; alturaMax: number; angulo: number }[] = [
-    { dx: -6, ext: indicador, alturaMax: 16, angulo: -4 },
-    { dx: -2, ext: medio, alturaMax: 18, angulo: 0 },
-    { dx: 2, ext: anelar, alturaMax: 16, angulo: 4 },
-    { dx: 6, ext: minimo, alturaMax: 13, angulo: 8 },
-  ];
+  const transicao = `transform ${550 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1), height ${550 / velocidade}ms ease-in-out`;
+  
+  // Mãos ainda maiores para clareza absoluta
+  const escala = 1.6; 
+  const color = "#FAD1AF";
+  const stroke = "#B87550";
 
   return (
-    <g style={{ transform: `scale(${escalaMao})` }}>
-      {/* Palma da mão */}
-      <rect x={-10} y={-3} width={20} height={18} rx={9} fill={color} stroke={strokeColor} strokeWidth="1.2" />
+    <g style={{ transform: `scale(${escala}) rotate(${lado === "esq" ? 5 : -5}deg)` }}>
+      {/* Palma */}
+      <rect x={-9} y={-2} width={18} height={16} rx={8} fill={color} stroke={stroke} strokeWidth="1.2" />
       
-      {/* Dedos (Indicador ao Mínimo) */}
-      {dedos.map((d, i) => {
-        const h = 5 + d.ext * 18;
+      {/* Dedos Principais */}
+      {[
+        { dx: -5.5, ext: indicador, hMax: 18, a: -5 },
+        { dx: -1.8, ext: medio, hMax: 20, a: 0 },
+        { dx: 1.8, ext: anelar, hMax: 18, a: 5 },
+        { dx: 5.5, ext: minimo, hMax: 15, a: 10 },
+      ].map((d, i) => {
+        const h = 4 + d.ext * d.hMax;
         return (
-          <g key={i} style={{ transform: `translate(${d.dx}px, 8px) rotate(${d.angulo * (1 - d.ext)}deg)`, transition: transicao }}>
-            {/* Articulação e falanges simuladas */}
-            <rect
-              x={-2.5}
-              y={-h}
-              width={5}
-              height={h}
-              rx={2.5}
-              fill={color} 
-              stroke={strokeColor} 
-              strokeWidth="1"
-              style={{ transition: transicao }}
-            />
-            {/* Detalhe da junta para maior realismo */}
-            {d.ext > 0.5 && (
-              <line x1="-1.5" y1={-h/2} x2="1.5" y2={-h/2} stroke={strokeColor} strokeWidth="0.5" opacity="0.5" />
-            )}
+          <g key={i} style={{ transform: `translate(${d.dx}px, 8px) rotate(${d.a * (1 - d.ext)}deg)`, transition: transicao }}>
+            <rect x={-2.2} y={-h} width={4.4} height={h} rx={2.2} fill={color} stroke={stroke} strokeWidth="1" />
+            {d.ext > 0.6 && <line x1="-1.5" y1={-h/2} x2="1.5" y2={-h/2} stroke={stroke} strokeWidth="0.5" opacity="0.4" />}
           </g>
         );
       })}
 
-      {/* Polegar */}
-      <g
-        style={{
-          transform: `translate(-10px, 6px) rotate(${25 - polegar * 65}deg)`,
-          transformOrigin: "center left",
-          transition: transicao,
-        }}
-      >
-        <rect
-          x={-2}
-          y={-2.5}
-          width={5}
-          height={8 + polegar * 10}
-          rx={2.5}
-          fill={color} 
-          stroke={strokeColor} 
-          strokeWidth="1"
-          style={{ transition: transicao, transform: "rotate(-90deg)" }}
-        />
+      {/* Polegar Detalhado */}
+      <g style={{ transform: `translate(-9px, 5px) rotate(${20 - polegar * 70}deg)`, transition: transicao }}>
+        <rect x={-2} y={-2.5} width={4.5} height={8 + polegar * 11} rx={2.2} fill={color} stroke={stroke} strokeWidth="1" style={{ transform: "rotate(-90deg)" }} />
       </g>
     </g>
+  );
+}
+
+/**
+ * Componente flutuante opcional para acionar o visualizador de Libras.
+ */
+export function LibrasTrigger({ onOpen }: { onOpen: () => void }) {
+  return (
+    <button
+      onClick={onOpen}
+      className="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-[10px] font-black text-primary transition-all hover:bg-primary/20 active:scale-95"
+    >
+      <Hand className="size-4" />
+      <span>VER EM LIBRAS</span>
+    </button>
   );
 }

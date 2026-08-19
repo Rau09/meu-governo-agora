@@ -65,13 +65,13 @@ function Agendamento() {
   }
 
   return (
-    <AppShell librasMensagem="Tela de agendamento. Escolha a área, o serviço, a data e o horário desejado.">
+    <AppShell librasMensagem="Agendar Atendimento. Escolha a área de serviço, o tipo de atendimento, a unidade mais próxima, a data e o horário. Sua confirmação será gerada instantaneamente.">
       <TopBar titulo="Agendar" subtitulo="Escolha o serviço e o melhor horário para você" />
 
       {feito && (
         <div className="mx-4 -mt-5 flex items-start gap-3 rounded-3xl border border-success/30 bg-card p-4 shadow-card">
           <CheckCircle2 className="size-6 text-success" />
-          <div>
+          <div className="flex-1">
             <p className="text-sm font-semibold">Agendamento confirmado!</p>
             <p className="text-xs text-muted-foreground">
               Protocolo {feito}. Você receberá o lembrete pelo WhatsApp.

@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Stethoscope, PawPrint, MapPin, MessageCircle, UserRound, Building2 } from "lucide-react";
+import { Home, Stethoscope, PawPrint, MapPin, MessageCircle, UserRound, Building2, Hand } from "lucide-react";
+import { LibrasViewer } from "./LibrasAvatar";
 
 
 const nav = [
@@ -19,11 +20,31 @@ export function AppShell({
   librasMensagem?: string;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [librasAtivo, setLibrasAtivo] = useState(false);
 
   return (
     <div className="min-h-dvh bg-secondary/40">
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float">
         <main className="pb-28">{children}</main>
+
+        {/* Botão Flutuante de Acessibilidade (Libras) */}
+        {librasMensagem && (
+          <button
+            onClick={() => setLibrasAtivo(true)}
+            className="fixed bottom-24 right-4 z-40 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-xl transition-all active:scale-95"
+            aria-label="Ver tradução em Libras"
+          >
+            <div className="font-black text-[10px] absolute -top-2 bg-accent-gradient px-2 py-0.5 rounded-full text-accent-foreground border-2 border-background">LIBRAS</div>
+            <Hand className="size-6" />
+          </button>
+        )}
+
+        {librasAtivo && librasMensagem && (
+          <LibrasViewer 
+            mensagem={librasMensagem} 
+            onClose={() => setLibrasAtivo(false)} 
+          />
+        )}
 
         <nav
           aria-label="Navegação principal"

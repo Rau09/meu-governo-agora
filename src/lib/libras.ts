@@ -22,20 +22,23 @@ export type Configuracao =
   | "mindinho"
   | "ok";
 
+/** 
+ * Definição dos dedos (1 = estendido, 0 = dobrado, valores entre 0 e 1 para posições intermediárias).
+ * Cada configuração de mão é projetada para clareza máxima em Libras.
+ */
 export const DEDOS: Record<Configuracao, [number, number, number, number, number]> = {
-  //        polegar, indic, médio, anelar, mínimo   (1 = estendido, 0 = dobrado)
-  aberta: [1, 1, 1, 1, 1],
-  punho: [0, 0, 0, 0, 0],
-  apontar: [0, 1, 0, 0, 0],
-  dois: [0, 1, 1, 0, 0],
-  tres: [0, 1, 1, 1, 0],
-  joia: [1, 0, 0, 0, 0],
-  garra: [0.6, 0.6, 0.6, 0.6, 0.6],
-  c: [0.8, 0.8, 0.8, 0.8, 0.8],
-  pinca: [0.8, 0.8, 0, 0, 0],
-  mindinho: [0, 0, 0, 0, 1],
-  ok: [0.3, 0.3, 1, 1, 1],
-
+  //        polegar, indic, médio, anelar, mínimo
+  aberta:   [1, 1, 1, 1, 1],
+  punho:    [0.1, 0, 0, 0, 0],
+  apontar:  [0.2, 1, 0, 0, 0],
+  dois:     [0.2, 1, 1, 0, 0],
+  tres:     [0.2, 1, 1, 1, 0],
+  joia:     [1, 0, 0, 0, 0],
+  garra:    [0.6, 0.6, 0.6, 0.6, 0.6],
+  c:        [0.8, 0.8, 0.8, 0.8, 0.8],
+  pinca:    [0.8, 1, 0, 0, 0],
+  mindinho: [0.2, 0, 0, 0, 1],
+  ok:       [0.4, 0.4, 1, 1, 1],
 };
 
 export type Pose = {
