@@ -29,8 +29,9 @@ type Msg = {
   texto: string; 
   tipo: "texto" | "medicamento" | "protocolo" | "opcoes" | "servico";
   dados?: any;
-  acao?: { rotulo: string; para: string };
-  opcoes?: { rotulo: string; valor: string }[];
+  acao?: { rotulo: string; para: string } | undefined;
+  opcoes?: { rotulo: string; valor: string }[] | undefined;
+
 };
 
 function Atendimento() {
