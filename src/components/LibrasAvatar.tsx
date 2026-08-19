@@ -189,8 +189,8 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
             <ellipse cx="88" cy="68" rx="1.8" ry="2.2" fill="#1A1A1A" />
             <path d="M75 80 Q80 82 85 80" fill="none" stroke="#8B4513" strokeWidth="1.2" strokeLinecap="round" />
             {/* Sobrancelhas sutis */}
-            <path d="M68 55 Q72 52 75 54" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
-            <path d="M85 54 Q88 52 92 55" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
+            <path d="M68 58 Q72 55 75 57" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
+            <path d="M85 57 Q88 55 92 58" fill="none" stroke="#2C1810" strokeWidth="1" opacity="0.6" />
           </g>
 
           {/* Tronco - Camisa Social Lisa (Azul Profissional) */}
