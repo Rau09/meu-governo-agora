@@ -732,26 +732,26 @@ function DetalheLista({
             const st = STATUS_OCORRENCIA.find((s) => s.id === o.status)!;
             const n = NIVEIS[nivelOcorrencia(o)];
             return (
-              <li key={o.protocolo} className="rounded-2xl border border-border bg-card p-3">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-semibold leading-tight">
+              <li key={o.protocolo} className="rounded-[1.5rem] border border-border bg-card p-4 shadow-sm transition-all hover:border-primary/20">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-sm font-bold leading-snug">
                     {metaCategoria(o.categoria).emoji} {o.categoria}
                   </p>
-                  <span className="shrink-0 text-[10px] font-bold text-muted-foreground">{o.protocolo}</span>
+                  <span className="shrink-0 text-[10px] font-black text-muted-foreground/50 tracking-tighter">{o.protocolo}</span>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
-                  {o.bairro} · {diasAberto(o)} dias · {o.reclamacoes} reclamações
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
+                  {o.bairro} · {diasAberto(o)} dias aberto
                 </p>
-                <div className="mt-1.5 flex flex-wrap gap-1.5">
-                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${n.classe}`}>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className={`rounded-full px-3 py-1 text-[10px] font-bold tracking-tight ${n.classe}`}>
                     {n.emoji} {n.rotulo}
                   </span>
-                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${st.classe}`}>
+                  <span className={`rounded-full px-3 py-1 text-[10px] font-bold tracking-tight ${st.classe}`}>
                     {st.emoji} {st.rotulo}
                   </span>
                   {atrasada(o) && (
-                    <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-bold text-destructive">
-                      ⏰ Atrasada
+                    <span className="rounded-full bg-destructive/10 px-3 py-1 text-[10px] font-bold text-destructive">
+                      ⏰ Atraso Crítico
                     </span>
                   )}
                 </div>
