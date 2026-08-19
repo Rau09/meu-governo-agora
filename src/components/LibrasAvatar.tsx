@@ -38,10 +38,9 @@ export function LibrasAvatar() {
               {/* Cabeça */}
               <circle cx="60" cy="35" r="18" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
               
-              {/* Cabelo Marrom Ajustado (Ligeiramente para cima) */}
-              <path d="M42 28 Q60 8 78 28 Q82 33 78 38 Q60 28 42 38 Q38 33 42 28" fill="#4A3728" />
-              <path d="M42 28 Q40 36 45 43" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
-              <path d="M78 28 Q80 36 75 43" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+              {/* Cabelo Curto Rente à Cabeça */}
+              <path d="M43 25 Q60 17 77 25 Q80 30 77 35 Q60 25 43 35 Q40 30 43 25" fill="#4A3728" />
+
 
 
 
