@@ -208,7 +208,7 @@ function Registro() {
   }
 
   return (
-    <AppShell librasMensagem={`Criar acesso seguro: Passo ${passo} de 4. ${passo === 1 ? 'Preencha seu nome completo, CPF e WhatsApp.' : passo === 2 ? 'Informe seu município e bairro.' : passo === 3 ? 'Crie um PIN de 6 dígitos para sua segurança.' : 'Selecione suas preferências e aceite os termos de privacidade.'}`}>
+    <AppShell  >
       <TopBar 
         titulo="Criar meu acesso" 
         subtitulo={`Passo ${passo} de 4 — ${passo === 1 ? 'Identificação' : passo === 2 ? 'Localização' : passo === 3 ? 'Segurança' : 'Privacidade'}`} 
