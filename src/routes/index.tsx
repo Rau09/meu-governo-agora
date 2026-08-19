@@ -53,7 +53,7 @@ function Inicio() {
   const proximo = agendamentos[0];
 
   return (
-    <AppShell librasMensagem="Bem-vindo ao Cantu Conecta. Aqui você acessa serviços de saúde, cuida da causa animal e participa da melhoria da sua cidade.">
+    <AppShell librasMensagem="Bem-vindo ao Cantu Conecta. Aqui você acessa serviços de saúde, cuida da causa animal e comunica problemas na sua cidade.">
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
