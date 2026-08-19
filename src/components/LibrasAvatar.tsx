@@ -327,24 +327,29 @@ function Mao({ config, velocidade, color = "#FAD1AF" }: { config: Configuracao; 
   return (
     <g style={{ transform: `scale(${escalaMao})` }}>
       {/* Palma da mão */}
-      <rect x={-8} y={-2} width={16} height={14} rx={7} fill={color} stroke={strokeColor} strokeWidth="0.8" />
+      <rect x={-10} y={-3} width={20} height={18} rx={9} fill={color} stroke={strokeColor} strokeWidth="1.2" />
       
       {/* Dedos (Indicador ao Mínimo) */}
       {dedos.map((d, i) => {
-        const h = 4 + d.ext * 14;
+        const h = 5 + d.ext * 18;
         return (
-          <g key={i} style={{ transform: `translate(${d.dx}px, 6px) rotate(${d.angulo * (1 - d.ext)}deg)`, transition: transicao }}>
+          <g key={i} style={{ transform: `translate(${d.dx}px, 8px) rotate(${d.angulo * (1 - d.ext)}deg)`, transition: transicao }}>
+            {/* Articulação e falanges simuladas */}
             <rect
-              x={-2}
+              x={-2.5}
               y={-h}
-              width={4}
+              width={5}
               height={h}
-              rx={2}
+              rx={2.5}
               fill={color} 
               stroke={strokeColor} 
-              strokeWidth="0.7"
+              strokeWidth="1"
               style={{ transition: transicao }}
             />
+            {/* Detalhe da junta para maior realismo */}
+            {d.ext > 0.5 && (
+              <line x1="-1.5" y1={-h/2} x2="1.5" y2={-h/2} stroke={strokeColor} strokeWidth="0.5" opacity="0.5" />
+            )}
           </g>
         );
       })}
@@ -352,20 +357,20 @@ function Mao({ config, velocidade, color = "#FAD1AF" }: { config: Configuracao; 
       {/* Polegar */}
       <g
         style={{
-          transform: `translate(-8px, 4px) rotate(${25 - polegar * 60}deg)`,
+          transform: `translate(-10px, 6px) rotate(${25 - polegar * 65}deg)`,
           transformOrigin: "center left",
           transition: transicao,
         }}
       >
         <rect
-          x={-1.5}
-          y={-2}
-          width={4}
-          height={6 + polegar * 7}
-          rx={2}
+          x={-2}
+          y={-2.5}
+          width={5}
+          height={8 + polegar * 10}
+          rx={2.5}
           fill={color} 
           stroke={strokeColor} 
-          strokeWidth="0.7"
+          strokeWidth="1"
           style={{ transition: transicao, transform: "rotate(-90deg)" }}
         />
       </g>
