@@ -25,22 +25,38 @@ const dicionarioGlosas: Record<string, string> = {
  * Tradutor de texto simples para sequências de glosas.
  */
 export function traduzirParaLibras(texto: string): string[] {
-  const palavras = texto.toLowerCase().replace(/[.,!?;:]/g, "").split(/\s+/);
+  // Mapeamento de frases comuns para glosas específicas
+  const frasesProntas: Record<string, string[]> = {
+    "escolha a área do serviço: saúde, animal ou serviços urbanos.": ["ESCOLHER", "AREA", "SERVIÇO", "SAUDE", "ANIMAL", "CIDADE"],
+    "como posso ajudar você hoje? selecione uma opção acima para começarmos.": ["OI", "AJUDA", "VOCE", "ESCOLHER", "OPÇÃO"],
+  };
+
+  const textoLimpo = texto.toLowerCase().trim();
+  if (frasesProntas[textoLimpo]) return frasesProntas[textoLimpo];
+
+  const palavras = textoLimpo.replace(/[.,!?;:]/g, "").split(/\s+/);
   const glosas: string[] = [];
 
   palavras.forEach((palavra) => {
+    // Tenta encontrar a palavra no dicionário
     if (dicionarioGlosas[palavra]) {
       glosas.push(dicionarioGlosas[palavra]);
-    } else if (palavra.length > 0) {
-      // Caso não encontre a palavra, soletra (Datilologia simplificada)
-      palavra.split("").forEach((letra) => {
-        glosas.push(letra.toUpperCase());
-      });
+    } else if (palavra.length > 3) {
+      // Para palavras longas não mapeadas, tenta encontrar substrings ou simplifica
+      const radical = palavra.substring(0, 4);
+      const match = Object.keys(dicionarioGlosas).find(k => k.startsWith(radical));
+      if (match) {
+        glosas.push(dicionarioGlosas[match]);
+      } else {
+        // Soletra as 3 primeiras letras se for desconhecida
+        palavra.substring(0, 3).split("").forEach(l => glosas.push(l.toUpperCase()));
+      }
     }
   });
 
-  return glosas;
+  return glosas.length > 0 ? glosas : ["SINAL"];
 }
+
 
 /**
  * Hook para gerenciar o estado global de tradução de Libras.

@@ -14,30 +14,43 @@ import { X, Play, Pause, RotateCcw, FastForward, Rewind } from "lucide-react";
 import { useLibras } from "@/lib/libras-translator";
 
 // Componente do Modelo 3D (Placeholder realista)
-function AvatarModelo({ glosas, velocidade, reproduzindo, onFinalizado }: any) {
+function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
   const group = useRef<THREE.Group>(null);
-  const [indiceGlosa, setIndiceGlosa] = useState(0);
-  
-  // Nota: Em um app real, carregaríamos um modelo GLB/GLTF específico com animações de Libras
-  // Aqui simularemos as animações nos braços para demonstrar o conceito
+  const [glosaAtual, setGlosaAtual] = useState("");
+  const tempoInicioRef = useRef(0);
   
   useFrame((state, delta) => {
     if (!reproduzindo || glosas.length === 0) return;
 
+    const tempoTotal = state.clock.getElapsedTime() * velocidade;
+    const duracaoPorGlosa = 1.2; // Segundos por sinal
+    const indice = Math.floor(tempoTotal / duracaoPorGlosa) % glosas.length;
+    const glosa = glosas[indice];
+    
+    if (glosa !== glosaAtual) {
+      setGlosaAtual(glosa);
+    }
+
     if (group.current) {
-      const time = state.clock.getElapsedTime() * velocidade;
-      
-      // Simulação de movimentos de braços e mãos
       const braçoDir = group.current.getObjectByName("BraçoDireito");
       const braçoEsq = group.current.getObjectByName("BraçoEsquerdo");
+      const cabeça = group.current.getObjectByName("Cabeça");
       
-      if (braçoDir && braçoEsq) {
-        braçoDir.rotation.x = Math.sin(time * 5) * 0.5;
-        braçoDir.rotation.z = Math.cos(time * 3) * 0.3;
-        braçoEsq.rotation.x = Math.cos(time * 4) * 0.4;
+      if (braçoDir && braçoEsq && cabeça) {
+        // Oscilação baseada na glosa (simulação de sinais diferentes)
+        const seed = glosa.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const freq = 3 + (seed % 5);
+        
+        braçoDir.rotation.x = -0.5 + Math.sin(tempoTotal * freq) * 0.8;
+        braçoDir.rotation.y = Math.cos(tempoTotal * freq * 0.5) * 0.4;
+        braçoEsq.rotation.x = -0.5 + Math.cos(tempoTotal * freq * 0.8) * 0.6;
+        
+        // Pequena inclinação da cabeça acompanhando
+        cabeça.rotation.y = Math.sin(tempoTotal * 2) * 0.1;
       }
     }
   });
+
 
   return (
     <group ref={group}>
@@ -48,7 +61,8 @@ function AvatarModelo({ glosas, velocidade, reproduzindo, onFinalizado }: any) {
       </mesh>
       
       {/* Cabeça */}
-      <mesh position={[0, 0.4, 0]}>
+      <mesh name="Cabeça" position={[0, 0.4, 0]}>
+
         <sphereGeometry args={[0.18, 32, 32]} />
         <meshStandardMaterial color="#fcd34d" />
       </mesh>
@@ -125,7 +139,7 @@ export function LibrasAvatar() {
 
           {/* Área 3D */}
           <div className="flex-1 relative bg-gradient-to-b from-slate-900 to-slate-800">
-            <Canvas shadows className="cursor-grab active:cursor-grabbing">
+            <Canvas shadows className="cursor-grab active:cursor-grabbing" onClick={() => setReproduzindo(!reproduzindo)}>
               <PerspectiveCamera makeDefault position={[0, 0, 1.8]} />
               <Suspense fallback={<Html center className="text-white text-xs font-bold">Carregando Avatar...</Html>}>
                 <AvatarModelo 
@@ -143,15 +157,34 @@ export function LibrasAvatar() {
               />
             </Canvas>
 
-            {/* Legenda das Glosas */}
-            {mensagem && (
-              <div className="absolute bottom-4 left-0 right-0 px-4">
-                <div className="bg-black/60 backdrop-blur-md rounded-xl p-2 text-center border border-white/10">
-                  <p className="text-[9px] text-primary-foreground/60 uppercase font-black mb-1">Traduzindo texto...</p>
-                  <p className="text-xs font-bold text-white line-clamp-1">{mensagem}</p>
+            {/* Legenda das Glosas e Feedback Visual */}
+            <div className="absolute bottom-4 left-0 right-0 px-4 space-y-2">
+              <AnimatePresence mode="wait">
+                {glosas.length > 0 && reproduzindo && (
+                  <motion.div 
+                    key={glosas.join("-")}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex justify-center gap-1 overflow-hidden"
+                  >
+                    {glosas.map((g, i) => (
+                      <span key={i} className="text-[8px] px-1.5 py-0.5 rounded-md bg-primary/20 text-primary-foreground font-black">
+                        {g}
+                      </span>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {mensagem && (
+                <div className="bg-black/60 backdrop-blur-md rounded-xl p-2 text-center border border-white/10 shadow-lg">
+                  <p className="text-[9px] text-primary-foreground/60 uppercase font-black mb-1">Tradução em tempo real</p>
+                  <p className="text-xs font-bold text-white line-clamp-2 leading-tight">{mensagem}</p>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
           </div>
 
           {/* Controles */}
