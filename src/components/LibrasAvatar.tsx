@@ -179,7 +179,7 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
 
 function SignerFigure({ pose }: { pose: Pose }) {
   return (
-    <div className="relative h-44 w-36 drop-shadow-lg perspective-1000">
+    <div className="relative h-56 w-44 drop-shadow-xl perspective-1000">
       <div 
         className="relative w-full h-full preserve-3d"
         style={{
@@ -191,28 +191,36 @@ function SignerFigure({ pose }: { pose: Pose }) {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
         
         {/* Tronco Humano Estilizado (SVG) */}
-        <svg viewBox="0 0 120 150" className="relative w-full h-full z-10 drop-shadow-sm">
+        <svg viewBox="0 0 120 150" className="relative w-full h-full z-10 drop-shadow-md">
           {/* Cabeça */}
-          <circle cx="60" cy="35" r="18" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
-          {/* Cabelo Marrom */}
-          <path d="M42 28 Q60 12 78 28 L78 35 Q60 25 42 35 Z" fill="#4A3728" />
-          <path d="M42 28 Q40 35 45 42" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
-          <path d="M78 28 Q80 35 75 42" fill="none" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="60" cy="35" r="18" fill="#FAD1AF" stroke="#E59866" strokeWidth="1" />
+          {/* Cabelo Marrom com mais volume */}
+          <path d="M42 28 Q60 8 78 28 L80 38 Q70 32 60 38 Q50 32 40 38 Z" fill="#5D4037" />
+          <path d="M42 28 Q38 38 45 45" fill="none" stroke="#5D4037" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M78 28 Q82 38 75 45" fill="none" stroke="#5D4037" strokeWidth="2.5" strokeLinecap="round" />
           
-          {/* Rosto */}
+          {/* Rosto mais expressivo */}
           {/* Olhos */}
-          <circle cx="53" cy="35" r="1.5" fill="#333" />
-          <circle cx="67" cy="35" r="1.5" fill="#333" />
+          <g>
+            <circle cx="53" cy="35" r="2" fill="#2C3E50" />
+            <circle cx="53.5" cy="34.2" r="0.6" fill="white" />
+            <circle cx="67" cy="35" r="2" fill="#2C3E50" />
+            <circle cx="67.5" cy="34.2" r="0.6" fill="white" />
+          </g>
           {/* Nariz */}
-          <path d="M60 37 L60 40" fill="none" stroke="#D4A373" strokeWidth="1" strokeLinecap="round" />
-          {/* Sorriso */}
-          <path d="M54 44 Q60 48 66 44" fill="none" stroke="#D4A373" strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M60 38 L60 41" fill="none" stroke="#D35400" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+          {/* Sorriso gentil */}
+          <path d="M54 45 Q60 50 66 45" fill="none" stroke="#D35400" strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
 
-          {/* Tronco */}
-          <path d="M35 60 Q60 55 85 60 L90 130 Q60 135 30 130 Z" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
-          {/* Roupas Verdes */}
-          <path d="M35 60 Q60 55 85 60 L88 95 Q60 100 32 95 Z" fill="#22C55E" />
-          <path d="M38 95 L42 128 L78 128 L82 95 Z" fill="#16A34A" />
+          {/* Pescoço */}
+          <rect x="54" y="50" width="12" height="12" rx="2" fill="#FAD1AF" />
+
+          {/* Tronco / Camiseta */}
+          <path d="M30 62 Q60 58 90 62 L95 130 Q60 135 25 130 Z" fill="#2ECC71" />
+          {/* Detalhe da gola */}
+          <path d="M50 62 Q60 70 70 62" fill="none" stroke="#27AE60" strokeWidth="2" strokeLinecap="round" />
+          {/* Calça */}
+          <path d="M35 125 L40 145 L80 145 L85 125 Z" fill="#1E8449" />
         </svg>
 
         {/* Braços e mãos articuladas sobrepostos */}
@@ -268,7 +276,7 @@ function Braco({
 }) {
   const ombro = rotacao * 1.6;
   const flexao = cotovelo * 1.1;
-  const transicao = "transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1)";
+  const transicao = "transform 500ms cubic-bezier(0.4, 0, 0.2, 1)";
   return (
     <g
       style={{
@@ -277,7 +285,7 @@ function Braco({
       }}
     >
       {/* ombro → cotovelo */}
-      <rect x={-6} y={-4} width={12} height={28} rx={6} fill={color} />
+      <rect x={-7} y={-4} width={14} height={32} rx={7} fill={color} stroke="#E59866" strokeWidth="0.5" />
       <g
         style={{
           transform: `translate(0px, 24px) rotate(${flexao}deg)`,
@@ -285,7 +293,7 @@ function Braco({
         }}
       >
         {/* antebraço */}
-        <rect x={-5.5} y={-3} width={11} height={24} rx={5.5} fill={color} />
+        <rect x={-6} y={-3} width={12} height={26} rx={6} fill={color} stroke="#E59866" strokeWidth="0.5" />
         <g style={{ transform: "translate(0px, 22px)" }}>
           <Mao config={config} color={color} />
         </g>
@@ -297,7 +305,7 @@ function Braco({
 /** Mão com palma e cinco dedos que abrem/fecham conforme a configuração. */
 function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: string }) {
   const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
-  const transicao = "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), height 350ms ease-in-out";
+  const transicao = "transform 400ms cubic-bezier(0.4, 0, 0.2, 1), height 400ms ease-in-out";
 
   const dedos: { dx: number; ext: number; alturaMax: number }[] = [
     { dx: -4, ext: indicador, alturaMax: 10 },
@@ -311,7 +319,7 @@ function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: stri
   return (
     <g>
       {/* palma */}
-      <rect x={-6} y={-2} width={12} height={10} rx={4} fill={color} stroke={strokeColor} strokeWidth="0.5" />
+      <rect x={-7} y={-2} width={14} height={12} rx={5} fill={color} stroke={strokeColor} strokeWidth="0.6" />
       {/* dedos */}
       {dedos.map((d, i) => {
         const h = 2.8 + d.ext * d.alturaMax;
@@ -320,10 +328,10 @@ function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: stri
             key={i}
             x={d.dx - 1.25}
             y={5 - h + 2.5}
-            width={2.5}
+            width={3}
             height={h}
-            rx={1.25}
-            fill={color} stroke={strokeColor} strokeWidth="0.4"
+            rx={1.5}
+            fill={color} stroke={strokeColor} strokeWidth="0.5"
             style={{ transition: transicao }}
           />
         );
@@ -332,10 +340,10 @@ function Mao({ config, color = "#F5D5B8" }: { config: Configuracao; color?: stri
       <rect
         x={-9}
         y={0}
-        width={2.8}
-        height={2.8 + polegar * 7.5}
-        rx={1.4}
-        fill={color} stroke={strokeColor} strokeWidth="0.4"
+        width={3.2}
+        height={3.2 + polegar * 8.5}
+        rx={1.6}
+        fill={color} stroke={strokeColor} strokeWidth="0.5"
         style={{
           transform: `rotate(${25 - polegar * 45}deg)`,
           transformOrigin: "-7px 2px",
