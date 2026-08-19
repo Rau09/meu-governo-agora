@@ -164,7 +164,7 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
           <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-8 relative overflow-hidden">
             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_70%)]" />
             
-            <SignerFigure pose={pose} />
+            <SignerFigure pose={pose} velocidade={velocidade} />
           </div>
 
           {passo && (
@@ -195,14 +195,15 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
   );
 }
 
-function SignerFigure({ pose }: { pose: Pose }) {
+function SignerFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
   return (
     <div className="relative h-56 w-44 drop-shadow-xl perspective-1000">
       <div 
         className="relative w-full h-full preserve-3d"
         style={{
           transform: `rotateY(${pose.tronco ?? 0}deg)`,
-          transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+          transition: `transform ${420 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+
         }}
       >
         {/* Sombra no chão */}
@@ -235,7 +236,7 @@ function SignerFigure({ pose }: { pose: Pose }) {
           <g
             style={{
               transformOrigin: "60px 120px",
-              transition: "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+              transition: `transform ${420 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
             }}
           >
             {/* Braço esquerdo (à direita na tela) */}
@@ -245,7 +246,9 @@ function SignerFigure({ pose }: { pose: Pose }) {
               rotacao={pose.bracoEsq}
               cotovelo={pose.coveloEsq}
               config={pose.maoEsq}
+              velocidade={velocidade}
               color="#F5D5B8"
+
             />
             {/* Braço direito (à esquerda na tela) */}
             <Braco
@@ -254,7 +257,9 @@ function SignerFigure({ pose }: { pose: Pose }) {
               rotacao={pose.bracoDir}
               cotovelo={pose.coveloDir}
               config={pose.maoDir}
+              velocidade={velocidade}
               color="#F5D5B8"
+
             />
           </g>
         </svg>
@@ -276,11 +281,13 @@ function Braco({
   rotacao: number;
   cotovelo: number;
   config: Configuracao;
+  velocidade: number;
   color?: string;
 }) {
+
   const ombro = rotacao * 1.6;
   const flexao = cotovelo * 1.1;
-  const transicao = "transform 500ms cubic-bezier(0.4, 0, 0.2, 1)";
+  const transicao = `transform ${500 / velocidade}ms cubic-bezier(0.4, 0, 0.2, 1)`;
   return (
     <g
       style={{
@@ -299,7 +306,7 @@ function Braco({
         {/* antebraço */}
         <rect x={-6} y={-3} width={12} height={26} rx={6} fill={color} stroke="#E59866" strokeWidth="0.5" />
         <g style={{ transform: "translate(0px, 22px)" }}>
-          <Mao config={config} color={color} />
+          <Mao config={config} velocidade={velocidade} color={color} />
         </g>
       </g>
     </g>
@@ -307,9 +314,9 @@ function Braco({
 }
 
 /** Mão com palma e cinco dedos detalhados que abrem/fecham conforme a configuração. */
-function Mao({ config, color = "#FAD1AF" }: { config: Configuracao; color?: string }) {
+function Mao({ config, velocidade, color = "#FAD1AF" }: { config: Configuracao; velocidade: number; color?: string }) {
   const [polegar, indicador, medio, anelar, minimo] = DEDOS[config];
-  const transicao = "transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1), height 450ms ease-in-out";
+  const transicao = `transform ${450 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1), height ${450 / velocidade}ms ease-in-out`;
 
   // Aumentamos o tamanho base da mão para melhor legibilidade
   const escalaMao = 1.15;
