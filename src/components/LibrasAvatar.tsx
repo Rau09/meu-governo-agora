@@ -38,7 +38,7 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
       
       if (braçoDir && braçoEsq && cabeça) {
         // Oscilação baseada na glosa (simulação de sinais diferentes)
-        const seed = glosa.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const seed = glosa.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
         const freq = 3 + (seed % 5);
         
         braçoDir.rotation.x = -0.5 + Math.sin(tempoTotal * freq) * 0.8;

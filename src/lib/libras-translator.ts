@@ -44,7 +44,7 @@ export function traduzirParaLibras(texto: string): string[] {
     } else if (palavra.length > 3) {
       // Para palavras longas não mapeadas, tenta encontrar substrings ou simplifica
       const radical = palavra.substring(0, 4);
-      const match = Object.keys(dicionarioGlosas).find(k => k.startsWith(radical));
+      const match = Object.keys(dicionarioGlosas).find(k => k.startsWith(radical)) as string;
       if (match) {
         glosas.push(dicionarioGlosas[match]);
       } else {
