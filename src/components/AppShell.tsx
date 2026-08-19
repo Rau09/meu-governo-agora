@@ -1,6 +1,7 @@
-import { useState, type ReactNode } from "react";
+import { useState, useRef, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Stethoscope, PawPrint, MapPin, MessageCircle, UserRound, Building2, Hand } from "lucide-react";
+import { motion, useDragControls } from "framer-motion";
 import { LibrasViewer } from "./LibrasAvatar";
 
 
