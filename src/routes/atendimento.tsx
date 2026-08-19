@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight, Eye } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { useLibras } from "@/lib/libras-translator";
+
 import { responder } from "@/lib/cantu-ia";
 
 
@@ -12,12 +12,12 @@ export const Route = createFileRoute("/atendimento")({
     typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
   head: () => ({
     meta: [
-      { title: "Atendimento 24/7 — Cantu Conecta" },
+      { title: "Atendimento 24/7 — NexLine" },
       {
         name: "description",
         content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
       },
-      { property: "og:title", content: "Atendimento 24/7 — Cantu Conecta" },
+      { property: "og:title", content: "Atendimento 24/7 — NexLine" },
       { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
     ],
   }),
@@ -46,13 +46,13 @@ const atalhos = [
 
 function Atendimento() {
   const { protocolo } = Route.useSearch();
-  const { setMensagem } = useLibras();
+  
   const [msgs, setMsgs] = useState<Msg[]>([
 
     {
       de: "bot",
       texto:
-        "Olá! Sou a assistente do Cantu Conecta. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
+        "Olá! Sou a assistente do NexLine. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
     },
   ]);
 
@@ -162,12 +162,6 @@ function Atendimento() {
                     {m.acao.rotulo} <ArrowRight className="size-3" />
                   </Link>
                 )}
-                <button
-                  onClick={() => setMensagem(m.texto)}
-                  className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-secondary px-3 text-[10px] font-black text-muted-foreground hover:bg-primary-soft hover:text-primary transition-colors"
-                >
-                  <Eye className="size-3" /> VER EM LIBRAS
-                </button>
               </div>
 
             </div>
