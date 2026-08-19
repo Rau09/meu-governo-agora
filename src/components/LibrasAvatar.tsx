@@ -62,12 +62,30 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
       </mesh>
 
       
-      {/* Cabeça */}
+      {/* Cabeça Careca */}
       <mesh name="Cabeça" position={[0, 0.4, 0]}>
-
         <sphereGeometry args={[0.18, 32, 32]} />
         <meshStandardMaterial color="#fcd34d" />
       </mesh>
+      
+      {/* Rosto Amigável (2D sobreposto) */}
+      <group position={[0, 0.4, 0.18]}>
+        {/* Olhos */}
+        <mesh position={[-0.05, 0.05, 0]}>
+          <circleGeometry args={[0.015, 16]} />
+          <meshBasicMaterial color="black" />
+        </mesh>
+        <mesh position={[0.05, 0.05, 0]}>
+          <circleGeometry args={[0.015, 16]} />
+          <meshBasicMaterial color="black" />
+        </mesh>
+        {/* Sorriso Amigável */}
+        <mesh position={[0, -0.05, 0]} rotation={[0, 0, Math.PI]}>
+          <ringGeometry args={[0.04, 0.05, 16, 1, 0, Math.PI]} />
+          <meshBasicMaterial color="black" />
+        </mesh>
+      </group>
+
 
       {/* Braço Direito (Nomeado para animação) */}
       <group name="BraçoDireito" position={[0.25, 0.2, 0]}>
