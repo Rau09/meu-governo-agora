@@ -297,6 +297,15 @@ export function statusMedicamento(qtd: number) {
 }
 
 export const MEDICAMENTOS: Medicamento[] = [
+  // Dados oficiais de referência (Quedas do Iguaçu - 08/12/2025)
+  { nome: "Albendazol 400 mg", unidade: "Farmácia Municipal", quantidade: 2163 },
+  { nome: "Carvedilol 3,125 mg", unidade: "Farmácia Municipal", quantidade: 27450 },
+  { nome: "Amoxicilina 250 mg/5 ml", unidade: "Farmácia Municipal", quantidade: 923 },
+  { nome: "Levotiroxina 100 mcg", unidade: "Farmácia Municipal", quantidade: 6390 },
+  { nome: "Levotiroxina 50 mcg", unidade: "Farmácia Municipal", quantidade: 16850 },
+  { nome: "Rivaroxabana 20 mg", unidade: "Farmácia Municipal", quantidade: 3810 },
+  
+  // Dados de acompanhamento simulados para outras unidades
   { nome: "Dipirona 500mg", unidade: "UBS Central", quantidade: 420 },
   { nome: "Dipirona 500mg", unidade: "UBS Bela Vista", quantidade: 18 },
   { nome: "Paracetamol 750mg", unidade: "UBS Central", quantidade: 260 },
