@@ -59,10 +59,11 @@ export function LibrasAvatar() {
               {/* Tronco */}
               <path d="M35 60 Q60 55 85 60 L90 130 Q60 135 30 130 Z" fill="#F5D5B8" stroke="#D4A373" strokeWidth="1" />
 
-              {/* Roupas Verde e Branco */}
-              <path d="M35 60 Q60 55 85 60 L88 130 Q60 135 32 130 Z" fill="white" stroke="#22C55E" strokeWidth="0.5" />
+              {/* Roupas Verde e Azul */}
+              <path d="M35 60 Q60 55 85 60 L88 130 Q60 135 32 130 Z" fill="#3B82F6" stroke="#22C55E" strokeWidth="0.5" />
               <path d="M35 60 Q60 55 85 60 L88 95 Q60 100 32 95 Z" fill="#22C55E" />
-              <path d="M50 60 L60 95 L70 60" fill="white" opacity="0.3" /> {/* Detalhe gola V */}
+              <path d="M50 60 L60 95 L70 60" fill="#3B82F6" opacity="0.3" /> {/* Detalhe gola V Azul */}
+
 
 
               {/* Braços e mãos articuladas sobrepostos */}
