@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcessibilidadeRouteImport } from './routes/acessibilidade'
 import { Route as AgendamentoRouteImport } from './routes/agendamento'
 import { Route as AtendimentoRouteImport } from './routes/atendimento'
 import { Route as CausaAnimalRouteImport } from './routes/causa-animal'
@@ -25,6 +26,11 @@ import { Route as ServicosRouteImport } from './routes/servicos'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcessibilidadeRoute = AcessibilidadeRouteImport.update({
+  id: '/acessibilidade',
+  path: '/acessibilidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AgendamentoRoute = AgendamentoRouteImport.update({
@@ -85,6 +91,7 @@ const ServicosRoute = ServicosRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acessibilidade': typeof AcessibilidadeRoute
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/causa-animal': typeof CausaAnimalRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acessibilidade': typeof AcessibilidadeRoute
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/causa-animal': typeof CausaAnimalRoute
@@ -114,6 +122,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/acessibilidade': typeof AcessibilidadeRoute
   '/agendamento': typeof AgendamentoRoute
   '/atendimento': typeof AtendimentoRoute
   '/causa-animal': typeof CausaAnimalRoute
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/acessibilidade'
     | '/agendamento'
     | '/atendimento'
     | '/causa-animal'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/acessibilidade'
     | '/agendamento'
     | '/atendimento'
     | '/causa-animal'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/acessibilidade'
     | '/agendamento'
     | '/atendimento'
     | '/causa-animal'
@@ -173,6 +185,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcessibilidadeRoute: typeof AcessibilidadeRoute
   AgendamentoRoute: typeof AgendamentoRoute
   AtendimentoRoute: typeof AtendimentoRoute
   CausaAnimalRoute: typeof CausaAnimalRoute
@@ -193,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acessibilidade': {
+      id: '/acessibilidade'
+      path: '/acessibilidade'
+      fullPath: '/acessibilidade'
+      preLoaderRoute: typeof AcessibilidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/agendamento': {
@@ -277,6 +297,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcessibilidadeRoute: AcessibilidadeRoute,
   AgendamentoRoute: AgendamentoRoute,
   AtendimentoRoute: AtendimentoRoute,
   CausaAnimalRoute: CausaAnimalRoute,

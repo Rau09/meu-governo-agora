@@ -4,6 +4,7 @@ import {
   PawPrint,
   MapPin,
   MessageCircle,
+  Hand,
   CalendarPlus,
   ArrowRight,
   UserRound,
@@ -43,7 +44,7 @@ const acoesRapidas = [
   { to: "/agendamento", label: "Agendar", icon: CalendarPlus },
   { to: "/atendimento", label: "Assistente", icon: MessageCircle },
   { to: "/ocorrencia", label: "Problemas", icon: MapPin },
-  { to: "/medicamentos", label: "Remédios", icon: Search },
+  { to: "/acessibilidade", label: "Libras", icon: Hand },
 ] as const;
 
 function Inicio() {
