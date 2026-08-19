@@ -2,6 +2,9 @@ import { type ReactNode, useRef } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, LayoutPanelLeft, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Hand } from "lucide-react";
+import { LibrasAvatar } from "./LibrasAvatar";
+import { useLibras } from "@/lib/libras-translator";
 
 
 const nav = [
@@ -23,8 +26,11 @@ export function AppShell({
 
   return (
     <div className="min-h-dvh bg-secondary/40" ref={constraintsRef}>
-      <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative">
+      <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative overflow-hidden">
         <main className="pb-28">{children}</main>
+
+        <LibrasButton />
+        <LibrasAvatar />
 
 
 
@@ -76,4 +82,24 @@ export function TopBar({ titulo, subtitulo }: { titulo: string; subtitulo?: stri
     </header>
   );
 }
+
+function LibrasButton() {
+  const { toggleInterpreter, isInterpreterVisible } = useLibras();
+
+  return (
+    <motion.button
+      drag
+      dragConstraints={{ left: -20, right: 20, top: -400, bottom: 20 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      onClick={toggleInterpreter}
+      className={`fixed bottom-24 right-6 z-50 flex size-14 items-center justify-center rounded-full shadow-2xl transition-colors ${
+        isInterpreterVisible ? "bg-destructive text-white" : "bg-primary text-white"
+      }`}
+    >
+      <Hand className="size-7" />
+    </motion.button>
+  );
+}
+
 
