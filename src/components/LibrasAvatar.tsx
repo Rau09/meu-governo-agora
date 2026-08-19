@@ -166,7 +166,7 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
             </div>
           </div>
 
-          <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-8 relative overflow-hidden">
+          <div className="flex flex-col items-center bg-linear-to-b from-primary/10 to-primary/5 py-12 relative overflow-hidden">
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_80%)]" />
             
             <SignerFigure pose={pose} velocidade={velocidade} />
@@ -204,60 +204,52 @@ export function LibrasAvatar({ mensagem }: { mensagem?: string | undefined }) {
 
 function SignerFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
   return (
-    <div className="relative h-56 w-44 drop-shadow-xl perspective-1000">
+    <div className="relative h-64 w-56 drop-shadow-2xl perspective-1000">
       <div 
         className="relative w-full h-full preserve-3d"
         style={{
           transform: `rotateY(${pose.tronco ?? 0}deg)`,
-          transition: `transform ${420 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+          transition: `transform ${480 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
         }}
       >
-        {/* Sombra no chão */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/10 blur-md rounded-[100%] z-0" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black/15 blur-xl rounded-[100%] z-0" />
         
-        {/* Tronco Humano Estilizado (SVG) */}
-        <svg viewBox="0 0 120 150" className="relative w-full h-full z-10 drop-shadow-md">
-          {/* Cabeça e Cabelo (Assistente Digital Profissional) */}
-          <circle cx="60" cy="35" r="19" fill="#FAD1AF" />
-          <path d="M41 25 Q60 5 79 25 L83 40 Q60 30 37 40 Z" fill="#4E342E" />
+        <svg viewBox="0 0 140 180" className="relative w-full h-full z-10 drop-shadow-lg">
+          <circle cx="70" cy="45" r="26" fill="#FAD1AF" />
+          <path d="M42 35 Q70 10 98 35 L102 55 Q70 40 38 55 Z" fill="#4E342E" />
           
-          {/* Rosto */}
           <g>
-            <circle cx="53" cy="35" r="2.5" fill="#1A1A1A" />
-            <circle cx="67" cy="35" r="2.5" fill="#1A1A1A" />
-            <path d="M52 48 Q60 54 68 48" fill="none" stroke="#E74C3C" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="60" cy="45" r="3.5" fill="#1A1A1A" />
+            <circle cx="80" cy="45" r="3.5" fill="#1A1A1A" />
+            <path d="M58 65 Q70 72 82 65" fill="none" stroke="#E74C3C" strokeWidth="2.5" strokeLinecap="round" />
           </g>
 
-          {/* Roupa Profissional Verde */}
-          <path d="M25 60 Q60 55 95 60 L100 145 Q60 150 20 145 Z" fill="#2ECC71" />
-          <path d="M30 60 Q60 65 90 60" fill="none" stroke="#27AE60" strokeWidth="2" />
+          <path d="M30 75 Q70 70 110 75 L120 175 Q70 180 20 175 Z" fill="#2ECC71" />
+          <path d="M35 75 Q70 85 105 75" fill="none" stroke="#27AE60" strokeWidth="3" />
         </svg>
 
-        {/* Braços e mãos articuladas sobrepostos */}
         <svg
-          viewBox="0 0 120 150"
+          viewBox="0 0 140 180"
           className="absolute inset-0 z-20 pointer-events-none"
         >
           <g
             style={{
-              transformOrigin: "60px 120px",
-              transition: `transform ${420 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+              transformOrigin: "70px 140px",
+              transition: `transform ${480 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
             }}
           >
-            {/* Braço esquerdo (à direita na tela) */}
             <Braco
-              x={90}
-              y={70}
+              x={105}
+              y={90}
               rotacao={pose.bracoEsq}
               cotovelo={pose.coveloEsq}
               config={pose.maoEsq}
               velocidade={velocidade}
               color="#F5D5B8"
             />
-            {/* Braço direito (à esquerda na tela) */}
             <Braco
-              x={30}
-              y={70}
+              x={35}
+              y={90}
               rotacao={pose.bracoDir}
               cotovelo={pose.coveloDir}
               config={pose.maoDir}
@@ -322,37 +314,42 @@ function Mao({ config, velocidade, color = "#FAD1AF" }: { config: Configuracao; 
   const transicao = `transform ${450 / velocidade}ms cubic-bezier(0.34, 1.56, 0.64, 1), height ${450 / velocidade}ms ease-in-out`;
 
   // Aumentamos o tamanho base da mão para melhor legibilidade
-  const escalaMao = 1.15;
-  const strokeColor = "#C8855F";
+  const escalaMao = 1.35;
+  const strokeColor = "#B87550";
 
   const dedos: { dx: number; ext: number; alturaMax: number; angulo: number }[] = [
-    { dx: -4.5, ext: indicador, alturaMax: 11, angulo: -2 },
-    { dx: -1.5, ext: medio, alturaMax: 12, angulo: 0 },
-    { dx: 1.5, ext: anelar, alturaMax: 11, angulo: 2 },
-    { dx: 4.5, ext: minimo, alturaMax: 9, angulo: 5 },
+    { dx: -6, ext: indicador, alturaMax: 16, angulo: -4 },
+    { dx: -2, ext: medio, alturaMax: 18, angulo: 0 },
+    { dx: 2, ext: anelar, alturaMax: 16, angulo: 4 },
+    { dx: 6, ext: minimo, alturaMax: 13, angulo: 8 },
   ];
 
   return (
     <g style={{ transform: `scale(${escalaMao})` }}>
       {/* Palma da mão */}
-      <rect x={-8} y={-2} width={16} height={14} rx={7} fill={color} stroke={strokeColor} strokeWidth="0.8" />
+      <rect x={-10} y={-3} width={20} height={18} rx={9} fill={color} stroke={strokeColor} strokeWidth="1.2" />
       
       {/* Dedos (Indicador ao Mínimo) */}
       {dedos.map((d, i) => {
-        const h = 4 + d.ext * 14;
+        const h = 5 + d.ext * 18;
         return (
-          <g key={i} style={{ transform: `translate(${d.dx}px, 6px) rotate(${d.angulo * (1 - d.ext)}deg)`, transition: transicao }}>
+          <g key={i} style={{ transform: `translate(${d.dx}px, 8px) rotate(${d.angulo * (1 - d.ext)}deg)`, transition: transicao }}>
+            {/* Articulação e falanges simuladas */}
             <rect
-              x={-2}
+              x={-2.5}
               y={-h}
-              width={4}
+              width={5}
               height={h}
-              rx={2}
+              rx={2.5}
               fill={color} 
               stroke={strokeColor} 
-              strokeWidth="0.7"
+              strokeWidth="1"
               style={{ transition: transicao }}
             />
+            {/* Detalhe da junta para maior realismo */}
+            {d.ext > 0.5 && (
+              <line x1="-1.5" y1={-h/2} x2="1.5" y2={-h/2} stroke={strokeColor} strokeWidth="0.5" opacity="0.5" />
+            )}
           </g>
         );
       })}
@@ -360,20 +357,20 @@ function Mao({ config, velocidade, color = "#FAD1AF" }: { config: Configuracao; 
       {/* Polegar */}
       <g
         style={{
-          transform: `translate(-8px, 4px) rotate(${25 - polegar * 60}deg)`,
+          transform: `translate(-10px, 6px) rotate(${25 - polegar * 65}deg)`,
           transformOrigin: "center left",
           transition: transicao,
         }}
       >
         <rect
-          x={-1.5}
-          y={-2}
-          width={4}
-          height={6 + polegar * 7}
-          rx={2}
+          x={-2}
+          y={-2.5}
+          width={5}
+          height={8 + polegar * 10}
+          rx={2.5}
           fill={color} 
           stroke={strokeColor} 
-          strokeWidth="0.7"
+          strokeWidth="1"
           style={{ transition: transicao, transform: "rotate(-90deg)" }}
         />
       </g>
