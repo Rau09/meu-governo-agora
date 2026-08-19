@@ -55,18 +55,37 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
 
   return (
     <group ref={group}>
-      {/* Corpo principal */}
-      <mesh position={[0, -0.5, 0]}>
-        <capsuleGeometry args={[0.25, 1, 4, 16]} />
+      {/* Corpo (Enquadramento da Cintura para cima) */}
+      <mesh position={[0, -0.2, 0]}>
+        <capsuleGeometry args={[0.25, 0.6, 4, 16]} />
         <meshStandardMaterial color="#1e293b" />
       </mesh>
-      
-      {/* Cabeça */}
-      <mesh name="Cabeça" position={[0, 0.4, 0]}>
 
+      
+      {/* Cabeça Careca */}
+      <mesh name="Cabeça" position={[0, 0.4, 0]}>
         <sphereGeometry args={[0.18, 32, 32]} />
         <meshStandardMaterial color="#fcd34d" />
       </mesh>
+      
+      {/* Rosto Amigável (2D sobreposto) */}
+      <group position={[0, 0.4, 0.18]}>
+        {/* Olhos */}
+        <mesh position={[-0.05, 0.05, 0]}>
+          <circleGeometry args={[0.015, 16]} />
+          <meshBasicMaterial color="black" />
+        </mesh>
+        <mesh position={[0.05, 0.05, 0]}>
+          <circleGeometry args={[0.015, 16]} />
+          <meshBasicMaterial color="black" />
+        </mesh>
+        {/* Sorriso Amigável */}
+        <mesh position={[0, -0.05, 0]} rotation={[0, 0, Math.PI]}>
+          <ringGeometry args={[0.04, 0.05, 16, 1, 0, Math.PI]} />
+          <meshBasicMaterial color="black" />
+        </mesh>
+      </group>
+
 
       {/* Braço Direito (Nomeado para animação) */}
       <group name="BraçoDireito" position={[0.25, 0.2, 0]}>
@@ -153,9 +172,9 @@ export function LibrasAvatar() {
               <OrbitControls 
                 enableZoom={false} 
                 enablePan={false}
-                minPolarAngle={Math.PI / 2.5}
-                maxPolarAngle={Math.PI / 2}
+                enableRotate={false}
               />
+
             </Canvas>
 
             {/* Legenda das Glosas e Feedback Visual */}
