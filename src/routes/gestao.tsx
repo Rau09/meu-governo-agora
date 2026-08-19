@@ -280,18 +280,18 @@ function Painel({ onSair }: { onSair: () => void }) {
 
   return (
     <AppShell librasMensagem="Painel de gestão regional, com alertas, prioridades, mapa e análise da inteligência artificial para a Cantuquiriguaçu.">
-      <TopBar titulo="Painel Administrativo" subtitulo="Gestão Integrada · Cantu Conecta · Administração" />
+      <TopBar titulo="Portal da Gestão" subtitulo="Acompanhamento em tempo real Cantu Conecta" />
 
-      <div className="-mt-5 space-y-6 px-4">
+      <div className="-mt-6 space-y-6 px-4">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/60">
-            Sessão Ativa · {new Date().toLocaleDateString('pt-BR')}
+          <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
+            Sessão Administrativa · {new Date().toLocaleDateString('pt-BR')}
           </p>
           <button
             onClick={onSair}
-            className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white transition-all hover:bg-white/10 active:scale-95"
+            className="flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary-soft px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary transition-all hover:bg-primary/20 active:scale-95"
           >
-            <LogOut className="size-3" /> Encerrar
+            <LogOut className="size-3" /> Sair
           </button>
         </div>
 
@@ -303,17 +303,19 @@ function Painel({ onSair }: { onSair: () => void }) {
               type="button"
               onClick={() => setDetalhe({ titulo: label, nota, itens })}
               style={{ transitionDelay: `${i * 70}ms` }}
-              className={`relative overflow-hidden rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-md active:scale-[0.98] ${
+              className={`relative overflow-hidden rounded-3xl border border-border bg-card p-5 text-left shadow-card transition-all duration-300 hover:border-primary/50 hover:shadow-float active:scale-[0.98] ${
                 animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
               }`}
             >
               <div className="flex items-center justify-between">
-                <Icon className={`size-4 ${tom} opacity-80`} />
-                <div className={`size-1.5 rounded-full ${tom.includes("destructive") ? "bg-destructive" : tom.includes("success") ? "bg-success" : "bg-primary"} opacity-40`} />
+                <div className="flex size-9 items-center justify-center rounded-2xl bg-primary-soft">
+                  <Icon className={`size-4.5 ${tom.includes("destructive") ? "text-destructive" : tom.includes("success") ? "text-success" : "text-primary"}`} />
+                </div>
+                <div className={`size-2 rounded-full ${tom.includes("destructive") ? "bg-destructive animate-pulse" : tom.includes("success") ? "bg-success" : "bg-primary"} opacity-60`} />
               </div>
-              <p className="mt-3 font-display text-3xl font-bold tracking-tight">{valor}</p>
-              <p className="mt-0.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
-              <p className={`mt-2 text-[10px] font-medium ${tom === "text-destructive" ? "text-destructive" : "text-muted-foreground/80"}`}>
+              <p className="mt-4 font-display text-3xl font-bold tracking-tight">{valor}</p>
+              <p className="mt-0.5 text-[11px] font-bold text-muted-foreground">{label}</p>
+              <p className={`mt-2 text-[10px] font-bold ${tom.includes("destructive") ? "text-destructive" : "text-muted-foreground/80"}`}>
                 {nota}
               </p>
             </button>
