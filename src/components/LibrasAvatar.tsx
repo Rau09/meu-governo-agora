@@ -181,7 +181,7 @@ function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) 
           <ellipse cx="80" cy="70" rx="20" ry="26" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
           
           {/* Cabelo Adulto Profissional */}
-          <path d="M58 45 Q80 30 102 45 L106 58 Q80 50 54 58 Z" fill="#2C1810" />
+          <path d="M58 50 Q80 35 102 50 L106 63 Q80 55 54 63 Z" fill="#2C1810" />
           
           {/* Rosto Sóbrio */}
           <g className="opacity-90">
