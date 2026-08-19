@@ -15,7 +15,7 @@ export const Route = createFileRoute("/atendimento")({
       { title: "Atendimento 24/7 — NexLine" },
       {
         name: "description",
-        content: "Assistente virtual da Cantuquiriguaçu disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
+        content: "Assistente virtual da NexLine disponível 24 horas para tirar dúvidas e facilitar o acesso a serviços regionais.",
       },
       { property: "og:title", content: "Atendimento 24/7 — NexLine" },
       { property: "og:description", content: "Respostas imediatas sobre saúde, causa animal e serviços urbanos em toda a região Cantu." },
