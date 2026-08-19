@@ -167,15 +167,15 @@ export function LibrasViewer({
 
 function LibrasFigure({ pose, velocidade }: { pose: Pose; velocidade: number }) {
   return (
-    <div className="relative h-[450px] w-96 drop-shadow-2xl translate-y-12">
+    <div className="relative h-full w-full max-w-[400px] drop-shadow-2xl flex items-center justify-center">
       <div 
-        className="relative w-full h-full"
+        className="relative w-full aspect-[4/5]"
         style={{
           transform: `rotateY(${pose.tronco ?? 0}deg)`,
           transition: `transform ${600 / velocidade}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
         }}
       >
-        <svg viewBox="0 0 160 200" className="w-[160px] h-[200px] mx-auto drop-shadow-lg" preserveAspectRatio="xMidYMin meet">
+        <svg viewBox="0 0 160 200" className="w-full h-full drop-shadow-lg" preserveAspectRatio="xMidYMin meet">
           {/* Cabeça e Pescoço - Tons de pele profissionais */}
           <rect x="75" y="73" width="10" height="20" fill="#D2B48C" />
           <ellipse cx="80" cy="75" rx="20" ry="26" fill="#D2B48C" stroke="#B89B7E" strokeWidth="0.5" />
