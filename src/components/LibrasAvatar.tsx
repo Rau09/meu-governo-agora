@@ -55,11 +55,12 @@ function AvatarModelo({ glosas, velocidade, reproduzindo }: any) {
 
   return (
     <group ref={group}>
-      {/* Corpo principal */}
-      <mesh position={[0, -0.5, 0]}>
-        <capsuleGeometry args={[0.25, 1, 4, 16]} />
+      {/* Corpo (Enquadramento da Cintura para cima) */}
+      <mesh position={[0, -0.2, 0]}>
+        <capsuleGeometry args={[0.25, 0.6, 4, 16]} />
         <meshStandardMaterial color="#1e293b" />
       </mesh>
+
       
       {/* Cabeça */}
       <mesh name="Cabeça" position={[0, 0.4, 0]}>
@@ -153,9 +154,9 @@ export function LibrasAvatar() {
               <OrbitControls 
                 enableZoom={false} 
                 enablePan={false}
-                minPolarAngle={Math.PI / 2.5}
-                maxPolarAngle={Math.PI / 2}
+                enableRotate={false}
               />
+
             </Canvas>
 
             {/* Legenda das Glosas e Feedback Visual */}
