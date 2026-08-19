@@ -1,7 +1,6 @@
 
 /**
  * Dicionário simplificado para mapeamento de texto para glosas de Libras.
- * Em um cenário real, isso seria integrado a uma API de tradução mais complexa.
  */
 const dicionarioGlosas: Record<string, string> = {
   saúde: "SAUDE",
@@ -25,7 +24,6 @@ const dicionarioGlosas: Record<string, string> = {
  * Tradutor de texto simples para sequências de glosas.
  */
 export function traduzirParaLibras(texto: string): string[] {
-  // Mapeamento de frases comuns para glosas específicas
   const frasesProntas: Record<string, string[]> = {
     "escolha a área do serviço: saúde, animal ou serviços urbanos.": ["ESCOLHER", "AREA", "SERVIÇO", "SAUDE", "ANIMAL", "CIDADE"],
     "como posso ajudar você hoje? selecione uma opção acima para começarmos.": ["OI", "AJUDA", "VOCE", "ESCOLHER", "OPÇÃO"],
@@ -38,21 +36,16 @@ export function traduzirParaLibras(texto: string): string[] {
   const glosas: string[] = [];
 
   palavras.forEach((palavra) => {
-    // Tenta encontrar a palavra no dicionário
-    if (dicionarioGlosas[palavra]) {
-      glosas.push(dicionarioGlosas[palavra]);
+    const glosaMapeada = dicionarioGlosas[palavra];
+    if (glosaMapeada) {
+      glosas.push(glosaMapeada);
     } else if (palavra.length > 3) {
-      // Para palavras longas não mapeadas, tenta encontrar substrings ou simplifica
       const radical = palavra.substring(0, 4);
       const matchKey = Object.keys(dicionarioGlosas).find(k => k.startsWith(radical));
       if (matchKey) {
-        const glosa = dicionarioGlosas[matchKey];
-        if (glosa) glosas.push(glosa);
+        const glosaRadical = dicionarioGlosas[matchKey];
+        if (glosaRadical) glosas.push(glosaRadical);
       } else {
-
-
-
-        // Soletra as 3 primeiras letras se for desconhecida
         palavra.substring(0, 3).split("").forEach(l => glosas.push(l.toUpperCase()));
       }
     }
@@ -60,7 +53,6 @@ export function traduzirParaLibras(texto: string): string[] {
 
   return glosas.length > 0 ? glosas : ["SINAL"];
 }
-
 
 /**
  * Hook para gerenciar o estado global de tradução de Libras.
