@@ -83,3 +83,23 @@ export function TopBar({ titulo, subtitulo }: { titulo: string; subtitulo?: stri
   );
 }
 
+function LibrasButton() {
+  const { toggleInterpreter, isInterpreterVisible } = useLibras();
+
+  return (
+    <motion.button
+      drag
+      dragConstraints={{ left: -20, right: 20, top: -400, bottom: 20 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      onClick={toggleInterpreter}
+      className={`fixed bottom-24 right-6 z-50 flex size-14 items-center justify-center rounded-full shadow-2xl transition-colors ${
+        isInterpreterVisible ? "bg-destructive text-white" : "bg-primary text-white"
+      }`}
+    >
+      <Hand className="size-7" />
+    </motion.button>
+  );
+}
+
+
