@@ -13,7 +13,7 @@ function PerfilPage() {
 
   if (!cidadao) {
     return (
-      <AppShell librasMensagem="deixe facil o acesso">
+      <AppShell librasMensagem="Perfil do usuário. Crie seu acesso para gerenciar agendamentos e solicitações.">
         <TopBar titulo="Meu Perfil" />
         <div className="flex flex-col items-center justify-center p-10 text-center min-h-[50vh]">
           <div className="size-20 rounded-[2rem] bg-secondary flex items-center justify-center mb-4">
@@ -30,7 +30,7 @@ function PerfilPage() {
   }
 
   return (
-    <AppShell librasMensagem="deixe facil o acesso">
+    <AppShell librasMensagem="Meu Perfil. Aqui você visualiza seus dados, histórico de solicitações e gerencia suas preferências de conta.">
       <TopBar titulo="Meu Perfil" />
       
       <div className="px-5 py-6 space-y-6">
