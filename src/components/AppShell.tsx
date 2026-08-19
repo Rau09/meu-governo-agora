@@ -2,6 +2,9 @@ import { type ReactNode, useRef } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, LayoutPanelLeft, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Hand } from "lucide-react";
+import { LibrasAvatar } from "./LibrasAvatar";
+import { useLibras } from "@/lib/libras-translator";
 
 
 const nav = [
@@ -23,8 +26,11 @@ export function AppShell({
 
   return (
     <div className="min-h-dvh bg-secondary/40" ref={constraintsRef}>
-      <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative">
+      <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative overflow-hidden">
         <main className="pb-28">{children}</main>
+
+        <LibrasButton />
+        <LibrasAvatar />
 
 
 
