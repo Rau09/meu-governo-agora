@@ -233,11 +233,11 @@ function BracoArticulado({
   return (
     <g style={{ transform: `translate(${x}px, ${y}px) rotate(${anguloOmbro}deg)`, transition: transicao }}>
       {/* Braço superior */}
-      <rect x={-8} y={-5} width={16} height={35} rx={8} fill="#FAD1AF" stroke="#E59866" strokeWidth="0.5" />
+      <rect x={-8} y={-5} width={16} height={35} rx={8} fill="#D2B48C" stroke="#A68966" strokeWidth="0.5" />
       
       <g style={{ transform: `translate(0px, 28px) rotate(${anguloCotovelo}deg)`, transition: transicao }}>
-        {/* Antebraço */}
-        <rect x={-7} y={-4} width={14} height={32} rx={7} fill="#FAD1AF" stroke="#E59866" strokeWidth="0.5" />
+        {/* Antebraço Humano Definido */}
+        <rect x={-7} y={-4} width={14} height={32} rx={7} fill="#D2B48C" stroke="#A68966" strokeWidth="0.5" />
         
         <g style={{ transform: "translate(0px, 28px)" }}>
           <MaoLibras config={config} velocidade={velocidade} lado={lado} />
