@@ -61,20 +61,24 @@ function Atendimento() {
   ]);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const prot = searchParams.get('protocolo');
-    const ass = searchParams.get('assunto');
-    
-    if (prot) {
-      enviar(`Andamento do protocolo ${prot}`);
-    } else if (ass) {
-      const decoded = decodeURIComponent(ass);
-      if (decoded.startsWith('adoção-')) {
-        enviar(`Quero saber mais sobre a adoção do ${decoded.replace('adoção-', '')}`);
-      } else {
-        enviar(decoded);
+    // Timeout para garantir que o componente montou e as funções estão prontas
+    const t = setTimeout(() => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const prot = searchParams.get('protocolo');
+      const ass = searchParams.get('assunto');
+      
+      if (prot) {
+        enviar(`Andamento do protocolo ${prot}`);
+      } else if (ass) {
+        const decoded = decodeURIComponent(ass);
+        if (decoded.startsWith('adoção-')) {
+          enviar(`Quero saber mais sobre a adoção do ${decoded.replace('adoção-', '')}`);
+        } else {
+          enviar(decoded);
+        }
       }
-    }
+    }, 100);
+    return () => clearTimeout(t);
   }, []);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
