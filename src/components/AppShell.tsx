@@ -57,6 +57,24 @@ export function AppShell({
     </div>
   );
 }
+function LibrasButton({ onOpen, constraintsRef }: { onOpen: () => void; constraintsRef: React.RefObject<any> }) {
+  return (
+    <motion.button
+      drag
+      dragConstraints={constraintsRef}
+      dragElastic={0.1}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      onClick={onOpen}
+      className="fixed bottom-24 right-4 z-50 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-float border-2 border-white/20"
+    >
+      <div className="relative">
+        <HandMetal className="size-6" />
+        <span className="absolute -top-1 -right-1 bg-accent px-1 rounded text-[7px] font-black text-accent-foreground uppercase leading-none py-0.5">BETA</span>
+      </div>
+    </motion.button>
+  );
+}
 
 export function TopBar({ titulo, subtitulo }: { titulo: string; subtitulo?: string }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
