@@ -120,7 +120,9 @@ function buscarMedicamento(pergunta: string): Resposta | null {
   const p = normalizar(pergunta);
   const nomes = [...new Set(MEDICAMENTOS.map((m) => m.nome))];
   const achado = nomes.find((n) => {
-    const base = normalizar(n.split(" ")[0]!);
+    const firstWord = n.split(" ")[0];
+    if (!firstWord) return false;
+    const base = normalizar(firstWord);
     return base.length > 3 && p.includes(base);
   });
 
