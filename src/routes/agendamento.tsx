@@ -32,17 +32,24 @@ function Agendamento() {
   
   const { agendamentos, criar, cancelar } = useAgendamentos();
 
-  const areaInicial = useMemo(
-    () => AREAS_REAL.find((a: any) => a.servicos.some((s: string) => s === servicoInicial))?.id ?? AREAS_REAL[0].id,
-    [servicoInicial, AREAS_REAL],
-  );
+  const areaInicial = useMemo(() => {
+    if (!AREAS_REAL || AREAS_REAL.length === 0) return "";
+    const encontrada = AREAS_REAL.find((a: any) =>
+      a.servicos.some((s: string) => s === servicoInicial)
+    );
+    return encontrada?.id ?? AREAS_REAL[0].id;
+  }, [servicoInicial, AREAS_REAL]);
 
 
   const [areaId, setAreaId] = useState<string>(areaInicial);
-  const area = useMemo(() => AREAS_REAL.find((a) => a.id === areaId) ?? AREAS_REAL[0], [areaId, AREAS_REAL]);
-  const [servico, setServico] = useState<string>(servicoInicial ?? area.servicos[0]);
+  const area = useMemo(() => {
+    if (!AREAS_REAL || AREAS_REAL.length === 0) return null;
+    return AREAS_REAL.find((a) => a.id === areaId) ?? AREAS_REAL[0];
+  }, [areaId, AREAS_REAL]);
+
+  const [servico, setServico] = useState<string>(servicoInicial ?? area?.servicos[0] ?? "");
   const [unidade, setUnidade] = useState<string>(
-    cidadao?.municipio ? `${area.unidades[0]} (${cidadao.municipio})` : area.unidades[0]
+    cidadao?.municipio ? `${area?.unidades[0] ?? ""} (${cidadao.municipio})` : (area?.unidades[0] ?? "")
   );
   const [data, setData] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10));
   const [hora, setHora] = useState<string>("");
@@ -52,12 +59,13 @@ function Agendamento() {
 
   // Efeito para sincronizar serviço e unidade quando a área muda
   useEffect(() => {
-    if (servicoInicial && AREAS_REAL.find(a => a.id === areaId)?.servicos.includes(servicoInicial)) {
+    if (!area) return;
+    if (servicoInicial && area.servicos.includes(servicoInicial)) {
       return;
     }
     setServico(area.servicos[0]);
     setUnidade(area.unidades[0]);
-  }, [areaId, area, AREAS_REAL, servicoInicial]);
+  }, [areaId, area, servicoInicial]);
 
   function trocarArea(id: string) {
     setAreaId(id);
@@ -71,6 +79,7 @@ function Agendamento() {
     setFeito(null);
     
     try {
+      if (!area) throw new Error("Área não selecionada.");
       const novo = await criar({
         area: area.nome,
         servico,
@@ -111,7 +120,7 @@ function Agendamento() {
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            {AREAS_REAL.map((a) => (
+            {AREAS_REAL?.map((a) => (
               <button
                 key={a.id}
                 type="button"
@@ -133,7 +142,7 @@ function Agendamento() {
             onChange={(e) => setServico(e.target.value)}
             className="mt-2 min-h-11 w-full rounded-2xl border border-input bg-background px-3 text-sm"
           >
-            {area.servicos.map((s: string) => (
+            {area?.servicos.map((s: string) => (
               <option key={s} value={s}>
                 {s}
               </option>
@@ -149,7 +158,7 @@ function Agendamento() {
             onChange={(e) => setUnidade(e.target.value)}
             className="mt-2 min-h-11 w-full rounded-2xl border border-input bg-background px-3 text-sm"
           >
-            {area.unidades.map((u: string) => (
+            {area?.unidades.map((u: string) => (
               <option key={u} value={u}>
                 {u}
               </option>
@@ -204,7 +213,7 @@ function Agendamento() {
         <button
           type="button"
           onClick={confirmar}
-          disabled={!hora || enviando}
+          disabled={!hora || enviando || !area}
           className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card transition-opacity disabled:opacity-40"
         >
           {enviando ? (
