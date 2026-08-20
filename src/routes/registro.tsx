@@ -86,9 +86,10 @@ function Registro() {
     return <TelaPin onEntrar={desbloquear} onSair={sair} nome={cidadao.nome} />;
   }
 
-  if (cidadao) {
+  if (cidadao && desbloqueado) {
     return (
       <AppShell>
+
 
         <TopBar titulo="Meu acesso" subtitulo="Cadastro protegido por PIN" />
         <div className="-mt-5 space-y-4 px-4">
