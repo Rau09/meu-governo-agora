@@ -28,9 +28,11 @@ import {
   STATUS_OCORRENCIA,
   useAgendamentos,
   useOcorrencias,
+  useServicos,
   type Ocorrencia,
   type StatusOcorrencia,
 } from "@/lib/cantu-store";
+
 import {
   NIVEIS,
   alertas,
@@ -241,9 +243,11 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 }
 
 function Painel({ onSair }: { onSair: () => void }) {
+  const AREAS_REAL = useServicos();
   const { agendamentos } = useAgendamentos();
   const { ocorrencias, atualizarStatus } = useOcorrencias();
   const [filtro, setFiltro] = useState<string>("todas");
+
   const [animar, setAnimar] = useState(false);
   const [detalhe, setDetalhe] = useState<{ titulo: string; nota?: string; itens: OcorrenciaGestao[] } | null>(null);
   const [mapaFiltro, setMapaFiltro] = useState("todos");
@@ -280,14 +284,15 @@ function Painel({ onSair }: { onSair: () => void }) {
   }
 
   const porArea = useMemo(() => {
-    const base = AREAS.map((a) => ({ nome: a.nome, total: 0 }));
+    const base = AREAS_REAL.map((a: any) => ({ nome: a.nome, total: 0 }));
     for (const ag of agendamentos) {
       const item = base.find((b) => b.nome === ag.area);
       if (item) item.total += 1;
     }
     const max = Math.max(1, ...base.map((b) => b.total));
     return base.map((b) => ({ ...b, pct: Math.round((b.total / max) * 100) }));
-  }, [agendamentos]);
+  }, [agendamentos, AREAS_REAL]);
+
 
   const fila = useMemo(
     () => (filtro === "todas" ? agendamentos : agendamentos.filter((a) => a.area === filtro)),
@@ -636,7 +641,7 @@ function Painel({ onSair }: { onSair: () => void }) {
             </div>
 
             <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {[{ id: "todas", nome: "Todas" }, ...AREAS.map((a) => ({ id: a.nome, nome: a.nome }))].map((f) => (
+              {[{ id: "todas", nome: "Todas" }, ...AREAS_REAL.map((a: any) => ({ id: a.nome, nome: a.nome }))].map((f) => (
                 <button
                   key={f.id}
                   onClick={() => setFiltro(f.id)}

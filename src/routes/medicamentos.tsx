@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, Pill, AlertTriangle, CheckCircle2, Building2, MapPin, ChevronRight, Info, AlertCircle, BarChart3, Clock } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { MEDICAMENTOS, statusMedicamento, type Medicamento } from "@/lib/cantu-store";
+import { MEDICAMENTOS, statusMedicamento, type Medicamento, useMedicamentos } from "@/lib/cantu-store";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/medicamentos")({
@@ -35,24 +35,26 @@ function Medicamentos() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<string>("todos");
   const [detalhe, setDetalhe] = useState<Medicamento | null>(null);
+  const MEDICAMENTOS_REAL = useMedicamentos();
 
   const stats = useMemo(() => {
-    const todos = MEDICAMENTOS.length;
-    const disponiveis = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'disponivel').length;
-    const baixo = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'baixo').length;
-    const indisponiveis = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'indisponivel').length;
+    const todos = MEDICAMENTOS_REAL.length;
+    const disponiveis = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'disponivel').length;
+    const baixo = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'baixo').length;
+    const indisponiveis = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'indisponivel').length;
     return { todos, disponiveis, baixo, indisponiveis };
-  }, []);
+  }, [MEDICAMENTOS_REAL]);
 
   const lista = useMemo(() => {
     const termo = busca.trim().toLowerCase();
-    return MEDICAMENTOS.filter((m) => {
+    return MEDICAMENTOS_REAL.filter((m) => {
       const st = statusMedicamento(m.quantidade).id;
       const casaTexto =
         !termo || m.nome.toLowerCase().includes(termo) || m.unidade.toLowerCase().includes(termo);
       return casaTexto && (filtro === "todos" || st === filtro);
     });
-  }, [busca, filtro]);
+  }, [busca, filtro, MEDICAMENTOS_REAL]);
+
 
   return (
     <AppShell >
@@ -117,9 +119,12 @@ function Medicamentos() {
             <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Building2 className="size-5" />
             </div>
-            <p className="mt-4 text-2xl font-black text-foreground">4</p>
+            <p className="mt-4 text-2xl font-black text-foreground">
+              {new Set(MEDICAMENTOS_REAL.map((m: any) => m.unidade)).size || 0}
+            </p>
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Unidades Atendendo</p>
           </div>
+
         </section>
 
         {/* 3. Lista de Medicamentos */}
@@ -138,9 +143,10 @@ function Medicamentos() {
             </div>
           ) : (
             <ul className="space-y-3">
-              {lista.map((m, i) => {
+              {lista.map((m: any, i: number) => {
                 const st = statusMedicamento(m.quantidade);
-                const isDemo = m.unidade === "Farmácia Municipal";
+                const isDemo = false; // Removendo flag estática já que os dados são do banco
+
                 return (
                   <li key={`${m.nome}-${m.unidade}`} style={{ animationDelay: `${i * 40}ms` }} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                     <button

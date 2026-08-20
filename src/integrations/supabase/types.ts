@@ -56,6 +56,69 @@ export type Database = {
         }
         Relationships: []
       }
+      estoque_medicamentos: {
+        Row: {
+          id: string
+          medicamento_id: string | null
+          quantidade: number
+          ultima_atualizacao: string | null
+          unidade_id: string | null
+        }
+        Insert: {
+          id?: string
+          medicamento_id?: string | null
+          quantidade?: number
+          ultima_atualizacao?: string | null
+          unidade_id?: string | null
+        }
+        Update: {
+          id?: string
+          medicamento_id?: string | null
+          quantidade?: number
+          ultima_atualizacao?: string | null
+          unidade_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estoque_medicamentos_medicamento_id_fkey"
+            columns: ["medicamento_id"]
+            isOneToOne: false
+            referencedRelation: "medicamentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estoque_medicamentos_unidade_id_fkey"
+            columns: ["unidade_id"]
+            isOneToOne: false
+            referencedRelation: "unidades_saude"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medicamentos: {
+        Row: {
+          criado_em: string | null
+          descricao: string | null
+          id: string
+          nome: string
+          principio_ativo: string | null
+        }
+        Insert: {
+          criado_em?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+          principio_ativo?: string | null
+        }
+        Update: {
+          criado_em?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+          principio_ativo?: string | null
+        }
+        Relationships: []
+      }
       ocorrencias: {
         Row: {
           atualizado_em: string | null
@@ -140,6 +203,60 @@ export type Database = {
         }
         Relationships: []
       }
+      servicos_municipais: {
+        Row: {
+          cor_classe: string
+          criado_em: string | null
+          id: string
+          nome: string
+          servicos: string[]
+          slug: string
+          unidades: string[]
+        }
+        Insert: {
+          cor_classe: string
+          criado_em?: string | null
+          id?: string
+          nome: string
+          servicos: string[]
+          slug: string
+          unidades: string[]
+        }
+        Update: {
+          cor_classe?: string
+          criado_em?: string | null
+          id?: string
+          nome?: string
+          servicos?: string[]
+          slug?: string
+          unidades?: string[]
+        }
+        Relationships: []
+      }
+      unidades_saude: {
+        Row: {
+          criado_em: string | null
+          endereco: string | null
+          id: string
+          nome: string
+          tipo: string | null
+        }
+        Insert: {
+          criado_em?: string | null
+          endereco?: string | null
+          id?: string
+          nome: string
+          tipo?: string | null
+        }
+        Update: {
+          criado_em?: string | null
+          endereco?: string | null
+          id?: string
+          nome?: string
+          tipo?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -173,6 +290,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "gestor" | "cidadao"
+      estoque_status: "disponivel" | "baixo" | "indisponivel"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -301,6 +419,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "gestor", "cidadao"],
+      estoque_status: ["disponivel", "baixo", "indisponivel"],
     },
   },
 } as const

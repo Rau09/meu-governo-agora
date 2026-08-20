@@ -245,15 +245,28 @@ export function useAgendamentos() {
     // Sincronizar remoto se logado
     if (session?.user) {
       const fetchRemoto = async () => {
-        const { data, error } = await supabase
-          .from('agendamentos')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .order('criado_em', { ascending: false });
+        // Verificar se é gestor
+        const { data: isGestor } = await supabase.rpc('has_role', {
+          _user_id: session.user.id,
+          _role: 'gestor'
+        });
+        const { data: isAdmin } = await supabase.rpc('has_role', {
+          _user_id: session.user.id,
+          _role: 'admin'
+        });
+
+        let query = supabase.from('agendamentos').select('*');
+        
+        // Se não for gestor/admin, filtra apenas os próprios
+        if (!isGestor && !isAdmin) {
+          query = query.eq('user_id', session.user.id);
+        }
+
+        const { data, error } = await query.order('criado_em', { ascending: false });
 
         if (data && !error) {
           const remoteAgendas: Agendamento[] = data.map(d => ({
-            id: d.protocolo, // Usamos protocolo como ID visual
+            id: d.protocolo,
             area: d.area,
             servico: d.servico,
             unidade: d.unidade,
@@ -264,7 +277,10 @@ export function useAgendamentos() {
             status: d.status as any,
           }));
           setAgendamentos(remoteAgendas);
-          write(KEY_AGENDA, remoteAgendas);
+          // Só salva no local se for o próprio usuário (evita misturar dados de gestão no local)
+          if (!isGestor && !isAdmin) {
+            write(KEY_AGENDA, remoteAgendas);
+          }
         }
       };
       fetchRemoto();
@@ -313,7 +329,7 @@ export function useAgendamentos() {
       atual.filter((a) => a.id !== id),
     );
 
-    // Cancelar remoto (usando protocolo que mapeamos para ID)
+    // Cancelar remoto
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
       await supabase.from('agendamentos').delete().eq('protocolo', id).eq('user_id', session.user.id);
@@ -322,6 +338,7 @@ export function useAgendamentos() {
 
   return { agendamentos, criar, cancelar };
 }
+
 
 export const MUNICIPIOS_CANTU = [
   "Cantagalo",
@@ -391,6 +408,28 @@ export const AREAS = [
   },
 ] as const;
 
+export function useServicos() {
+  const [areas, setAreas] = useState<any[]>(AREAS as any);
+
+  useEffect(() => {
+    async function fetchServicos() {
+      const { data, error } = await supabase.from('servicos_municipais').select('*');
+      if (data && !error) {
+        setAreas(data.map(d => ({
+          id: d.slug,
+          nome: d.nome,
+          cor: d.cor_classe,
+          servicos: d.servicos,
+          unidades: d.unidades,
+        })) as any);
+      }
+    }
+    fetchServicos();
+  }, []);
+
+  return areas;
+}
+
 export const HORARIOS = [
   "08:00",
   "08:40",
@@ -404,6 +443,7 @@ export const HORARIOS = [
   "15:40",
   "16:20",
 ];
+
 
 /* ---------- Medicamentos (dados simulados) ---------- */
 
@@ -420,36 +460,44 @@ export function statusMedicamento(qtd: number) {
 }
 
 export const MEDICAMENTOS: Medicamento[] = [
-  // Dados oficiais de referência (Quedas do Iguaçu - 08/12/2025)
   { nome: "Albendazol 400 mg", unidade: "Farmácia Municipal", quantidade: 2163 },
   { nome: "Carvedilol 3,125 mg", unidade: "Farmácia Municipal", quantidade: 27450 },
   { nome: "Amoxicilina 250 mg/5 ml", unidade: "Farmácia Municipal", quantidade: 923 },
   { nome: "Levotiroxina 100 mcg", unidade: "Farmácia Municipal", quantidade: 6390 },
   { nome: "Levotiroxina 50 mcg", unidade: "Farmácia Municipal", quantidade: 16850 },
   { nome: "Rivaroxabana 20 mg", unidade: "Farmácia Municipal", quantidade: 3810 },
-  
-  // Dados de acompanhamento simulados para outras unidades
   { nome: "Dipirona 500mg", unidade: "UBS Central", quantidade: 420 },
-  { nome: "Dipirona 500mg", unidade: "UBS Bela Vista", quantidade: 18 },
   { nome: "Paracetamol 750mg", unidade: "UBS Central", quantidade: 260 },
-  { nome: "Paracetamol 750mg", unidade: "UBS São Francisco", quantidade: 0 },
-  { nome: "Amoxicilina 500mg", unidade: "UBS Central", quantidade: 75 },
-  { nome: "Amoxicilina 500mg", unidade: "UBS Bela Vista", quantidade: 12 },
-  { nome: "Ibuprofeno 600mg", unidade: "UBS São Francisco", quantidade: 145 },
-  { nome: "Omeprazol 20mg", unidade: "UBS Central", quantidade: 310 },
-  { nome: "Omeprazol 20mg", unidade: "UBS Bela Vista", quantidade: 0 },
-  { nome: "Losartana 50mg", unidade: "UBS Central", quantidade: 520 },
-  { nome: "Losartana 50mg", unidade: "UBS São Francisco", quantidade: 24 },
-  { nome: "Metformina 850mg", unidade: "UBS Bela Vista", quantidade: 180 },
-  { nome: "Captopril 25mg", unidade: "UBS São Francisco", quantidade: 96 },
-  { nome: "Insulina NPH", unidade: "UBS Central", quantidade: 28 },
-  { nome: "Salbutamol spray", unidade: "UBS Bela Vista", quantidade: 0 },
-  { nome: "Soro fisiológico", unidade: "UBS Central", quantidade: 640 },
-  { nome: "Anticoncepcional oral", unidade: "UBS São Francisco", quantidade: 210 },
-  { nome: "Ácido fólico", unidade: "UBS Central", quantidade: 22 },
-  { nome: "Sinvastatina 20mg", unidade: "UBS Bela Vista", quantidade: 155 },
-  { nome: "Prednisona 20mg", unidade: "UBS São Francisco", quantidade: 8 },
 ];
+
+export function useMedicamentos() {
+  const [medicamentos, setMedicamentos] = useState<Medicamento[]>(MEDICAMENTOS);
+
+  useEffect(() => {
+    async function fetchMedicamentos() {
+      // Fazemos um join entre medicamentos e estoque para ter o formato correto
+      const { data, error } = await supabase
+        .from('estoque_medicamentos')
+        .select(`
+          quantidade,
+          medicamentos (nome),
+          unidades_saude (nome)
+        `);
+      
+      if (data && !error) {
+        setMedicamentos(data.map((d: any) => ({
+          nome: d.medicamentos.nome,
+          unidade: d.unidades_saude.nome,
+          quantidade: d.quantidade
+        })));
+      }
+    }
+    fetchMedicamentos();
+  }, []);
+
+  return medicamentos;
+}
+
 
 /* ---------- Comunicar problema (ocorrências) ---------- */
 
@@ -504,10 +552,24 @@ export function useOcorrencias() {
     // Sincronizar remoto se logado
     if (session?.user) {
       const fetchRemoto = async () => {
-        const { data, error } = await supabase
-          .from('ocorrencias')
-          .select('*')
-          .order('criado_em', { ascending: false });
+        // Verificar se é gestor
+        const { data: isGestor } = await supabase.rpc('has_role', {
+          _user_id: session.user.id,
+          _role: 'gestor'
+        });
+        const { data: isAdmin } = await supabase.rpc('has_role', {
+          _user_id: session.user.id,
+          _role: 'admin'
+        });
+
+        let query = supabase.from('ocorrencias').select('*');
+        
+        // Se não for gestor/admin, filtra apenas os próprios
+        if (!isGestor && !isAdmin) {
+          query = query.eq('user_id', session.user.id);
+        }
+
+        const { data, error } = await query.order('criado_em', { ascending: false });
 
         if (data && !error) {
           const remoteOcor: Ocorrencia[] = data.map(d => ({
@@ -521,11 +583,15 @@ export function useOcorrencias() {
             status: d.status as StatusOcorrencia,
           }));
           setOcorrencias(remoteOcor);
-          write(KEY_OCOR, remoteOcor);
+          // Só salva no local se for o próprio usuário
+          if (!isGestor && !isAdmin) {
+            write(KEY_OCOR, remoteOcor);
+          }
         }
       };
       fetchRemoto();
     }
+
 
     return () => window.removeEventListener("cantu-store", syncLocal);
   }, [session]);
