@@ -103,6 +103,13 @@ const REGRAS: Regra[] = [
       acao: { rotulo: "Meus Agendamentos", para: "/agendamento" },
     },
   },
+  {
+    chaves: ["cachorro", "gato", "animal", "animais", "adocao", "adotar", "pet", "pets", "maustratos", "perdido", "encontrado", "ferido", "abandono", "vacinacao", "castracao", "porte", "sexo"],
+    resposta: {
+      texto: "Na plataforma NexLine, cuidamos também da causa animal. Você pode adotar um novo companheiro, ver fotos e detalhes dos animais disponíveis ou registrar ocorrências de maus-tratos e animais perdidos.",
+      acao: { rotulo: "Ver Causa Animal", para: "/causa-animal" },
+    },
+  },
 ];
 
 const CHAVES_MEDICAMENTO = [

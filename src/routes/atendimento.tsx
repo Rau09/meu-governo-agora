@@ -7,7 +7,7 @@ import { responder } from "@/lib/cantu-ia";
 import { useLibras } from "@/lib/libras-translator";
 
 
-type Busca = { protocolo?: string; assunto?: string };
+type Busca = { protocolo?: string | undefined; assunto?: string | undefined };
 export const Route = createFileRoute("/atendimento")({
   validateSearch: (search: Record<string, unknown>): Busca => ({
     protocolo: typeof search['protocolo'] === "string" ? search['protocolo'] : undefined,

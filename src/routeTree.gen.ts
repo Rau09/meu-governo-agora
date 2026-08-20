@@ -17,6 +17,7 @@ import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as GestaoRouteImport } from './routes/gestao'
 import { Route as MedicamentosRouteImport } from './routes/medicamentos'
 import { Route as OcorrenciaRouteImport } from './routes/ocorrencia'
+import { Route as OcorrenciaAnimalRouteImport } from './routes/ocorrencia-animal'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as RegistroRouteImport } from './routes/registro'
 import { Route as SaudeRouteImport } from './routes/saude'
@@ -63,6 +64,11 @@ const OcorrenciaRoute = OcorrenciaRouteImport.update({
   path: '/ocorrencia',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OcorrenciaAnimalRoute = OcorrenciaAnimalRouteImport.update({
+  id: '/ocorrencia-animal',
+  path: '/ocorrencia-animal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PerfilRoute = PerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
+  '/ocorrencia-animal': typeof OcorrenciaAnimalRoute
   '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
   '/saude': typeof SaudeRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
+  '/ocorrencia-animal': typeof OcorrenciaAnimalRoute
   '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
   '/saude': typeof SaudeRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
+  '/ocorrencia-animal': typeof OcorrenciaAnimalRoute
   '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
   '/saude': typeof SaudeRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
+    | '/ocorrencia-animal'
     | '/perfil'
     | '/registro'
     | '/saude'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
+    | '/ocorrencia-animal'
     | '/perfil'
     | '/registro'
     | '/saude'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
+    | '/ocorrencia-animal'
     | '/perfil'
     | '/registro'
     | '/saude'
@@ -192,6 +204,7 @@ export interface RootRouteChildren {
   GestaoRoute: typeof GestaoRoute
   MedicamentosRoute: typeof MedicamentosRoute
   OcorrenciaRoute: typeof OcorrenciaRoute
+  OcorrenciaAnimalRoute: typeof OcorrenciaAnimalRoute
   PerfilRoute: typeof PerfilRoute
   RegistroRoute: typeof RegistroRoute
   SaudeRoute: typeof SaudeRoute
@@ -257,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OcorrenciaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ocorrencia-animal': {
+      id: '/ocorrencia-animal'
+      path: '/ocorrencia-animal'
+      fullPath: '/ocorrencia-animal'
+      preLoaderRoute: typeof OcorrenciaAnimalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/perfil': {
       id: '/perfil'
       path: '/perfil'
@@ -304,6 +324,7 @@ const rootRouteChildren: RootRouteChildren = {
   GestaoRoute: GestaoRoute,
   MedicamentosRoute: MedicamentosRoute,
   OcorrenciaRoute: OcorrenciaRoute,
+  OcorrenciaAnimalRoute: OcorrenciaAnimalRoute,
   PerfilRoute: PerfilRoute,
   RegistroRoute: RegistroRoute,
   SaudeRoute: SaudeRoute,
