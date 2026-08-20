@@ -409,7 +409,7 @@ export const AREAS = [
 ] as const;
 
 export function useServicos() {
-  const [areas, setAreas] = useState<typeof AREAS>(AREAS);
+  const [areas, setAreas] = useState<any[]>(AREAS as any);
 
   useEffect(() => {
     async function fetchServicos() {
