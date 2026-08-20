@@ -1,0 +1,518 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.15"
+  }
+  public: {
+    Tables: {
+      agendamentos: {
+        Row: {
+          area: string
+          criado_em: string | null
+          data: string
+          hora: string
+          id: string
+          nome_paciente: string
+          protocolo: string
+          servico: string
+          status: string
+          unidade: string
+          user_id: string
+        }
+        Insert: {
+          area: string
+          criado_em?: string | null
+          data: string
+          hora: string
+          id?: string
+          nome_paciente: string
+          protocolo: string
+          servico: string
+          status?: string
+          unidade: string
+          user_id: string
+        }
+        Update: {
+          area?: string
+          criado_em?: string | null
+          data?: string
+          hora?: string
+          id?: string
+          nome_paciente?: string
+          protocolo?: string
+          servico?: string
+          status?: string
+          unidade?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      animais: {
+        Row: {
+          castrado: boolean | null
+          criado_em: string | null
+          descricao: string | null
+          especie: string
+          fotos: string[] | null
+          id: string
+          idade: string | null
+          localizacao: string | null
+          nome: string
+          porte: string | null
+          raca: string | null
+          sexo: string | null
+          status: string | null
+          vacinado: boolean | null
+        }
+        Insert: {
+          castrado?: boolean | null
+          criado_em?: string | null
+          descricao?: string | null
+          especie?: string
+          fotos?: string[] | null
+          id?: string
+          idade?: string | null
+          localizacao?: string | null
+          nome: string
+          porte?: string | null
+          raca?: string | null
+          sexo?: string | null
+          status?: string | null
+          vacinado?: boolean | null
+        }
+        Update: {
+          castrado?: boolean | null
+          criado_em?: string | null
+          descricao?: string | null
+          especie?: string
+          fotos?: string[] | null
+          id?: string
+          idade?: string | null
+          localizacao?: string | null
+          nome?: string
+          porte?: string | null
+          raca?: string | null
+          sexo?: string | null
+          status?: string | null
+          vacinado?: boolean | null
+        }
+        Relationships: []
+      }
+      estoque_medicamentos: {
+        Row: {
+          id: string
+          medicamento_id: string | null
+          quantidade: number
+          ultima_atualizacao: string | null
+          unidade_id: string | null
+        }
+        Insert: {
+          id?: string
+          medicamento_id?: string | null
+          quantidade?: number
+          ultima_atualizacao?: string | null
+          unidade_id?: string | null
+        }
+        Update: {
+          id?: string
+          medicamento_id?: string | null
+          quantidade?: number
+          ultima_atualizacao?: string | null
+          unidade_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estoque_medicamentos_medicamento_id_fkey"
+            columns: ["medicamento_id"]
+            isOneToOne: false
+            referencedRelation: "medicamentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estoque_medicamentos_unidade_id_fkey"
+            columns: ["unidade_id"]
+            isOneToOne: false
+            referencedRelation: "unidades_saude"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medicamentos: {
+        Row: {
+          criado_em: string | null
+          descricao: string | null
+          id: string
+          nome: string
+          principio_ativo: string | null
+        }
+        Insert: {
+          criado_em?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+          principio_ativo?: string | null
+        }
+        Update: {
+          criado_em?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+          principio_ativo?: string | null
+        }
+        Relationships: []
+      }
+      ocorrencias: {
+        Row: {
+          atualizado_em: string | null
+          categoria: string
+          criado_em: string | null
+          descricao: string
+          endereco: string | null
+          foto_url: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          protocolo: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          atualizado_em?: string | null
+          categoria: string
+          criado_em?: string | null
+          descricao: string
+          endereco?: string | null
+          foto_url?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          protocolo: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          atualizado_em?: string | null
+          categoria?: string
+          criado_em?: string | null
+          descricao?: string
+          endereco?: string | null
+          foto_url?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          protocolo?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ocorrencias_animais: {
+        Row: {
+          categoria: string
+          criado_em: string | null
+          descricao: string
+          endereco: string | null
+          foto_url: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          protocolo: string
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          categoria: string
+          criado_em?: string | null
+          descricao: string
+          endereco?: string | null
+          foto_url?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          protocolo: string
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          categoria?: string
+          criado_em?: string | null
+          descricao?: string
+          endereco?: string | null
+          foto_url?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          protocolo?: string
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          atualizado_em: string | null
+          bairro: string | null
+          cpf: string | null
+          criado_em: string | null
+          estado: string | null
+          id: string
+          municipio: string | null
+          nome: string
+          preferencias: string[] | null
+          telefone: string | null
+        }
+        Insert: {
+          atualizado_em?: string | null
+          bairro?: string | null
+          cpf?: string | null
+          criado_em?: string | null
+          estado?: string | null
+          id: string
+          municipio?: string | null
+          nome: string
+          preferencias?: string[] | null
+          telefone?: string | null
+        }
+        Update: {
+          atualizado_em?: string | null
+          bairro?: string | null
+          cpf?: string | null
+          criado_em?: string | null
+          estado?: string | null
+          id?: string
+          municipio?: string | null
+          nome?: string
+          preferencias?: string[] | null
+          telefone?: string | null
+        }
+        Relationships: []
+      }
+      servicos_municipais: {
+        Row: {
+          cor_classe: string
+          criado_em: string | null
+          id: string
+          nome: string
+          servicos: string[]
+          slug: string
+          unidades: string[]
+        }
+        Insert: {
+          cor_classe: string
+          criado_em?: string | null
+          id?: string
+          nome: string
+          servicos: string[]
+          slug: string
+          unidades: string[]
+        }
+        Update: {
+          cor_classe?: string
+          criado_em?: string | null
+          id?: string
+          nome?: string
+          servicos?: string[]
+          slug?: string
+          unidades?: string[]
+        }
+        Relationships: []
+      }
+      unidades_saude: {
+        Row: {
+          criado_em: string | null
+          endereco: string | null
+          id: string
+          nome: string
+          tipo: string | null
+        }
+        Insert: {
+          criado_em?: string | null
+          endereco?: string | null
+          id?: string
+          nome: string
+          tipo?: string | null
+        }
+        Update: {
+          criado_em?: string | null
+          endereco?: string | null
+          id?: string
+          nome?: string
+          tipo?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+    }
+    Enums: {
+      app_role: "admin" | "gestor" | "cidadao"
+      estoque_status: "disponivel" | "baixo" | "indisponivel"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      app_role: ["admin", "gestor", "cidadao"],
+      estoque_status: ["disponivel", "baixo", "indisponivel"],
+    },
+  },
+} as const
