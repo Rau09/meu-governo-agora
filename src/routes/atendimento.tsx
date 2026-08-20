@@ -50,33 +50,36 @@ const atalhos = [
 function Atendimento() {
   const { protocolo, assunto } = Route.useSearch();
   const { translate } = useLibras();
-  const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
-  const p = searchParams.get('protocolo');
-  const a = searchParams.get('assunto');
-  
-  const initialMsgs: Msg[] = [
+  const [msgs, setMsgs] = useState<Msg[]>([
     {
       de: "bot",
       texto: "Olá! Sou a assistente do NexLine. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
     },
-  ];
-
-  if (p || a) {
-    const txt = p 
-      ? `Andamento do protocolo ${p}`
-      : decodeURIComponent(a!).startsWith('adoção-')
-        ? `Quero saber mais sobre a adoção do ${decodeURIComponent(a!).replace('adoção-', '')}`
-        : decodeURIComponent(a!);
-    
-    initialMsgs.push({ de: "eu", texto: txt });
-    const r = responder(txt);
-    initialMsgs.push({ de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) });
-  }
-
-  const [msgs, setMsgs] = useState<Msg[]>(initialMsgs);
+  ]);
 
   useEffect(() => {
-    // A lógica de inicialização agora é feita no useState inicial.
+    const sp = new URLSearchParams(window.location.search);
+    const pVal = sp.get('protocolo');
+    const aVal = sp.get('assunto');
+    
+    if (pVal || aVal) {
+      const txt = pVal 
+        ? `Andamento do protocolo ${pVal}`
+        : decodeURIComponent(aVal!).startsWith('adoção-')
+          ? `Quero saber mais sobre a adoção do ${decodeURIComponent(aVal!).replace('adoção-', '')}`
+          : decodeURIComponent(aVal!);
+      
+      setMsgs(prev => [
+        ...prev,
+        { de: "eu", texto: txt }
+      ]);
+      
+      // Pequeno delay para a resposta parecer natural
+      setTimeout(() => {
+        const r = responder(txt);
+        setMsgs(prev => [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
+      }, 500);
+    }
   }, []);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
