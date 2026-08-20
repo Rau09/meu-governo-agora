@@ -105,8 +105,9 @@ export function MapaOcorrencias({
         if (o.status === "resolvido") colorClass = "bg-success";
         else if (n === "critico") colorClass = "bg-destructive animate-pulse";
         else if (atrasada(o)) colorClass = "bg-accent";
-        else if (o.status === "analise") colorClass = "bg-yellow-500";
+        else if (o.status === "analise" || o.status === "recebido") colorClass = "bg-yellow-500";
         else if (o.status === "execucao") colorClass = "bg-blue-500";
+
 
         el.innerHTML = `
           <div class="relative flex items-center justify-center size-8 rounded-xl border-2 border-white shadow-lg text-white font-bold cursor-pointer transition-transform hover:scale-125 ${colorClass}">
