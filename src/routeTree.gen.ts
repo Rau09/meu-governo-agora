@@ -23,7 +23,6 @@ import { Route as RegistroRouteImport } from './routes/registro'
 import { Route as SaudeRouteImport } from './routes/saude'
 import { Route as ServicosRouteImport } from './routes/servicos'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
-import { Route as ApiPublicSetupGestorRouteImport } from './routes/api/public/setup-gestor'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -95,11 +94,6 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicSetupGestorRoute = ApiPublicSetupGestorRouteImport.update({
-  id: '/api/public/setup-gestor',
-  path: '/api/public/setup-gestor',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -116,7 +110,6 @@ export interface FileRoutesByFullPath {
   '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/api/public/setup-gestor': typeof ApiPublicSetupGestorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -133,7 +126,6 @@ export interface FileRoutesByTo {
   '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/api/public/setup-gestor': typeof ApiPublicSetupGestorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -151,7 +143,6 @@ export interface FileRoutesById {
   '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/api/public/setup-gestor': typeof ApiPublicSetupGestorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -170,7 +161,6 @@ export interface FileRouteTypes {
     | '/saude'
     | '/servicos'
     | '/auth/callback'
-    | '/api/public/setup-gestor'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -187,7 +177,6 @@ export interface FileRouteTypes {
     | '/saude'
     | '/servicos'
     | '/auth/callback'
-    | '/api/public/setup-gestor'
   id:
     | '__root__'
     | '/'
@@ -204,7 +193,6 @@ export interface FileRouteTypes {
     | '/saude'
     | '/servicos'
     | '/auth/callback'
-    | '/api/public/setup-gestor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -222,7 +210,6 @@ export interface RootRouteChildren {
   SaudeRoute: typeof SaudeRoute
   ServicosRoute: typeof ServicosRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
-  ApiPublicSetupGestorRoute: typeof ApiPublicSetupGestorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -325,13 +312,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/setup-gestor': {
-      id: '/api/public/setup-gestor'
-      path: '/api/public/setup-gestor'
-      fullPath: '/api/public/setup-gestor'
-      preLoaderRoute: typeof ApiPublicSetupGestorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -350,7 +330,6 @@ const rootRouteChildren: RootRouteChildren = {
   SaudeRoute: SaudeRoute,
   ServicosRoute: ServicosRoute,
   AuthCallbackRoute: AuthCallbackRoute,
-  ApiPublicSetupGestorRoute: ApiPublicSetupGestorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
