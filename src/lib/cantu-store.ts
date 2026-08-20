@@ -33,6 +33,7 @@ const KEY_AGENDA = "cantu.agendamentos";
 const KEY_SESSAO = "cantu.sessao";
 const KEY_TENTATIVAS = "cantu.tentativas";
 const KEY_OCOR = "cantu.ocorrencias";
+const KEY_OCOR_ANIMAL = "cantu.ocorrencias_animais";
 const KEY_ANIMAIS = "cantu.animais";
 
 function read<T>(key: string, fallback: T): T {
@@ -529,6 +530,42 @@ export type Ocorrencia = {
   responsavel?: string;
 };
 
+export type Animal = {
+  id: string;
+  nome: string;
+  especie: string;
+  raca: string | null;
+  idade: string | null;
+  porte: string | null;
+  sexo: string | null;
+  localizacao: string | null;
+  vacinado: boolean;
+  castrado: boolean;
+  descricao: string | null;
+  status: "disponivel" | "adotado" | "pendente";
+  fotos: string[];
+};
+
+export type OcorrenciaAnimal = {
+  protocolo: string;
+  categoria: string;
+  descricao: string;
+  foto?: string | null;
+  local?: { lat: number; lng: number } | null;
+  endereco?: string | null;
+  criadoEm: string;
+  status: string;
+};
+
+export const CATEGORIAS_OCORRENCIA_ANIMAL = [
+  "Animal perdido",
+  "Animal encontrado",
+  "Animal ferido",
+  "Abandono",
+  "Maus-tratos",
+  "Outro",
+] as const;
+
 export const STATUS_OCORRENCIA: {
   id: StatusOcorrencia;
   rotulo: string;
@@ -650,6 +687,118 @@ export function useOcorrencias() {
   }, []);
 
   return { ocorrencias, criar, atualizarStatus };
+}
+
+export function useAnimais() {
+  const [animais, setAnimais] = useState<Animal[]>([]);
+
+  useEffect(() => {
+    async function fetchAnimais() {
+      const { data, error } = await supabase
+        .from('animais')
+        .select('*')
+        .eq('status', 'disponivel')
+        .order('criado_em', { ascending: false });
+      
+      if (data && !error) {
+        setAnimais(data.map(d => ({
+          id: d.id,
+          nome: d.nome,
+          especie: d.especie,
+          raca: d.raca,
+          idade: d.idade,
+          porte: d.porte,
+          sexo: d.sexo,
+          localizacao: d.localizacao,
+          vacinado: d.vacinado,
+          castrado: d.castrado,
+          descricao: d.descricao,
+          status: d.status as any,
+          fotos: d.fotos || [],
+        })));
+      }
+    }
+    fetchAnimais();
+  }, []);
+
+  return animais;
+}
+
+export function useOcorrenciasAnimais() {
+  const [ocorrencias, setOcorrencias] = useState<OcorrenciaAnimal[]>([]);
+  const { session } = useCidadao();
+
+  useEffect(() => {
+    const syncLocal = () => setOcorrencias(read<OcorrenciaAnimal[]>(KEY_OCOR_ANIMAL, []));
+    syncLocal();
+    window.addEventListener("cantu-store", syncLocal);
+
+    if (session?.user) {
+      const fetchRemoto = async () => {
+        const { data: isGestor } = await supabase.rpc('has_role', { _user_id: session.user.id, _role: 'gestor' });
+        const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: session.user.id, _role: 'admin' });
+
+        let query = supabase.from('ocorrencias_animais').select('*');
+        if (!isGestor && !isAdmin) {
+          query = query.eq('user_id', session.user.id);
+        }
+
+        const { data, error } = await query.order('criado_em', { ascending: false });
+        if (data && !error) {
+          const remote: OcorrenciaAnimal[] = data.map(d => ({
+            protocolo: d.protocolo,
+            categoria: d.categoria,
+            descricao: d.descricao,
+            foto: d.foto_url,
+            local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
+            endereco: d.endereco,
+            criadoEm: d.criado_em,
+            status: d.status,
+          }));
+          setOcorrencias(remote);
+          if (!isGestor && !isAdmin) {
+            write(KEY_OCOR_ANIMAL, remote);
+          }
+        }
+      };
+      fetchRemoto();
+    }
+
+    return () => window.removeEventListener("cantu-store", syncLocal);
+  }, [session]);
+
+  const criar = useCallback(async (o: Omit<OcorrenciaAnimal, "protocolo" | "criadoEm" | "status">) => {
+    const atual = read<OcorrenciaAnimal[]>(KEY_OCOR_ANIMAL, []);
+    const protocolo = `PET-${new Date().getFullYear()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+    
+    const nova: OcorrenciaAnimal = {
+      ...o,
+      protocolo,
+      criadoEm: new Date().toISOString(),
+      status: "recebido",
+    };
+
+    write(KEY_OCOR_ANIMAL, [nova, ...atual]);
+
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+    if (currentSession?.user) {
+      await supabase.from('ocorrencias_animais').insert({
+        user_id: currentSession.user.id,
+        protocolo,
+        categoria: o.categoria,
+        descricao: o.descricao,
+        foto_url: o.foto ?? null,
+        lat: o.local?.lat ?? null,
+        lng: o.local?.lng ?? null,
+        endereco: o.endereco ?? null,
+        status: "recebido"
+      });
+    }
+
+    return nova;
+  }, []);
+
+  return { ocorrencias, criar };
 }
 
 export function lerOcorrencias(): Ocorrencia[] {
