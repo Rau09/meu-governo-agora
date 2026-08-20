@@ -339,13 +339,59 @@ function Painel({ onSair }: { onSair: () => void }) {
 
 function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtivos: any[], setDetalhe: any, animar: boolean }) {
   return (
-    <section className={`rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-7 shadow-card transition-all ${animar ? "opacity-100" : "opacity-0"}`}>
-      <h2 className="text-lg font-bold">Protocolos de Emergência</h2>
+    <section
+      style={{ transitionDelay: "550ms" }}
+      className={`rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-7 shadow-card transition-all duration-500 ease-out ${
+        animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-destructive/10">
+            <AlertTriangle className="size-6 text-destructive" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-foreground tracking-tight">Protocolos de Emergência</h2>
+            <p className="text-[11px] font-medium text-muted-foreground">Intervenção imediata recomendada pela IA Cantu.</p>
+          </div>
+        </div>
+        <span className="rounded-full bg-destructive px-3 py-1 text-[10px] font-black text-white shadow-sm">
+          {alertasAtivos.length} CRÍTICOS
+        </span>
+      </div>
+
       <div className="mt-6 space-y-4">
         {alertasAtivos.map((a) => (
-          <button key={a.id} onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })} className="w-full rounded-[2rem] border border-border bg-card p-5 text-left">
-            <p className="font-bold text-sm">{a.titulo}</p>
-          </button>
+          <div key={a.id} className="group relative">
+            <button
+              type="button"
+              onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })}
+              className="w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-sm transition-all duration-300 hover:border-destructive/40 hover:shadow-float active:scale-[0.99]"
+            >
+              <div className="flex items-start gap-4">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-secondary/50 text-2xl leading-none">{a.emoji}</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-bold text-foreground">{a.titulo}</p>
+                    <ChevronRight className="size-4 shrink-0 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground font-medium">{a.detalhe}</p>
+                  
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest ${NIVEIS[a.nivel].classe}`}>
+                        {NIVEIS[a.nivel].rotulo}
+                      </span>
+                      <span className="text-[10px] font-bold text-destructive/80 flex items-center gap-1">
+                         <Clock3 className="size-3" /> {a.acao}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-bold text-primary underline underline-offset-2">Resolver agora</span>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
         ))}
       </div>
     </section>
