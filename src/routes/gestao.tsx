@@ -147,17 +147,27 @@ function Gestao() {
 }
 
 function Login({ onEntrar }: { onEntrar: () => void }) {
-  const [usuario, setUsuario] = useState("");
+  const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (usuario.trim().toLowerCase() === USUARIO && senha === SENHA) {
-      setErro("");
-      onEntrar();
+    setCarregando(true);
+    setErro("");
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password: senha,
+    });
+
+    if (error) {
+      setErro("Credenciais inválidas ou acesso negado.");
+      setCarregando(false);
     } else {
-      setErro("Usuário ou senha inválidos.");
+      // O useEffect no componente pai detectará a mudança de sessão
+      onEntrar();
     }
   }
 
