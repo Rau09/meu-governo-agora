@@ -512,7 +512,7 @@ export const CATEGORIAS_OCORRENCIA = [
   "Outro",
 ] as const;
 
-export type StatusOcorrencia = "recebido" | "analise" | "encaminhado" | "andamento" | "resolvido";
+export type StatusOcorrencia = "recebido" | "analise" | "execucao" | "resolvido";
 
 export type Ocorrencia = {
   protocolo: string;
@@ -523,6 +523,8 @@ export type Ocorrencia = {
   endereco?: string | null;
   criadoEm: string;
   status: StatusOcorrencia;
+  prioridade?: string;
+  responsavel?: string;
 };
 
 export const STATUS_OCORRENCIA: {
