@@ -521,10 +521,24 @@ export function useOcorrencias() {
     // Sincronizar remoto se logado
     if (session?.user) {
       const fetchRemoto = async () => {
-        const { data, error } = await supabase
-          .from('ocorrencias')
-          .select('*')
-          .order('criado_em', { ascending: false });
+        // Verificar se é gestor
+        const { data: isGestor } = await supabase.rpc('has_role', {
+          _user_id: session.user.id,
+          _role: 'gestor'
+        });
+        const { data: isAdmin } = await supabase.rpc('has_role', {
+          _user_id: session.user.id,
+          _role: 'admin'
+        });
+
+        let query = supabase.from('ocorrencias').select('*');
+        
+        // Se não for gestor/admin, filtra apenas os próprios
+        if (!isGestor && !isAdmin) {
+          query = query.eq('user_id', session.user.id);
+        }
+
+        const { data, error } = await query.order('criado_em', { ascending: false });
 
         if (data && !error) {
           const remoteOcor: Ocorrencia[] = data.map(d => ({
@@ -538,11 +552,15 @@ export function useOcorrencias() {
             status: d.status as StatusOcorrencia,
           }));
           setOcorrencias(remoteOcor);
-          write(KEY_OCOR, remoteOcor);
+          // Só salva no local se for o próprio usuário
+          if (!isGestor && !isAdmin) {
+            write(KEY_OCOR, remoteOcor);
+          }
         }
       };
       fetchRemoto();
     }
+
 
     return () => window.removeEventListener("cantu-store", syncLocal);
   }, [session]);
