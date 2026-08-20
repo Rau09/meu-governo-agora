@@ -27,7 +27,6 @@ const DICIONARIO: Record<string, Sinal[]> = {
 
 const ALFABETO: Record<string, Sinal> = {
   a: { bracos: { esquerdo: { ombro: 0, cotovelo: 0, mao: "aberta" }, direito: { ombro: 20, cotovelo: 40, mao: "fechada" } }, duracao: 200 },
-  // ... outras letras seriam adicionadas aqui
 };
 
 interface LibrasState {
@@ -65,6 +64,8 @@ export const useLibras = create<LibrasState>((set, get) => ({
       const sinais = DICIONARIO[palavra] || palavra.split("").map(l => ALFABETO[l] || ALFABETO["a"]);
       
       for (const sinal of sinais) {
+        if (!sinal) continue;
+        
         while (get().pausado) {
           await new Promise(r => setTimeout(r, 100));
           if (!get().traduzindo) return;
