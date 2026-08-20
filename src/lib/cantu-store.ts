@@ -125,21 +125,84 @@ export function limparTentativas() {
 
 export function useCidadao() {
   const [cidadao, setCidadao] = useState<Cidadao | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [desbloqueado, setDesbloqueado] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // 1. Sincronizar sessão do Supabase
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    // 2. Sincronizar dados do perfil do LocalStorage (Preservando app atual)
     const sync = () => {
       setCidadao(read<Cidadao | null>(KEY_USER, null));
       setDesbloqueado(window.sessionStorage.getItem(KEY_SESSAO) === "1");
     };
     sync();
     window.addEventListener("cantu-store", sync);
-    return () => window.removeEventListener("cantu-store", sync);
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("cantu-store", sync);
+    };
   }, []);
 
-  const salvar = useCallback((c: Cidadao) => {
+  // Sincronizar Perfil do Banco quando logado
+  useEffect(() => {
+    if (!session?.user) return;
+
+    const fetchProfile = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (data && !error) {
+        // Se temos dados no banco, priorizamos eles sobre o localStorage
+        const profileData: Cidadao = {
+          nome: data.nome,
+          cpf: data.cpf || "",
+          telefone: data.telefone || "",
+          bairro: data.bairro || "",
+          municipio: data.municipio || "Quedas do Iguaçu",
+          estado: data.estado || "PR",
+          preferencias: data.preferencias || [],
+        };
+        write(KEY_USER, profileData);
+      }
+    };
+
+    fetchProfile();
+  }, [session]);
+
+  const salvar = useCallback(async (c: Cidadao) => {
+    // Salvar localmente para manter UX fluida
     window.sessionStorage.setItem(KEY_SESSAO, "1");
     write(KEY_USER, c);
+
+    // Se estiver logado no Supabase, salvar no banco também
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('profiles').upsert({
+        id: session.user.id,
+        nome: c.nome,
+        cpf: c.cpf,
+        telefone: c.telefone,
+        bairro: c.bairro,
+        municipio: c.municipio,
+        estado: c.estado,
+        preferencias: c.preferencias,
+        updated_at: new Date().toISOString(),
+      });
+    }
   }, []);
 
   const desbloquear = useCallback(async (pin: string) => {
@@ -159,13 +222,14 @@ export function useCidadao() {
     window.dispatchEvent(new Event("cantu-store"));
   }, []);
 
-  const sair = useCallback(() => {
+  const sair = useCallback(async () => {
+    await supabase.auth.signOut();
     window.sessionStorage.removeItem(KEY_SESSAO);
     limparTentativas();
     write(KEY_USER, null);
   }, []);
 
-  return { cidadao, desbloqueado, salvar, sair, desbloquear, bloquear };
+  return { cidadao, session, desbloqueado, loading, salvar, sair, desbloquear, bloquear };
 }
 
 
