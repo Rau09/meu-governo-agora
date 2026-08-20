@@ -400,12 +400,78 @@ function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtiv
 
 function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any[], setDetalhe: any, setAcao: any, animar: boolean }) {
   return (
-    <section className={animar ? "opacity-100" : "opacity-0"}>
-      <h2 className="text-base font-bold mb-5">Monitoramento por Setor</h2>
+    <section style={{ transitionDelay: "650ms" }} className={animar ? "opacity-100" : "opacity-0"}>
+      <div className="mb-5 flex items-center justify-between px-2">
+        <div>
+          <h2 className="text-base font-bold text-foreground tracking-tight">Monitoramento por Setor</h2>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Visão Analítica Semanal</p>
+        </div>
+        <Link to="/gestao" className="text-[10px] font-bold text-primary uppercase tracking-wider">Ver Relatórios</Link>
+      </div>
+      
       <div className="space-y-4">
         {focos.map((p, i) => (
-          <div key={p.id} className="rounded-[2rem] border border-border bg-card p-6">
-            <p className="font-bold">{p.categoria}</p>
+          <div
+            key={p.id}
+            style={{ animationDelay: `${i * 100}ms` }}
+            className="animate-in rounded-[2rem] border border-border bg-card p-6 shadow-card transition-all duration-300 hover:border-primary/30"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                   <span className="text-lg">{metaCategoria(p.categoria).emoji}</span>
+                   <p className="text-base font-bold text-foreground tracking-tight">
+                     {p.categoria}
+                   </p>
+                </div>
+                <p className="text-[11px] font-bold text-muted-foreground mt-0.5">{p.bairro} — Cantuquiriguaçu</p>
+              </div>
+              <span className={`shrink-0 rounded-full px-3 py-1 text-[9px] font-black uppercase tracking-widest ${NIVEIS[p.nivel as keyof typeof NIVEIS].classe}`}>
+                {NIVEIS[p.nivel as keyof typeof NIVEIS].rotulo}
+              </span>
+            </div>
+            
+            <div className="mt-4 flex items-center gap-6">
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Demanda</span>
+                 <span className="text-sm font-black text-foreground">{p.total} casos</span>
+               </div>
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Gravidade</span>
+                 <span className="text-sm font-black text-destructive">{p.atrasadas} críticas</span>
+               </div>
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Tendência</span>
+                 <span className="text-sm font-black text-success">+{p.variacao}% res.</span>
+               </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl bg-secondary/30 p-4 border border-border/50">
+              <div className="flex items-center gap-2 mb-1.5">
+                <Sparkles className="size-3 text-primary" />
+                <span className="text-[9px] font-black uppercase tracking-widest text-primary">Insight IA</span>
+              </div>
+              <p className="text-[11px] font-medium leading-relaxed text-muted-foreground italic">
+                “{p.resumo}”
+              </p>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setDetalhe({ titulo: `${p.categoria} — ${p.bairro}`, nota: p.resumo, itens: p.itens })}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-background py-3.5 text-[10px] font-bold text-foreground hover:bg-secondary active:scale-95 transition-all shadow-sm"
+              >
+                Analisar Dados
+              </button>
+              <button
+                type="button"
+                onClick={() => setAcao(`Equipe operacional designada para ${p.bairro}.`)}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-primary py-3.5 text-[10px] font-bold text-primary-foreground hover:bg-primary/90 active:scale-95 shadow-float transition-all"
+              >
+                Despachar Unidade
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -413,12 +479,80 @@ function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any
   );
 }
 
-function DetalheLista({ titulo, nota, itens, onFechar, onMapa }: any) {
+function DetalheLista({
+  titulo,
+  nota,
+  itens,
+  onFechar,
+  onMapa,
+}: {
+  titulo: string;
+  nota?: string;
+  itens: OcorrenciaGestao[];
+  onFechar: () => void;
+  onMapa: (itens: OcorrenciaGestao[]) => void;
+}) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
-      <div className="w-full max-w-md bg-background rounded-3xl p-6 shadow-float">
-        <h3 className="font-bold text-lg mb-4">{titulo}</h3>
-        <button onClick={onFechar} className="mt-4 w-full bg-primary text-white py-3 rounded-2xl">Fechar</button>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 p-0 sm:items-center">
+      <div className="animate-in max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-[2.5rem] border border-border bg-background p-7 shadow-float slide-in-from-bottom-4 duration-300 sm:rounded-[2.5rem]">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-bold text-foreground">{titulo}</h3>
+            {nota && <p className="mt-0.5 text-xs font-medium text-muted-foreground">{nota}</p>}
+            <p className="mt-2 text-[11px] font-bold text-primary uppercase tracking-wider">{itens.length} registros encontrados</p>
+          </div>
+          <button
+            type="button"
+            onClick={onFechar}
+            aria-label="Fechar"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-secondary transition-transform active:scale-90"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+
+        {itens.length > 0 && (
+          <button
+            type="button"
+            onClick={() => onMapa(itens)}
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-4 text-sm font-bold text-primary-foreground shadow-float transition-all hover:bg-primary/90 active:scale-[0.98]"
+          >
+            <MapPin className="size-4" /> Ver Geocalização
+          </button>
+        )}
+
+        <ul className="mt-3 space-y-2 pb-2">
+          {itens.slice(0, 40).map((o) => {
+            const st = STATUS_OCORRENCIA.find((s) => s.id === o.status)!;
+            const n = NIVEIS[nivelOcorrencia(o)];
+            return (
+              <li key={o.protocolo} className="rounded-[1.5rem] border border-border bg-card p-4 shadow-sm transition-all hover:border-primary/20">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-sm font-bold leading-snug">
+                    {metaCategoria(o.categoria).emoji} {o.categoria}
+                  </p>
+                  <span className="shrink-0 text-[10px] font-black text-muted-foreground/50 tracking-tighter">{o.protocolo}</span>
+                </div>
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
+                  {o.bairro} · {diasAberto(o)} dias aberto
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className={`rounded-full px-3 py-1 text-[10px] font-bold tracking-tight ${n.classe}`}>
+                    {n.emoji} {n.rotulo}
+                  </span>
+                  <span className={`rounded-full px-3 py-1 text-[10px] font-bold tracking-tight ${st.classe}`}>
+                    {st.emoji} {st.rotulo}
+                  </span>
+                  {atrasada(o) && (
+                    <span className="rounded-full bg-destructive/10 px-3 py-1 text-[10px] font-bold text-destructive">
+                      ⏰ Atraso Crítico
+                    </span>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );
