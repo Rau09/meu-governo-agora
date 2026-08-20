@@ -811,6 +811,7 @@ function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any
       </motion.div>
 
 
+
       {detalhe && (
         <DetalheLista
           titulo={detalhe.titulo}
