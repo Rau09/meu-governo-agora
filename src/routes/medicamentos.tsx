@@ -36,6 +36,23 @@ function Medicamentos() {
   const [filtro, setFiltro] = useState<string>("todos");
   const [detalhe, setDetalhe] = useState<Medicamento | null>(null);
   const MEDICAMENTOS_REAL = useMedicamentos();
+  const { session } = useCidadao();
+  const [isStaff, setIsStaff] = useState(false);
+
+  useEffect(() => {
+    async function checkRole() {
+      if (!session?.user) return;
+      const { data } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id);
+      
+      const roles = data?.map(r => r.role) || [];
+      setIsStaff(roles.includes('gestor') || roles.includes('admin'));
+    }
+    checkRole();
+  }, [session]);
+
 
   const stats = useMemo(() => {
     const todos = MEDICAMENTOS_REAL.length;
