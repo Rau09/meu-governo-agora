@@ -121,11 +121,12 @@ function Agendamento() {
             onChange={(e) => setServico(e.target.value)}
             className="mt-2 min-h-11 w-full rounded-2xl border border-input bg-background px-3 text-sm"
           >
-            {area.servicos.map((s) => (
+            {area.servicos.map((s: string) => (
               <option key={s} value={s}>
                 {s}
               </option>
             ))}
+
           </select>
 
           <h2 className="mt-5 flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-muted-foreground">
