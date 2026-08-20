@@ -28,9 +28,11 @@ import {
   STATUS_OCORRENCIA,
   useAgendamentos,
   useOcorrencias,
+  useServicos,
   type Ocorrencia,
   type StatusOcorrencia,
 } from "@/lib/cantu-store";
+
 import {
   NIVEIS,
   alertas,
@@ -636,7 +638,7 @@ function Painel({ onSair }: { onSair: () => void }) {
             </div>
 
             <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {[{ id: "todas", nome: "Todas" }, ...AREAS.map((a) => ({ id: a.nome, nome: a.nome }))].map((f) => (
+              {[{ id: "todas", nome: "Todas" }, ...AREAS_REAL.map((a: any) => ({ id: a.nome, nome: a.nome }))].map((f) => (
                 <button
                   key={f.id}
                   onClick={() => setFiltro(f.id)}
