@@ -350,7 +350,10 @@ function Painel({ onSair }: { onSair: () => void }) {
           <MapaOcorrencias key={mapaFiltro} lista={lista} filtroInicial={mapaFiltro} destaque={destaque} />
         </section>
 
-        {/* 4. Monitoramento por Setor */}
+        {/* 4. Protocolos de Emergência */}
+        <DetalhesEmergencia alertasAtivos={alertasAtivos} setDetalhe={setDetalhe} animar={animar} />
+
+        {/* 5. Monitoramento por Setor */}
         <MonitoramentoSetor focos={focos} setDetalhe={setDetalhe} setAcao={setAcao} animar={animar} />
 
         {/* 5. Análise IA e Recomendação */}
