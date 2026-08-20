@@ -87,18 +87,23 @@ function LibrasButton() {
   const { toggleInterpreter, isInterpreterVisible } = useLibras();
 
   return (
-    <motion.button
-      drag
-      dragConstraints={{ left: -20, right: 20, top: -400, bottom: 20 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      onClick={toggleInterpreter}
-      className={`fixed bottom-24 right-6 z-50 flex size-14 items-center justify-center rounded-full shadow-2xl transition-colors ${
-        isInterpreterVisible ? "bg-destructive text-white" : "bg-primary text-white"
-      }`}
-    >
-      <Hand className="size-7" />
-    </motion.button>
+    <div className="fixed bottom-24 right-6 z-50 flex flex-col items-center gap-1">
+      <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full uppercase tracking-widest border border-primary/20 animate-pulse">
+        Beta
+      </span>
+      <motion.button
+        drag
+        dragConstraints={{ left: -20, right: 20, top: -400, bottom: 20 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={toggleInterpreter}
+        className={`flex size-14 items-center justify-center rounded-full shadow-2xl transition-colors ${
+          isInterpreterVisible ? "bg-destructive text-white" : "bg-primary text-white"
+        }`}
+      >
+        <Hand className="size-7" />
+      </motion.button>
+    </div>
   );
 }
 
