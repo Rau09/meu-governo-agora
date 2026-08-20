@@ -64,18 +64,44 @@ export function LibrasAvatar() {
 
 
 
-              {/* Braços e mãos articuladas sobrepostos */}
-              <motion.g
-                animate={!isPaused ? { 
-                  rotate: [0, -10, 10, 0],
-                  y: [0, -2, 2, 0]
-                } : {}}
-                transition={{ repeat: Infinity, duration: 2 / playbackSpeed }}
-                style={{ originX: "60px", originY: "60px" }}
-              >
-                <path d="M35 65 L20 100" stroke="#F5D5B8" strokeWidth="8" strokeLinecap="round" />
-                <path d="M85 65 L100 100" stroke="#F5D5B8" strokeWidth="8" strokeLinecap="round" />
-              </motion.g>
+              {/* Braços e mãos articuladas funcionais */}
+              <g>
+                {/* Braço Esquerdo */}
+                <motion.g
+                  animate={!isPaused ? { 
+                    rotate: [0, -20, 20, 0],
+                    x: [0, -2, 2, 0]
+                  } : {}}
+                  transition={{ repeat: Infinity, duration: 1.5 / playbackSpeed, ease: "easeInOut" }}
+                  style={{ originX: "40px", originY: "65px" }}
+                >
+                  <path d="M40 65 L25 90" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
+                  <path d="M25 90 L30 110" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
+                  {/* Mão Esquerda Proporcional */}
+                  <g transform="translate(30, 110) rotate(15)">
+                    <circle r="4" fill="#F5D5B8" />
+                    <path d="M-2 0 L-3 5 M0 0 L0 6 M2 0 L3 5 M4 0 L5 4 M-4 0 L-5 3" stroke="#F5D5B8" strokeWidth="1.2" strokeLinecap="round" />
+                  </g>
+                </motion.g>
+
+                {/* Braço Direito */}
+                <motion.g
+                  animate={!isPaused ? { 
+                    rotate: [0, 20, -20, 0],
+                    x: [0, 2, -2, 0]
+                  } : {}}
+                  transition={{ repeat: Infinity, duration: 1.2 / playbackSpeed, ease: "easeInOut" }}
+                  style={{ originX: "80px", originY: "65px" }}
+                >
+                  <path d="M80 65 L95 90" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
+                  <path d="M95 90 L90 110" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
+                  {/* Mão Direita Proporcional */}
+                  <g transform="translate(90, 110) rotate(-15)">
+                    <circle r="4" fill="#F5D5B8" />
+                    <path d="M-2 0 L-3 5 M0 0 L0 6 M2 0 L3 5 M4 0 L5 4 M-4 0 L-5 3" stroke="#F5D5B8" strokeWidth="1.2" strokeLinecap="round" />
+                  </g>
+                </motion.g>
+              </g>
             </svg>
           </div>
 
