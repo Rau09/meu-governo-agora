@@ -4,6 +4,7 @@ import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, 
 import { AppShell, TopBar } from "@/components/AppShell";
 
 import { responder } from "@/lib/cantu-ia";
+import { useLibras } from "@/lib/libras-translator";
 
 
 type Busca = { protocolo?: string };
