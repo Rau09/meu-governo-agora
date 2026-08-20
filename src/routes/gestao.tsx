@@ -658,8 +658,7 @@ function Painel({ onSair }: { onSair: () => void }) {
               </ul>
             )}
           </section>
-        </div>
-      </motion.div>
+      </div>
 
 function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtivos: any[], setDetalhe: any, animar: boolean }) {
   return (
