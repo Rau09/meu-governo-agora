@@ -78,29 +78,6 @@ function Atendimento() {
   useEffect(() => {
     // A lógica de inicialização agora é feita no useState inicial.
   }, []);
-    const sp = new URLSearchParams(window.location.search);
-    const p = sp.get('protocolo');
-    const a = sp.get('assunto');
-    
-    if (p || a) {
-      const txt = p 
-        ? `Andamento do protocolo ${p}`
-        : decodeURIComponent(a!).startsWith('adoção-')
-          ? `Quero saber mais sobre a adoção do ${decodeURIComponent(a!).replace('adoção-', '')}`
-          : decodeURIComponent(a!);
-
-      setMsgs([
-        {
-          de: "bot",
-          texto: "Olá! Sou a assistente do NexLine. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
-        },
-        { de: "eu", texto: txt }
-      ]);
-      
-      const r = responder(txt);
-      setMsgs(prev => [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
-    }
-  }, []);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
 
