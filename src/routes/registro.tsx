@@ -496,7 +496,7 @@ function Registro() {
 
           {/* Navigation Buttons */}
           <div className="mt-8 flex gap-3">
-            {passo > 1 && (
+            {passo > 2 && (
               <button
                 type="button"
                 onClick={() => {
@@ -513,17 +513,16 @@ function Registro() {
               type="button"
               disabled={enviando}
               onClick={() => {
-                if (passo < 4) {
-                  // Basic validation before moving forward
-                  if (passo === 1 && (!form.nome || !form.cpf || !form.telefone)) {
+                if (passo < 5) { // Novo limite
+                  if (passo === 2 && (!form.nome || !form.cpf || !form.telefone)) {
                     setErro("Preencha todos os campos para continuar.");
                     return;
                   }
-                  if (passo === 2 && !form.bairro) {
+                  if (passo === 3 && !form.bairro) {
                     setErro("Informe seu bairro ou comunidade.");
                     return;
                   }
-                  if (passo === 3 && (pin.length < 6 || pin !== pin2)) {
+                  if (passo === 4 && (pin.length < 6 || pin !== pin2)) {
                     setErro(pin.length < 6 ? "O PIN deve ter 6 dígitos." : "Os PINs não conferem.");
                     return;
                   }
