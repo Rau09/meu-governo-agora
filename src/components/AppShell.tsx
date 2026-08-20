@@ -1,6 +1,9 @@
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, Building2 } from "lucide-react";
+import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, Building2, HandMetal } from "lucide-react";
+import { motion, useDragControls } from "framer-motion";
+import { useLibras } from "@/lib/libras-translator";
+import { LibrasAvatar } from "./LibrasAvatar";
 
 const nav = [
   { to: "/", label: "Início", icon: Home },
@@ -17,11 +20,15 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const constraintsRef = useRef(null);
+  const { setAvatarOpen } = useLibras();
 
   return (
     <div className="min-h-dvh bg-secondary/40" ref={constraintsRef}>
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative overflow-hidden">
         <main className="pb-28">{children}</main>
+
+        <LibrasButton onOpen={() => setAvatarOpen(true)} constraintsRef={constraintsRef} />
+        <LibrasAvatar />
 
         <nav
           aria-label="Navegação principal"
@@ -48,6 +55,24 @@ export function AppShell({
         </nav>
       </div>
     </div>
+  );
+}
+function LibrasButton({ onOpen, constraintsRef }: { onOpen: () => void; constraintsRef: React.RefObject<any> }) {
+  return (
+    <motion.button
+      drag
+      dragConstraints={constraintsRef}
+      dragElastic={0.1}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      onClick={onOpen}
+      className="fixed bottom-24 right-4 z-50 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-float border-2 border-white/20"
+    >
+      <div className="relative">
+        <HandMetal className="size-6" />
+        <span className="absolute -top-1 -right-1 bg-accent px-1 rounded text-[7px] font-black text-accent-foreground uppercase leading-none py-0.5">BETA</span>
+      </div>
+    </motion.button>
   );
 }
 
