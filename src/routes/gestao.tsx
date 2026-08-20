@@ -161,7 +161,6 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
     // Hardcoded credentials fallback for demo/immediate access
     if (email === USUARIO && senha === SENHA) {
-      console.log("Attempting legacy login for:", email);
       const { error: legacyError } = await supabase.auth.signInWithPassword({
         email: "gestor@cantu.gov.br",
         password: "password123",
@@ -171,7 +170,6 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
         onEntrar();
         return;
       }
-      console.error("Legacy login failed:", legacyError);
     }
 
     const { error } = await supabase.auth.signInWithPassword({
