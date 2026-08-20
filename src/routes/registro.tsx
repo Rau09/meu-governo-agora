@@ -308,7 +308,7 @@ function Registro() {
     <AppShell>
       <TopBar 
         titulo="Criar meu acesso" 
-        subtitulo={`Passo ${passo} de 4 — ${passo === 2 ? 'Identificação' : passo === 3 ? 'Localização' : passo === 4 ? 'Segurança' : 'Privacidade'}`} 
+        subtitulo={`Passo ${passo - 1} de 4 — ${passo === 2 ? 'Identificação' : passo === 3 ? 'Localização' : passo === 4 ? 'Segurança' : 'Privacidade'}`} 
       />
 
       <div className="-mt-5 px-4 pb-10">
