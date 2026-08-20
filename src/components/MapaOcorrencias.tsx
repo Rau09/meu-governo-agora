@@ -14,7 +14,7 @@ import {
 import { STATUS_OCORRENCIA } from "@/lib/cantu-store";
 
 // O token deve ser configurado no painel da Lovable ou via variável de ambiente VITE_MAPBOX_ACCESS_TOKEN
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || "";
+const MAPBOX_TOKEN = (import.meta.env as any)['VITE_MAPBOX_ACCESS_TOKEN'] || "";
 
 /**
  * Mapa de ocorrências REAL usando Mapbox.
