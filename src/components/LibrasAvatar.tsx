@@ -64,18 +64,17 @@ export function LibrasAvatar() {
 
 
 
-              {/* Braços e mãos articuladas funcionais */}
+              {/* Braços e mãos articuladas funcionais e conectados */}
               <g>
                 {/* Braço Esquerdo */}
                 <motion.g
                   animate={!isPaused ? { 
                     rotate: [0, -20, 20, 0],
-                    x: [0, -2, 2, 0]
                   } : {}}
                   transition={{ repeat: Infinity, duration: 1.5 / playbackSpeed, ease: "easeInOut" }}
-                  style={{ originX: "40px", originY: "65px" }}
+                  style={{ originX: "35px", originY: "65px" }}
                 >
-                  <path d="M40 65 L25 90" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
+                  <path d="M35 65 L25 90" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
                   <path d="M25 90 L30 110" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
                   {/* Mão Esquerda Proporcional */}
                   <g transform="translate(30, 110) rotate(15)">
@@ -88,12 +87,11 @@ export function LibrasAvatar() {
                 <motion.g
                   animate={!isPaused ? { 
                     rotate: [0, 20, -20, 0],
-                    x: [0, 2, -2, 0]
                   } : {}}
                   transition={{ repeat: Infinity, duration: 1.2 / playbackSpeed, ease: "easeInOut" }}
-                  style={{ originX: "80px", originY: "65px" }}
+                  style={{ originX: "85px", originY: "65px" }}
                 >
-                  <path d="M80 65 L95 90" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
+                  <path d="M85 65 L95 90" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
                   <path d="M95 90 L90 110" stroke="#F5D5B8" strokeWidth="6" strokeLinecap="round" />
                   {/* Mão Direita Proporcional */}
                   <g transform="translate(90, 110) rotate(-15)">
