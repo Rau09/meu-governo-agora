@@ -35,24 +35,26 @@ function Medicamentos() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<string>("todos");
   const [detalhe, setDetalhe] = useState<Medicamento | null>(null);
+  const MEDICAMENTOS_REAL = useMedicamentos();
 
   const stats = useMemo(() => {
-    const todos = MEDICAMENTOS.length;
-    const disponiveis = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'disponivel').length;
-    const baixo = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'baixo').length;
-    const indisponiveis = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'indisponivel').length;
+    const todos = MEDICAMENTOS_REAL.length;
+    const disponiveis = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'disponivel').length;
+    const baixo = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'baixo').length;
+    const indisponiveis = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'indisponivel').length;
     return { todos, disponiveis, baixo, indisponiveis };
-  }, []);
+  }, [MEDICAMENTOS_REAL]);
 
   const lista = useMemo(() => {
     const termo = busca.trim().toLowerCase();
-    return MEDICAMENTOS.filter((m) => {
+    return MEDICAMENTOS_REAL.filter((m) => {
       const st = statusMedicamento(m.quantidade).id;
       const casaTexto =
         !termo || m.nome.toLowerCase().includes(termo) || m.unidade.toLowerCase().includes(termo);
       return casaTexto && (filtro === "todos" || st === filtro);
     });
-  }, [busca, filtro]);
+  }, [busca, filtro, MEDICAMENTOS_REAL]);
+
 
   return (
     <AppShell >
