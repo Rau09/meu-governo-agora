@@ -1,10 +1,11 @@
 import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento } from "@/lib/cantu-store";
 
 /**
- * Inteligência Cantu Conecta.
- *
- * Especializada em triagem de saúde, causa animal e serviços urbanos regionais.
- * Focada na região da Cantuquiriguaçu, PR.
+ * Inteligência Artificial Cantu Conecta (NexLine).
+ * 
+ * Motor de processamento de linguagem natural otimizado para a região
+ * da Cantuquiriguaçu, PR. Especializada em triagem de saúde, 
+ * gestão de causa animal, serviços urbanos e suporte ao cidadão.
  */
 
 export type Resposta = { texto: string; acao?: { rotulo: string; para: string } };
@@ -162,43 +163,52 @@ function consultarProtocolo(pergunta: string): Resposta | null {
 export function responder(pergunta: string): Resposta {
   const t = tokens(pergunta);
   if (t.length === 0) {
-    return { texto: "Pode escrever sua dúvida com um pouco mais de detalhe? Assim consigo te ajudar melhor." };
+    return { 
+      texto: "Entendi. Poderia fornecer mais detalhes sobre como posso ajudar você hoje? Estou pronto para auxiliar com agendamentos, medicamentos ou serviços urbanos." 
+    };
   }
 
+  // Lógica de Prioridade: Protocolos e Solicitações
   const protocolo = consultarProtocolo(pergunta);
   if (protocolo) return protocolo;
 
+  // Lógica de Farmácia e Medicamentos
   if (t.some((x) => CHAVES_MEDICAMENTO.includes(x))) {
     const especifico = buscarMedicamento(pergunta);
     if (especifico) return especifico;
     return {
       texto:
-        "Dá para consultar o estoque de medicamentos por unidade de saúde na tela Medicamentos. Se me disser o nome do remédio, eu verifico agora.",
-      acao: { rotulo: "Ver medicamentos", para: "/medicamentos" },
+        "Você pode consultar o estoque em tempo real de todas as unidades de saúde em nossa Central de Medicamentos. Qual fármaco você está procurando?",
+      acao: { rotulo: "Consultar Medicamentos", para: "/medicamentos" },
     };
   }
 
   const medicamento = buscarMedicamento(pergunta);
   if (medicamento) return medicamento;
 
+  // Lógica de Ocorrências e Zeladoria Urbana
   if (t.some((x) => CHAVES_PROBLEMA.includes(x))) {
     return {
       texto:
-        "Use Comunicar Problema: escolha o tipo (buraco, poste, árvore caída, lixo, via, vazamento ou outro), tire uma foto, ative o GPS e descreva. Você recebe um protocolo na hora.",
-      acao: { rotulo: "Comunicar problema", para: "/ocorrencia" },
+        "Identifiquei um relato de infraestrutura. Por favor, utilize o módulo de Ocorrências para anexar uma foto e localização GPS. Isso agiliza a resposta da Secretaria de Obras.",
+      acao: { rotulo: "Relatar Ocorrência", para: "/ocorrencia" },
     };
   }
 
-  // Melhor regra por número de palavras coincidentes.
+  // Motor de Busca por Contexto (NLP Simplificado)
   let melhor: { regra: Regra; pontos: number } | null = null;
   for (const regra of REGRAS) {
-    const pontos = t.filter((x) => regra.chaves.some((c) => x === c || (x.length > 4 && c.includes(x)))).length;
+    const pontos = t.filter((x) => 
+      regra.chaves.some((c) => x === c || (x.length > 4 && c.includes(x)))
+    ).length;
     if (pontos > 0 && (!melhor || pontos > melhor.pontos)) melhor = { regra, pontos };
   }
+  
   if (melhor) return melhor.regra.resposta;
 
+  // Fallback Inteligente
   return {
     texto:
-      "Ainda estou aprendendo sobre este assunto. Posso te ajudar com agendamento de saúde, proteção animal, estoque de medicamentos e acompanhamento de protocolos na região Cantu.",
+      "Ainda não possuo uma resposta específica para esse tema, mas posso ajudar você a navegar pelos serviços de saúde, agendamentos, causa animal ou infraestrutura da Cantuquiriguaçu. O que deseja fazer?",
   };
 }
