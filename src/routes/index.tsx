@@ -56,6 +56,7 @@ function Inicio() {
     <AppShell >
 
 
+
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
 
         <div className="flex items-center justify-between">
