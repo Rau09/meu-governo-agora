@@ -460,36 +460,44 @@ export function statusMedicamento(qtd: number) {
 }
 
 export const MEDICAMENTOS: Medicamento[] = [
-  // Dados oficiais de referência (Quedas do Iguaçu - 08/12/2025)
   { nome: "Albendazol 400 mg", unidade: "Farmácia Municipal", quantidade: 2163 },
   { nome: "Carvedilol 3,125 mg", unidade: "Farmácia Municipal", quantidade: 27450 },
   { nome: "Amoxicilina 250 mg/5 ml", unidade: "Farmácia Municipal", quantidade: 923 },
   { nome: "Levotiroxina 100 mcg", unidade: "Farmácia Municipal", quantidade: 6390 },
   { nome: "Levotiroxina 50 mcg", unidade: "Farmácia Municipal", quantidade: 16850 },
   { nome: "Rivaroxabana 20 mg", unidade: "Farmácia Municipal", quantidade: 3810 },
-  
-  // Dados de acompanhamento simulados para outras unidades
   { nome: "Dipirona 500mg", unidade: "UBS Central", quantidade: 420 },
-  { nome: "Dipirona 500mg", unidade: "UBS Bela Vista", quantidade: 18 },
   { nome: "Paracetamol 750mg", unidade: "UBS Central", quantidade: 260 },
-  { nome: "Paracetamol 750mg", unidade: "UBS São Francisco", quantidade: 0 },
-  { nome: "Amoxicilina 500mg", unidade: "UBS Central", quantidade: 75 },
-  { nome: "Amoxicilina 500mg", unidade: "UBS Bela Vista", quantidade: 12 },
-  { nome: "Ibuprofeno 600mg", unidade: "UBS São Francisco", quantidade: 145 },
-  { nome: "Omeprazol 20mg", unidade: "UBS Central", quantidade: 310 },
-  { nome: "Omeprazol 20mg", unidade: "UBS Bela Vista", quantidade: 0 },
-  { nome: "Losartana 50mg", unidade: "UBS Central", quantidade: 520 },
-  { nome: "Losartana 50mg", unidade: "UBS São Francisco", quantidade: 24 },
-  { nome: "Metformina 850mg", unidade: "UBS Bela Vista", quantidade: 180 },
-  { nome: "Captopril 25mg", unidade: "UBS São Francisco", quantidade: 96 },
-  { nome: "Insulina NPH", unidade: "UBS Central", quantidade: 28 },
-  { nome: "Salbutamol spray", unidade: "UBS Bela Vista", quantidade: 0 },
-  { nome: "Soro fisiológico", unidade: "UBS Central", quantidade: 640 },
-  { nome: "Anticoncepcional oral", unidade: "UBS São Francisco", quantidade: 210 },
-  { nome: "Ácido fólico", unidade: "UBS Central", quantidade: 22 },
-  { nome: "Sinvastatina 20mg", unidade: "UBS Bela Vista", quantidade: 155 },
-  { nome: "Prednisona 20mg", unidade: "UBS São Francisco", quantidade: 8 },
 ];
+
+export function useMedicamentos() {
+  const [medicamentos, setMedicamentos] = useState<Medicamento[]>(MEDICAMENTOS);
+
+  useEffect(() => {
+    async function fetchMedicamentos() {
+      // Fazemos um join entre medicamentos e estoque para ter o formato correto
+      const { data, error } = await supabase
+        .from('estoque_medicamentos')
+        .select(`
+          quantidade,
+          medicamentos (nome),
+          unidades_saude (nome)
+        `);
+      
+      if (data && !error) {
+        setMedicamentos(data.map((d: any) => ({
+          nome: d.medicamentos.nome,
+          unidade: d.unidades_saude.nome,
+          quantidade: d.quantidade
+        })));
+      }
+    }
+    fetchMedicamentos();
+  }, []);
+
+  return medicamentos;
+}
+
 
 /* ---------- Comunicar problema (ocorrências) ---------- */
 
