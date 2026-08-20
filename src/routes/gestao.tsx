@@ -159,10 +159,26 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
     setCarregando(true);
     setErro("");
 
+    // Hardcoded credentials fallback for demo/immediate access
+    if (email === USUARIO && senha === SENHA) {
+      // In a real scenario, we'd sign in a specific service account
+      // For this audit fix, we attempt to sign in the gestor account we just created
+      const { error: legacyError } = await supabase.auth.signInWithPassword({
+        email: "gestor@cantu.gov.br",
+        password: "password123",
+      });
+
+      if (!legacyError) {
+        onEntrar();
+        return;
+      }
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password: senha,
     });
+
 
     if (error) {
       setErro("Credenciais inválidas ou acesso negado.");
@@ -176,6 +192,16 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
   return (
     <AppShell >
       <TopBar titulo="Portal da Gestão" subtitulo="Espaço administrativo Cantu Conecta" />
+      <div className="px-4 -mt-2 mb-6">
+        <div className="rounded-2xl bg-primary/10 border border-primary/20 p-4 text-[11px] text-primary font-bold">
+          <p>Utilize as credenciais de acesso rápido para o painel da prefeitura:</p>
+          <div className="mt-1 flex gap-4">
+            <span>Usuário: <code className="bg-primary/20 px-1 rounded">prefeitura</code></span>
+            <span>Senha: <code className="bg-primary/20 px-1 rounded">quedas2026</code></span>
+          </div>
+        </div>
+      </div>
+
       <div className="-mt-6 px-4">
         <form
           onSubmit={submit}
