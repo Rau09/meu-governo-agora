@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Session } from "@supabase/supabase-js";
 
 export type Agendamento = {
   id: string;
@@ -123,21 +125,83 @@ export function limparTentativas() {
 
 export function useCidadao() {
   const [cidadao, setCidadao] = useState<Cidadao | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [desbloqueado, setDesbloqueado] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // 1. Sincronizar sessão do Supabase
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    // 2. Sincronizar dados do perfil do LocalStorage (Preservando app atual)
     const sync = () => {
       setCidadao(read<Cidadao | null>(KEY_USER, null));
       setDesbloqueado(window.sessionStorage.getItem(KEY_SESSAO) === "1");
     };
     sync();
     window.addEventListener("cantu-store", sync);
-    return () => window.removeEventListener("cantu-store", sync);
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("cantu-store", sync);
+    };
   }, []);
 
-  const salvar = useCallback((c: Cidadao) => {
+  // Sincronizar Perfil do Banco quando logado
+  useEffect(() => {
+    if (!session?.user) return;
+
+    const fetchProfile = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (data && !error) {
+        // Se temos dados no banco, priorizamos eles sobre o localStorage
+        const profileData: Cidadao = {
+          nome: data.nome,
+          cpf: data.cpf || "",
+          telefone: data.telefone || "",
+          bairro: data.bairro || "",
+          municipio: data.municipio || "Quedas do Iguaçu",
+          estado: data.estado || "PR",
+          preferencias: data.preferencias || [],
+        };
+        write(KEY_USER, profileData);
+      }
+    };
+
+    fetchProfile();
+  }, [session]);
+
+  const salvar = useCallback(async (c: Cidadao) => {
+    // Salvar localmente para manter UX fluida
     window.sessionStorage.setItem(KEY_SESSAO, "1");
     write(KEY_USER, c);
+
+    // Se estiver logado no Supabase, salvar no banco também
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('profiles').upsert({
+        id: session.user.id,
+        nome: c.nome,
+        cpf: c.cpf,
+        telefone: c.telefone,
+        bairro: c.bairro,
+        municipio: c.municipio,
+        estado: c.estado,
+        preferencias: c.preferencias,
+      } as any);
+    }
   }, []);
 
   const desbloquear = useCallback(async (pin: string) => {
@@ -157,44 +221,103 @@ export function useCidadao() {
     window.dispatchEvent(new Event("cantu-store"));
   }, []);
 
-  const sair = useCallback(() => {
+  const sair = useCallback(async () => {
+    await supabase.auth.signOut();
     window.sessionStorage.removeItem(KEY_SESSAO);
     limparTentativas();
     write(KEY_USER, null);
   }, []);
 
-  return { cidadao, desbloqueado, salvar, sair, desbloquear, bloquear };
+  return { cidadao, session, desbloqueado, loading, salvar, sair, desbloquear, bloquear };
 }
 
 
 export function useAgendamentos() {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
+  const { session } = useCidadao();
 
   useEffect(() => {
-    const sync = () => setAgendamentos(read<Agendamento[]>(KEY_AGENDA, []));
-    sync();
-    window.addEventListener("cantu-store", sync);
-    return () => window.removeEventListener("cantu-store", sync);
-  }, []);
+    // Sincronizar local
+    const syncLocal = () => setAgendamentos(read<Agendamento[]>(KEY_AGENDA, []));
+    syncLocal();
+    window.addEventListener("cantu-store", syncLocal);
 
-  const criar = useCallback((a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
+    // Sincronizar remoto se logado
+    if (session?.user) {
+      const fetchRemoto = async () => {
+        const { data, error } = await supabase
+          .from('agendamentos')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .order('criado_em', { ascending: false });
+
+        if (data && !error) {
+          const remoteAgendas: Agendamento[] = data.map(d => ({
+            id: d.protocolo, // Usamos protocolo como ID visual
+            area: d.area,
+            servico: d.servico,
+            unidade: d.unidade,
+            data: d.data,
+            hora: d.hora,
+            nome: d.nome_paciente,
+            criadoEm: d.criado_em || new Date().toISOString(),
+            status: d.status as any,
+          }));
+          setAgendamentos(remoteAgendas);
+          write(KEY_AGENDA, remoteAgendas);
+        }
+      };
+      fetchRemoto();
+    }
+
+    return () => window.removeEventListener("cantu-store", syncLocal);
+  }, [session]);
+
+  const criar = useCallback(async (a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
     const atual = read<Agendamento[]>(KEY_AGENDA, []);
+    const protocolo = Math.random().toString(36).slice(2, 9).toUpperCase();
+    
     const novo: Agendamento = {
       ...a,
-      id: Math.random().toString(36).slice(2, 9).toUpperCase(),
+      id: protocolo,
       criadoEm: new Date().toISOString(),
       status: "confirmado",
     };
+
+    // Salvar local
     write(KEY_AGENDA, [novo, ...atual]);
+
+    // Salvar remoto se logado
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('agendamentos').insert({
+        user_id: session.user.id,
+        protocolo: protocolo,
+        area: a.area,
+        servico: a.servico,
+        unidade: a.unidade,
+        data: a.data,
+        hora: a.hora,
+        nome_paciente: a.nome,
+        status: "confirmado"
+      });
+    }
+
     return novo;
   }, []);
 
-  const cancelar = useCallback((id: string) => {
+  const cancelar = useCallback(async (id: string) => {
     const atual = read<Agendamento[]>(KEY_AGENDA, []);
     write(
       KEY_AGENDA,
       atual.filter((a) => a.id !== id),
     );
+
+    // Cancelar remoto (usando protocolo que mapeamos para ID)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('agendamentos').delete().eq('protocolo', id).eq('user_id', session.user.id);
+    }
   }, []);
 
   return { agendamentos, criar, cancelar };
@@ -343,6 +466,17 @@ export const CATEGORIAS_OCORRENCIA = [
 
 export type StatusOcorrencia = "recebido" | "analise" | "encaminhado" | "andamento" | "resolvido";
 
+export type Ocorrencia = {
+  protocolo: string;
+  categoria: string;
+  descricao: string;
+  foto?: string | null;
+  local?: { lat: number; lng: number } | null;
+  endereco?: string | null;
+  criadoEm: string;
+  status: StatusOcorrencia;
+};
+
 export const STATUS_OCORRENCIA: {
   id: StatusOcorrencia;
   rotulo: string;
@@ -357,46 +491,91 @@ export const STATUS_OCORRENCIA: {
   { id: "resolvido", rotulo: "Resolvido", emoji: "🟢", classe: "bg-success/15 text-success", gravidade: 0 },
 ];
 
-export type Ocorrencia = {
-  protocolo: string;
-  categoria: string;
-  descricao: string;
-  foto?: string;
-  local?: { lat: number; lng: number } | undefined;
-  endereco?: string;
-  criadoEm: string;
-  status: StatusOcorrencia;
-};
-
 export function useOcorrencias() {
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
+  const { session } = useCidadao();
 
   useEffect(() => {
-    const sync = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
-    sync();
-    window.addEventListener("cantu-store", sync);
-    return () => window.removeEventListener("cantu-store", sync);
-  }, []);
+    // Sincronizar local
+    const syncLocal = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
+    syncLocal();
+    window.addEventListener("cantu-store", syncLocal);
 
-  const criar = useCallback((o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {
+    // Sincronizar remoto se logado
+    if (session?.user) {
+      const fetchRemoto = async () => {
+        const { data, error } = await supabase
+          .from('ocorrencias')
+          .select('*')
+          .order('criado_em', { ascending: false });
+
+        if (data && !error) {
+          const remoteOcor: Ocorrencia[] = data.map(d => ({
+            protocolo: d.protocolo,
+            categoria: d.categoria,
+            descricao: d.descricao,
+            foto: d.foto_url || null,
+            local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
+            endereco: d.endereco || null,
+            criadoEm: d.criado_em || new Date().toISOString(),
+            status: d.status as StatusOcorrencia,
+          }));
+          setOcorrencias(remoteOcor);
+          write(KEY_OCOR, remoteOcor);
+        }
+      };
+      fetchRemoto();
+    }
+
+    return () => window.removeEventListener("cantu-store", syncLocal);
+  }, [session]);
+
+  const criar = useCallback(async (o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {
     const atual = read<Ocorrencia[]>(KEY_OCOR, []);
     const ano = new Date().getFullYear();
+    const protocolo = `CANTU-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+    
     const nova: Ocorrencia = {
       ...o,
-      protocolo: `CANTU-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+      protocolo: protocolo,
       criadoEm: new Date().toISOString(),
       status: "recebido",
     };
+
+    // Salvar local
     write(KEY_OCOR, [nova, ...atual]);
+
+    // Salvar remoto se logado
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('ocorrencias').insert({
+        user_id: session.user.id,
+        protocolo: protocolo,
+        categoria: o.categoria,
+        descricao: o.descricao,
+        foto_url: o.foto ?? null,
+        lat: o.local?.lat ?? null,
+        lng: o.local?.lng ?? null,
+        endereco: o.endereco ?? null,
+        status: "recebido"
+      });
+    }
+
     return nova;
   }, []);
 
-  const atualizarStatus = useCallback((protocolo: string, status: StatusOcorrencia) => {
+  const atualizarStatus = useCallback(async (protocolo: string, status: StatusOcorrencia) => {
     const atual = read<Ocorrencia[]>(KEY_OCOR, []);
     write(
       KEY_OCOR,
       atual.map((o) => (o.protocolo === protocolo ? { ...o, status } : o)),
     );
+
+    // Atualizar remoto se logado
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('ocorrencias').update({ status }).eq('protocolo', protocolo);
+    }
   }, []);
 
   return { ocorrencias, criar, atualizarStatus };

@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Users,
   Clock3,
@@ -66,27 +67,69 @@ const SENHA = "quedas2026";
 
 function Gestao() {
   const [logado, setLogado] = useState(false);
+  const [gestor, setGestor] = useState(false);
   const [pronto, setPronto] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLogado(sessionStorage.getItem(CHAVE) === "1");
-    setPronto(true);
+    async function checkAuth() {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        setLogado(false);
+        setGestor(false);
+        setLoading(false);
+        setPronto(true);
+        return;
+      }
+
+      setLogado(true);
+
+      // Verificar se é gestor no banco de dados
+      const { data: isGestor } = await supabase.rpc('has_role', {
+        _user_id: session.user.id,
+        _role: 'gestor'
+      });
+
+      const { data: isAdmin } = await supabase.rpc('has_role', {
+        _user_id: session.user.id,
+        _role: 'admin'
+      });
+
+      setGestor(!!(isGestor || isAdmin));
+      setLoading(false);
+      setPronto(true);
+    }
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkAuth();
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  if (!pronto) {
+  if (loading || !pronto) {
     return (
-      <AppShell >
-        <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito" />
+      <AppShell>
+        <div className="flex min-h-[60vh] flex-col items-center justify-center p-4 text-center">
+          <div className="size-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="mt-4 text-sm font-medium text-muted-foreground tracking-tight">Verificando credenciais...</p>
+        </div>
       </AppShell>
     );
   }
 
-  if (!logado) {
+  // Se não estiver logado OU não for gestor, mostra a tela de Login
+  // Para manter a "separação segura", não dizemos que o usuário está logado mas sem permissão,
+  // apenas tratamos como acesso restrito.
+  if (!logado || !gestor) {
     return (
       <Login
         onEntrar={() => {
-          sessionStorage.setItem(CHAVE, "1");
-          setLogado(true);
+          // A função onEntrar aqui serve para avisar o componente que o estado mudou após login
+          // A verificação real acontece no useEffect do checkAuth
         }}
       />
     );
@@ -94,26 +137,37 @@ function Gestao() {
 
   return (
     <Painel
-      onSair={() => {
-        sessionStorage.removeItem(CHAVE);
+      onSair={async () => {
+        await supabase.auth.signOut();
         setLogado(false);
+        setGestor(false);
       }}
     />
   );
 }
 
 function Login({ onEntrar }: { onEntrar: () => void }) {
-  const [usuario, setUsuario] = useState("");
+  const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (usuario.trim().toLowerCase() === USUARIO && senha === SENHA) {
-      setErro("");
-      onEntrar();
+    setCarregando(true);
+    setErro("");
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password: senha,
+    });
+
+    if (error) {
+      setErro("Credenciais inválidas ou acesso negado.");
+      setCarregando(false);
     } else {
-      setErro("Usuário ou senha inválidos.");
+      // O useEffect no componente pai detectará a mudança de sessão
+      onEntrar();
     }
   }
 
@@ -133,16 +187,17 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
           <div className="mt-8 space-y-5">
             <div>
-              <label className="text-xs font-bold text-muted-foreground" htmlFor="usuario">
-                Usuário
+              <label className="text-xs font-bold text-muted-foreground" htmlFor="email">
+                E-mail Institucional
               </label>
               <input
-                id="usuario"
-                value={usuario}
-                onChange={(e) => setUsuario(e.target.value)}
-                autoComplete="username"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 className="mt-2 w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-sm outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10"
-                placeholder="Identificador do servidor"
+                placeholder="exemplo@prefeitura.gov.br"
               />
             </div>
 
@@ -171,9 +226,10 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
           <button
             type="submit"
-            className="mt-8 w-full rounded-2xl bg-primary py-4 text-sm font-bold text-primary-foreground shadow-float transition-all hover:bg-primary/90 active:scale-[0.98]"
+            disabled={carregando}
+            className="mt-8 w-full rounded-2xl bg-primary py-4 text-sm font-bold text-primary-foreground shadow-float transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
           >
-            Entrar no Sistema
+            {carregando ? "Autenticando..." : "Entrar no Sistema"}
           </button>
           <p className="mt-5 text-center text-[11px] font-medium text-muted-foreground/60 italic">
             Acesso restrito a servidores autorizados da Cantuquiriguaçu.

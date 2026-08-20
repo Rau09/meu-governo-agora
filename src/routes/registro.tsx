@@ -6,6 +6,7 @@ import {
   User, ArrowRight, ArrowLeft 
 } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+import { lovable } from "@/integrations/lovable/index";
 import {
   forcaPin,
   gerarSalt,
@@ -162,6 +163,20 @@ function Registro() {
   }
 
   /* ---- Cadastro ---- */
+  async function handleGoogleLogin() {
+    setEnviando(true);
+    setErro("");
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}/auth/callback`,
+    });
+
+    if (result.error) {
+      setErro("Erro ao iniciar login com Google.");
+      setEnviando(false);
+    }
+    // Redirecionamento acontece automaticamente se result.redirected é true
+  }
+
   async function enviar() {
     if (form.nome.trim().split(/\s+/).length < 2) {
       setErro("Informe seu nome completo (nome e sobrenome).");
@@ -191,8 +206,14 @@ function Registro() {
     
     setErro("");
     setEnviando(true);
+
+    // No novo modelo, incentivamos o uso do login social ou e-mail/senha seguro.
+    // Para manter compatibilidade com o "PIN" local, salvamos apenas localmente 
+    // se não houver sessão ativa. Mas o ideal é convidar para login social.
     const salt = gerarSalt();
-    salvar({
+    const pinHash = await hashPin(pin, salt);
+
+    await salvar({
       nome: form.nome.trim().slice(0, 80),
       cpf: form.cpf,
       telefone: form.telefone,
@@ -201,24 +222,99 @@ function Registro() {
       estado: form.estado,
       preferencias: form.preferencias,
       salt,
-      pinHash: await hashPin(pin, salt),
+      pinHash,
       consentimentoEm: new Date().toISOString(),
     });
+
     setEnviando(false);
     navigate({ to: "/saude" });
+  }
+
+  if (!cidadao && passo === 1) {
+    return (
+      <AppShell>
+        <TopBar titulo="Criar meu acesso" subtitulo="Escolha como deseja se identificar" />
+        <div className="-mt-5 px-4 space-y-6">
+          <div className="rounded-[2.5rem] border border-border bg-card p-8 shadow-card text-center">
+            <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-primary-soft text-primary mb-6">
+              <ShieldCheck className="size-8" />
+            </div>
+            <h2 className="text-xl font-bold tracking-tight">Segurança NexLine</h2>
+            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+              Utilizamos autenticação de alto nível para proteger seus dados de saúde e cidadania.
+            </p>
+
+            <div className="mt-8 space-y-3">
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={enviando}
+                className="flex min-h-14 w-full items-center justify-center gap-3 rounded-2xl border border-border bg-card px-4 text-sm font-bold shadow-sm transition-all hover:bg-secondary active:scale-[0.98] disabled:opacity-50"
+              >
+                <svg className="size-5" viewBox="0 0 24 24">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335"
+                  />
+                </svg>
+                Entrar com Google
+              </button>
+
+              <div className="relative py-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-card px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ou continue com</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setPasso(2)}
+                className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-sm font-bold text-primary transition-all active:scale-[0.98]"
+              >
+                <UserRound className="size-5" />
+                Dados do Cidadão
+              </button>
+            </div>
+            
+            <p className="mt-6 text-[10px] text-muted-foreground/60 leading-relaxed italic">
+              Seus dados são protegidos por criptografia e Row Level Security (RLS).
+            </p>
+          </div>
+
+          <p className="px-4 text-center text-xs text-muted-foreground">
+            Ao continuar, você concorda com nossos Termos de Uso e Política de Privacidade da Cantuquiriguaçu.
+          </p>
+        </div>
+      </AppShell>
+    );
   }
 
   return (
     <AppShell>
       <TopBar 
         titulo="Criar meu acesso" 
-        subtitulo={`Passo ${passo} de 4 — ${passo === 1 ? 'Identificação' : passo === 2 ? 'Localização' : passo === 3 ? 'Segurança' : 'Privacidade'}`} 
+        subtitulo={`Passo ${passo - 1} de 4 — ${passo === 2 ? 'Identificação' : passo === 3 ? 'Localização' : passo === 4 ? 'Segurança' : 'Privacidade'}`} 
       />
 
       <div className="-mt-5 px-4 pb-10">
         {/* Progress Bar */}
         <div className="mb-6 flex gap-2">
-          {[1, 2, 3, 4].map((i) => (
+          {[2, 3, 4, 5].map((i) => (
             <div 
               key={i} 
               className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
@@ -229,115 +325,7 @@ function Registro() {
         </div>
 
         <div className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card min-h-[300px] flex flex-col">
-          {passo === 1 && (
-            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center gap-3 text-primary mb-2">
-                <User className="size-6" />
-                <h2 className="font-bold text-lg">Quem é você?</h2>
-              </div>
-              <Campo
-                label="Nome completo"
-                value={form.nome}
-                onChange={(v) => setForm({ ...form, nome: v.slice(0, 80) })}
-                placeholder="Maria da Silva"
-                autoComplete="name"
-              />
-              <Campo
-                label="CPF"
-                value={form.cpf}
-                onChange={(v) => setForm({ ...form, cpf: mascaraCpf(v) })}
-                placeholder="000.000.000-00"
-                inputMode="numeric"
-              />
-              <Campo
-                label="WhatsApp"
-                value={form.telefone}
-                onChange={(v) => setForm({ ...form, telefone: mascaraTel(v) })}
-                placeholder="(46) 90000-0000"
-                inputMode="tel"
-                autoComplete="tel"
-              />
-            </div>
-          )}
-
-          {passo === 2 && (
-            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center gap-3 text-primary mb-2">
-                <MapPin className="size-6" />
-                <h2 className="font-bold text-lg">Onde você mora?</h2>
-              </div>
-              <label className="block">
-                <span className="text-xs font-semibold text-muted-foreground">Município</span>
-                <select
-                  value={form.municipio}
-                  onChange={(e) => setForm({ ...form, municipio: e.target.value })}
-                  className="mt-1 min-h-12 w-full rounded-2xl border border-input bg-background px-3 text-sm outline-none focus:border-primary"
-                >
-                  {MUNICIPIOS_CANTU.map(m => (
-                    <option key={m} value={m}>{m}</option>
-                  ))}
-                </select>
-              </label>
-              <Campo
-                label="Bairro / Comunidade"
-                value={form.bairro}
-                onChange={(v) => setForm({ ...form, bairro: v.slice(0, 60) })}
-                placeholder="Ex: Centro"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition((pos) => {
-                      // In a real app we'd reverse geocode. 
-                      // For now, we'll just give a feedback.
-                      setErro("Localização capturada com sucesso!");
-                      setTimeout(() => setErro(""), 2000);
-                    });
-                  }
-                }}
-                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-sm font-semibold active:scale-[0.98]"
-              >
-                <MapPin className="size-4 text-primary" /> Usar minha localização
-              </button>
-              <div className="p-4 rounded-2xl bg-secondary/50 border border-border flex items-start gap-3">
-                <ShieldCheck className="size-5 text-success mt-0.5" />
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Esses dados ajudam a prefeitura a planejar serviços específicos para a sua região na Cantuquiriguaçu.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {passo === 3 && (
-            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center gap-3 text-primary mb-2">
-                <Lock className="size-6" />
-                <h2 className="font-bold text-lg">Segurança Digital</h2>
-              </div>
-              <p className="text-[11px] text-muted-foreground">
-                Crie um PIN de 6 dígitos para proteger seus dados. Ele é guardado de forma criptografada apenas neste aparelho.
-              </p>
-              <Campo
-                label="Criar PIN (6 dígitos)"
-                value={pin}
-                onChange={(v) => setPin(v.replace(/\D/g, "").slice(0, 6))}
-                placeholder="••••••"
-                inputMode="numeric"
-                secreto
-              />
-              <Campo
-                label="Repetir PIN"
-                value={pin2}
-                onChange={(v) => setPin2(v.replace(/\D/g, "").slice(0, 6))}
-                placeholder="••••••"
-                inputMode="numeric"
-                secreto
-              />
-            </div>
-          )}
-
-          {passo === 4 && (
+          {passo === 5 && (
             <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center gap-3 text-primary mb-2">
                 <ShieldCheck className="size-6" />
@@ -357,7 +345,7 @@ function Registro() {
                         const current = form.preferencias;
                         setForm({
                           ...form,
-                          preferencias: current.includes(pref) 
+                          preferencias: current.includes(pref)
                             ? current.filter(p => p !== pref)
                             : [...current, pref]
                         });
@@ -400,6 +388,107 @@ function Registro() {
             </div>
           )}
 
+          {passo === 2 && (
+            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <User className="size-6" />
+                <h2 className="font-bold text-lg">Quem é você?</h2>
+              </div>
+              <Campo
+                label="Nome completo"
+                value={form.nome}
+                onChange={(v) => setForm({ ...form, nome: v.slice(0, 80) })}
+                placeholder="Maria da Silva"
+                autoComplete="name"
+              />
+              <Campo
+                label="CPF"
+                value={form.cpf}
+                onChange={(v) => setForm({ ...form, cpf: mascaraCpf(v) })}
+                placeholder="000.000.000-00"
+                inputMode="numeric"
+              />
+              <Campo
+                label="WhatsApp"
+                value={form.telefone}
+                onChange={(v) => setForm({ ...form, telefone: mascaraTel(v) })}
+                placeholder="(46) 90000-0000"
+                inputMode="tel"
+                autoComplete="tel"
+              />
+            </div>
+          )}
+
+          {passo === 3 && (
+            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <MapPin className="size-6" />
+                <h2 className="font-bold text-lg">Onde você mora?</h2>
+              </div>
+              <label className="block">
+                <span className="text-xs font-semibold text-muted-foreground">Município</span>
+                <select
+                  value={form.municipio}
+                  onChange={(e) => setForm({ ...form, municipio: e.target.value })}
+                  className="mt-1 min-h-12 w-full rounded-2xl border border-input bg-background px-3 text-sm outline-none focus:border-primary"
+                >
+                  {MUNICIPIOS_CANTU.map(m => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+              </label>
+              <Campo
+                label="Bairro / Comunidade"
+                value={form.bairro}
+                onChange={(v) => setForm({ ...form, bairro: v.slice(0, 60) })}
+                placeholder="Ex: Centro"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                      setErro("Localização capturada com sucesso!");
+                      setTimeout(() => setErro(""), 2000);
+                    });
+                  }
+                }}
+                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-sm font-semibold active:scale-[0.98]"
+              >
+                <MapPin className="size-4 text-primary" /> Usar minha localização
+              </button>
+            </div>
+          )}
+
+          {passo === 4 && (
+            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <Lock className="size-6" />
+                <h2 className="font-bold text-lg">Segurança Digital</h2>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Crie um PIN de 6 dígitos para proteger seus dados. Ele é guardado de forma criptografada apenas neste aparelho.
+              </p>
+              <Campo
+                label="Criar PIN (6 dígitos)"
+                value={pin}
+                onChange={(v) => setPin(v.replace(/\D/g, "").slice(0, 6))}
+                placeholder="••••••"
+                inputMode="numeric"
+                secreto
+              />
+              <Campo
+                label="Repetir PIN"
+                value={pin2}
+                onChange={(v) => setPin2(v.replace(/\D/g, "").slice(0, 6))}
+                placeholder="••••••"
+                inputMode="numeric"
+                secreto
+              />
+            </div>
+          )}
+
+
           {erro && (
             <p role="alert" className="mt-4 text-center text-xs font-bold text-destructive animate-bounce">
               {erro}
@@ -408,7 +497,7 @@ function Registro() {
 
           {/* Navigation Buttons */}
           <div className="mt-8 flex gap-3">
-            {passo > 1 && (
+            {passo > 2 && (
               <button
                 type="button"
                 onClick={() => {
@@ -425,17 +514,16 @@ function Registro() {
               type="button"
               disabled={enviando}
               onClick={() => {
-                if (passo < 4) {
-                  // Basic validation before moving forward
-                  if (passo === 1 && (!form.nome || !form.cpf || !form.telefone)) {
+                if (passo < 5) { // Novo limite
+                  if (passo === 2 && (!form.nome || !form.cpf || !form.telefone)) {
                     setErro("Preencha todos os campos para continuar.");
                     return;
                   }
-                  if (passo === 2 && !form.bairro) {
+                  if (passo === 3 && !form.bairro) {
                     setErro("Informe seu bairro ou comunidade.");
                     return;
                   }
-                  if (passo === 3 && (pin.length < 6 || pin !== pin2)) {
+                  if (passo === 4 && (pin.length < 6 || pin !== pin2)) {
                     setErro(pin.length < 6 ? "O PIN deve ter 6 dígitos." : "Os PINs não conferem.");
                     return;
                   }
@@ -447,7 +535,7 @@ function Registro() {
               }}
               className="flex-1 min-h-14 rounded-2xl bg-primary text-primary-foreground font-bold shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
             >
-              {passo < 4 ? (
+              {passo < 5 ? (
                 <>Próximo Passo <ArrowRight className="size-5" /></>
               ) : (
                 enviando ? "Processando..." : "Concluir Cadastro"
