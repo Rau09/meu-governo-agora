@@ -24,16 +24,14 @@ export function LibrasAvatar({ onClose }: { onClose: () => void }) {
               animate={{
                 rotate: sinalAtual?.bracos.esquerdo.ombro || 0,
               }}
-              originX="70px"
-              originY="135px"
+              style={{ originX: "70px", originY: "135px" }}
             >
               <rect x="55" y="135" width="15" height="40" rx="7" fill="#F5D5B8" />
               <motion.g
                 animate={{
                   rotate: sinalAtual?.bracos.esquerdo.cotovelo || 0,
                 }}
-                originX="62.5px"
-                originY="170px"
+                style={{ originX: "62.5px", originY: "170px" }}
               >
                 <rect x="55" y="170" width="15" height="35" rx="7" fill="#F5D5B8" />
                 {/* Mão */}
@@ -46,16 +44,14 @@ export function LibrasAvatar({ onClose }: { onClose: () => void }) {
               animate={{
                 rotate: -(sinalAtual?.bracos.direito.ombro || 0),
               }}
-              originX="130px"
-              originY="135px"
+              style={{ originX: "130px", originY: "135px" }}
             >
               <rect x="130" y="135" width="15" height="40" rx="7" fill="#F5D5B8" />
               <motion.g
                 animate={{
                   rotate: -(sinalAtual?.bracos.direito.cotovelo || 0),
                 }}
-                originX="137.5px"
-                originY="170px"
+                style={{ originX: "137.5px", originY: "170px" }}
               >
                 <rect x="130" y="170" width="15" height="35" rx="7" fill="#F5D5B8" />
                 {/* Mão */}

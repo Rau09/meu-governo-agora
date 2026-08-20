@@ -8,7 +8,7 @@ import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento, use
  * gestão de causa animal, serviços urbanos e suporte ao cidadão.
  */
 
-export type Resposta = { texto: string; acao?: { rotulo: string; para: string } };
+export type Resposta = { texto: string; acao?: { rotulo: string; para: string; libras?: boolean } };
 
 function normalizar(p: string) {
   return p
