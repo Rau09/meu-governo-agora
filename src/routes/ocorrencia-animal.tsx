@@ -102,13 +102,13 @@ function ComunicarProblemaAnimal() {
     try {
       let fotoUrl = null;
       if (foto) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("Sessão expirada");
         const fileExt = foto.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `animais/${fileName}`;
+        const filePath = `${user.id}/animais/${crypto.randomUUID()}.${fileExt}`;
         const { error: uploadError } = await supabase.storage.from('ocorrencias').upload(filePath, foto);
         if (uploadError) throw uploadError;
-        const { data: { publicUrl } } = supabase.storage.from('ocorrencias').getPublicUrl(filePath);
-        fotoUrl = publicUrl;
+        fotoUrl = filePath;
       }
 
       const nova = await criar({

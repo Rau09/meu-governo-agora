@@ -2,6 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Session } from "@supabase/supabase-js";
 
+/** Gera URL assinada temporária para fotos guardadas no bucket privado "ocorrencias". */
+async function resolverFoto(valor: string | null | undefined): Promise<string | null> {
+  if (!valor) return null;
+  if (valor.startsWith("http") || valor.startsWith("data:")) return valor;
+  const { data } = await supabase.storage.from("ocorrencias").createSignedUrl(valor, 60 * 60);
+  return data?.signedUrl ?? null;
+}
+
 export type Agendamento = {
   id: string;
   area: string;
@@ -612,16 +620,16 @@ export function useOcorrencias() {
         const { data, error } = await query.order('criado_em', { ascending: false });
 
         if (data && !error) {
-          const remoteOcor: Ocorrencia[] = data.map(d => ({
+          const remoteOcor: Ocorrencia[] = await Promise.all(data.map(async d => ({
             protocolo: d.protocolo,
             categoria: d.categoria,
             descricao: d.descricao,
-            foto: d.foto_url || null,
+            foto: await resolverFoto(d.foto_url),
             local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
             endereco: d.endereco || null,
             criadoEm: d.criado_em || new Date().toISOString(),
             status: d.status as StatusOcorrencia,
-          }));
+          })));
           setOcorrencias(remoteOcor);
           // Só salva no local se for o próprio usuário
           if (!isGestor && !isAdmin) {
@@ -745,16 +753,16 @@ export function useOcorrenciasAnimais() {
 
         const { data, error } = await query.order('criado_em', { ascending: false });
         if (data && !error) {
-          const remote: OcorrenciaAnimal[] = data.map(d => ({
+          const remote: OcorrenciaAnimal[] = await Promise.all(data.map(async d => ({
             protocolo: d.protocolo,
             categoria: d.categoria,
             descricao: d.descricao,
-            foto: d.foto_url,
+            foto: await resolverFoto(d.foto_url),
             local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
             endereco: d.endereco,
             criadoEm: d.criado_em || new Date().toISOString(),
             status: d.status || "recebido",
-          }));
+          })));
           setOcorrencias(remote);
           if (!isGestor && !isAdmin) {
             write(KEY_OCOR_ANIMAL, remote);
