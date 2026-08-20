@@ -56,25 +56,49 @@ function Inicio() {
     <AppShell >
 
       <div className="bg-primary/5 border-b border-primary/10 px-5 py-4 text-[9px] font-medium text-primary/60 leading-relaxed whitespace-pre-line">
-        Agora melhore a funcionalidade Causa Animal mantendo o design atual do Nexline.
-        
-        NÃO faça redesign geral.
-        
-        ADOÇÃO
-        Os animais devem poder possuir dados reais:
-        * foto; * nome; * idade; * porte; * sexo; * localização; * vacinação; * castração; * descrição; * status de adoção.
-        
-        OCORRÊNCIAS
-        Permita registrar:
-        * foto; * descrição; * categoria; * localização; * GPS quando autorizado; * data; * status.
-        
-        Exemplos: Animal perdido, Animal encontrado, Animal ferido, Abandono, Maus-tratos.
-        As ocorrências devem utilizar a mesma arquitetura segura de Problemas.
-        Cidadãos só podem visualizar informações públicas e suas próprias ocorrências.
-        Dados internos devem permanecer administrativos.
-        
-        Não invente dados para substituir dados reais.
-        Preserve todas as demais funções do Nexline.
+        Agora melhore o Assistente do Nexline para que ele seja realmente útil, sem permitir acesso indevido a informações.
+
+        ⚠️ NÃO transforme o assistente em um sistema com acesso irrestrito ao banco.
+
+        O Assistente deve responder com base apenas nas informações às quais o usuário possui permissão.
+
+        Exemplos:
+
+        “Qual UBS está mais próxima?”
+
+        → consultar dados públicos/localização.
+
+        “Onde posso encontrar meu medicamento?”
+
+        → consultar disponibilidade permitida.
+
+        “Qual é o status do meu problema?”
+
+        → consultar somente as solicitações daquele usuário.
+
+        “Quero registrar um problema.”
+
+        → orientar ou iniciar o fluxo existente.
+
+        O assistente NÃO deve:
+
+        * revelar dados de outros cidadãos;
+
+        * revelar dados administrativos privados;
+
+        * revelar credenciais;
+
+        * revelar informações internas;
+
+        * inventar informações.
+
+        Se não souber algo, deve informar que não possui aquela informação.
+
+        Utilize backend/Edge Functions quando necessário para proteger chaves e integrações.
+
+        Não coloque chaves secretas diretamente no frontend.
+
+        Preserve a interface atual do Assistente.
       </div>
 
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
