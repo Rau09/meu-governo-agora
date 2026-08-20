@@ -6,6 +6,7 @@ import {
   User, ArrowRight, ArrowLeft 
 } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
+import { lovable } from "@/integrations/lovable/index";
 import {
   forcaPin,
   gerarSalt,
