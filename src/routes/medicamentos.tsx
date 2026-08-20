@@ -172,12 +172,10 @@ function Medicamentos() {
                               }`}>
                                 {st.rotulo}
                               </span>
-                              {isDemo && (
-                                <span className="text-[9px] font-bold text-muted-foreground/60 italic">Ref: 08/12/2025</span>
-                              )}
                             </div>
                           </div>
                         </div>
+
                         <ChevronRight className="size-5 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
                       </div>
                       
@@ -303,18 +301,15 @@ function Medicamentos() {
              <p className="text-sm font-bold text-primary mt-1">{detalhe.unidade}</p>
              
              <div className="mt-8 space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+                 <div className="grid grid-cols-1 gap-4">
                    <div className="rounded-2xl bg-secondary/50 p-4">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Estoque</p>
-                      <p className="text-xl font-black text-foreground mt-1">{detalhe.quantidade} unid.</p>
-                   </div>
-                   <div className="rounded-2xl bg-secondary/50 p-4">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status</p>
-                      <p className={`text-sm font-black mt-1 ${statusMedicamento(detalhe.quantidade).id === 'indisponivel' ? 'text-destructive' : 'text-success'}`}>
-                        {statusMedicamento(detalhe.quantidade).rotulo}
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status de Disponibilidade</p>
+                      <p className={`text-lg font-black mt-1 ${statusMedicamento(detalhe.quantidade).id === 'indisponivel' ? 'text-destructive' : statusMedicamento(detalhe.quantidade).id === 'baixo' ? 'text-warning' : 'text-success'}`}>
+                        {statusMedicamento(detalhe.quantidade).emoji} {statusMedicamento(detalhe.quantidade).rotulo}
                       </p>
                    </div>
                 </div>
+
                 
                 <div className="space-y-4">
                    <div className="flex items-start gap-3">
