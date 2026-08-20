@@ -60,12 +60,24 @@ function Atendimento() {
     },
   ]);
 
-  const mounted = useRef(false);
   useEffect(() => {
-    if (mounted.current) return;
-    mounted.current = true;
+    const searchParams = new URLSearchParams(window.location.search);
+    const prot = searchParams.get('protocolo');
+    const ass = searchParams.get('assunto');
     
-    console.log("Atendimento useEffect trigger:", { protocolo, assunto });
+    console.log("Atendimento raw search:", { prot, ass });
+    
+    if (prot) {
+      enviar(`Andamento do protocolo ${prot}`);
+    } else if (ass) {
+      const decoded = decodeURIComponent(ass);
+      if (decoded.startsWith('adoção-')) {
+        enviar(`Quero saber mais sobre a adoção do ${decoded.replace('adoção-', '')}`);
+      } else {
+        enviar(decoded);
+      }
+    }
+  }, []);
     if (protocolo) {
       enviar(`Andamento do protocolo ${protocolo}`);
     } else if (assunto) {
