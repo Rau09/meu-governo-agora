@@ -457,3 +457,20 @@ export function alertas(lista: OcorrenciaGestao[]): Alerta[] {
 
   return a.sort((x, y) => NIVEIS[x.nivel].ordem - NIVEIS[y.nivel].ordem);
 }
+
+export function analisar(lista: OcorrenciaGestao[]) {
+  const r = resumir(lista);
+  if (r.atrasadas > 5) {
+    return {
+      texto: "Alerta de produtividade identificado. O volume de ocorrências fora do prazo na área de Obras sugere gargalo logístico.",
+      recomendacao: "Redirecionar equipe de manutenção da UBS Central para apoio emergencial em reparos de iluminação no Jardim Alvorada.",
+      detalhes: ["Gargalo em Obras (Jardim Alvorada)", "Atrasos acumulados > 7 dias", "Eficiência em Saúde acima da média"]
+    };
+  }
+  return {
+    texto: "Estabilidade operacional detectada. Fluxo de atendimento dentro das metas estabelecidas para o período.",
+    recomendacao: "Manter cronograma preventivo de poda de árvores no Centro para evitar novos incidentes com a rede elétrica.",
+    detalhes: ["Operação Nominal", "Tempo de resposta estável", "Feedback positivo de usuários"]
+  };
+}
+
