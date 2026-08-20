@@ -486,10 +486,180 @@ function Painel({ onSair }: { onSair: () => void }) {
             </div>
           </div>
         </section>
+        {/* 7. Monitoramento Detalhado (Substitui Log e Indicadores Antigos) */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-base font-bold text-foreground">Operação & Monitoramento</h2>
+            <div className="flex items-center gap-2">
+              <span className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-sm">
+                <LayoutDashboard className="size-4" />
+              </span>
+            </div>
+          </div>
+
+          <ul className="grid grid-cols-2 gap-4">
+            {indices.map((ind, i) => (
+              <motion.li 
+                key={ind.grupo}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 * i }}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDetalhe({
+                      titulo: ind.grupo,
+                      nota: `${ind.abertas} abertas · ${ind.execucao} em execução · ${ind.atrasadas} atrasadas`,
+                      itens: ind.itens,
+                    })
+                  }
+                  className="group h-full w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-card transition-all duration-300 hover:border-primary/30 hover:shadow-float active:scale-[0.98]"
+                >
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{ind.grupo}</p>
+                  <div className="mt-3 flex items-end justify-between">
+                    <p className="font-display text-3xl font-black text-foreground tracking-tighter">{ind.abertas}</p>
+                    <div className={`mb-1 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black uppercase ${ind.tendencia >= 0 ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"}`}>
+                      {ind.tendencia >= 0 ? "↑" : "↓"} {Math.abs(ind.tendencia)}%
+                    </div>
+                  </div>
+                  
+                  <div className="mt-5 space-y-2">
+                    <div className="flex items-center justify-between text-[10px] font-bold">
+                      <span className="text-muted-foreground">Execução</span>
+                      <span className="text-foreground">{ind.execucao}</span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(ind.execucao / (ind.abertas || 1)) * 100}%` }}
+                        className="h-full bg-primary/60" 
+                      />
+                    </div>
+                    {ind.atrasadas > 0 && (
+                      <p className="text-[9px] font-black text-destructive uppercase tracking-widest flex items-center gap-1">
+                        <AlertTriangle className="size-2.5" /> {ind.atrasadas} críticas em atraso
+                      </p>
+                    )}
+                  </div>
+                </button>
+              </motion.li>
+            ))}
+          </ul>
+        </section>
+
+        {/* 8. Demanda Consolidada por Área */}
+        <section className="rounded-[2.5rem] border border-border bg-card p-7 shadow-card">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-base font-bold text-foreground tracking-tight">Carga de Trabalho por Setor</h2>
+            <Filter className="size-4 text-muted-foreground/40" />
+          </div>
+          <ul className="space-y-4">
+            {porArea.map((a, i) => (
+              <li key={a.nome}>
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider mb-1.5">
+                  <span className="text-muted-foreground">{a.nome}</span>
+                  <span className="text-primary">{a.total} agendamentos</span>
+                </div>
+                <div className="h-3 overflow-hidden rounded-full bg-secondary/50 border border-border/10 p-0.5">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: animar ? `${a.pct}%` : "0%" }}
+                    transition={{ duration: 1, delay: 0.3 + i * 0.1 }}
+                    className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary shadow-sm"
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* 9. Solicitações e Fila de Atendimento */}
+        <div className="grid grid-cols-1 gap-6">
+          <section className="space-y-4">
+            <div className="flex items-center justify-between px-2">
+              <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                Ocorrências Recentes
+              </h2>
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-black text-primary">
+                {ocorrencias.length} TOTAL
+              </span>
+            </div>
+
+            {ocorrencias.length === 0 ? (
+              <div className="rounded-[2rem] border border-dashed border-border bg-card/50 p-10 text-center">
+                <Inbox className="size-10 text-muted-foreground/20 mx-auto mb-3" />
+                <p className="text-xs font-bold text-muted-foreground italic">
+                  Nenhum registro pendente no sistema.
+                </p>
+              </div>
+            ) : (
+              <ul className="space-y-4">
+                {ocorrencias.slice(0, 5).map((o, i) => (
+                  <CardOcorrencia key={o.protocolo} ocorrencia={o} indice={i} onStatus={atualizarStatus} />
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-center justify-between px-2">
+              <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                Fila de Atendimentos
+              </h2>
+              <span className="rounded-full bg-secondary px-3 py-1 text-[10px] font-black text-muted-foreground">
+                {fila.length} AGENDADOS
+              </span>
+            </div>
+
+            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {[{ id: "todas", nome: "Todas" }, ...AREAS.map((a) => ({ id: a.nome, nome: a.nome }))].map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setFiltro(f.id)}
+                  className={`shrink-0 rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${
+                    filtro === f.id
+                      ? "bg-primary text-primary-foreground shadow-float"
+                      : "bg-card border border-border text-muted-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {f.nome}
+                </button>
+              ))}
+            </div>
+
+            {fila.length === 0 ? (
+              <div className="rounded-[2rem] border border-dashed border-border bg-card/50 p-10 text-center">
+                <p className="text-xs font-bold text-muted-foreground italic">
+                  Fila vazia para este setor.
+                </p>
+              </div>
+            ) : (
+              <ul className="space-y-3">
+                {fila.slice(0, 10).map((a, i) => (
+                  <motion.li
+                    key={a.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-4 rounded-3xl border border-border bg-card p-5 shadow-sm transition-all hover:shadow-md"
+                  >
+                    <div className="flex size-10 items-center justify-center rounded-2xl bg-success/10 text-success">
+                      <CheckCircle2 className="size-5" />
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                      <p className="text-xs font-bold truncate">{a.servico}</p>
+                      <p className="text-[10px] font-medium text-muted-foreground truncate">
+                        {a.nome} · {a.unidade} · {new Date(a.data + "T00:00").toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                  </motion.li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
       </motion.div>
-    </AppShell>
-  );
-}
 
 function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtivos: any[], setDetalhe: any, animar: boolean }) {
   return (
