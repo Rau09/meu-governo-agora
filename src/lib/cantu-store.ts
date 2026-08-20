@@ -710,8 +710,8 @@ export function useAnimais() {
           porte: d.porte,
           sexo: d.sexo,
           localizacao: d.localizacao,
-          vacinado: d.vacinado,
-          castrado: d.castrado,
+          vacinado: !!d.vacinado,
+          castrado: !!d.castrado,
           descricao: d.descricao,
           status: d.status as any,
           fotos: d.fotos || [],
@@ -752,8 +752,8 @@ export function useOcorrenciasAnimais() {
             foto: d.foto_url,
             local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
             endereco: d.endereco,
-            criadoEm: d.criado_em,
-            status: d.status,
+            criadoEm: d.criado_em || new Date().toISOString(),
+            status: d.status || "recebido",
           }));
           setOcorrencias(remote);
           if (!isGestor && !isAdmin) {
