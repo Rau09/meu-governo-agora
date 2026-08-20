@@ -70,15 +70,30 @@ function Atendimento() {
     fim.current?.scrollIntoView({ behavior: "smooth" });
   }, [msgs]);
 
-  function enviar(valor: string) {
+  async function enviar(valor: string) {
     const pergunta = valor.trim();
     if (!pergunta) return;
+    const historico = msgs.slice(-8).map((m) => ({ de: m.de, texto: m.texto }));
     setMsgs((m) => [...m, { de: "eu", texto: pergunta }]);
     setTexto("");
-    setTimeout(() => {
-      const r = responder(pergunta);
-      setMsgs((m) => [...m, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
-    }, 450);
+
+    const r = responder(pergunta);
+    if (!r.generico) {
+      setTimeout(() => {
+        setMsgs((m) => [...m, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
+      }, 400);
+      return;
+    }
+
+    setPensando(true);
+    try {
+      const ia = await perguntarIA({ data: { pergunta, historico } });
+      setMsgs((m) => [...m, { de: "bot", texto: ia.texto || r.texto }]);
+    } catch {
+      setMsgs((m) => [...m, { de: "bot", texto: r.texto }]);
+    } finally {
+      setPensando(false);
+    }
   }
 
   return (
