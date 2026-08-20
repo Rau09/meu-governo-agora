@@ -137,11 +137,12 @@ function Agendamento() {
             onChange={(e) => setUnidade(e.target.value)}
             className="mt-2 min-h-11 w-full rounded-2xl border border-input bg-background px-3 text-sm"
           >
-            {area.unidades.map((u) => (
+            {area.unidades.map((u: string) => (
               <option key={u} value={u}>
                 {u}
               </option>
             ))}
+
           </select>
         </section>
 
