@@ -848,7 +848,7 @@ function DetalheLista({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 p-0 sm:items-center">
-      <div className="animate-in max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-[2.5rem] border border-border bg-background p-6 shadow-float slide-in-from-bottom-4 duration-300 sm:rounded-[2.5rem]">
+      <div className="animate-in max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-[2.5rem] border border-border bg-background p-7 shadow-float slide-in-from-bottom-4 duration-300 sm:rounded-[2.5rem]">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-lg font-bold text-foreground">{titulo}</h3>
