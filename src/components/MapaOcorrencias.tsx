@@ -85,10 +85,12 @@ export function MapaOcorrencias({
     visiveis.forEach(o => {
       if (!o.lat || !o.lng || !map.current) return;
 
-      if (markers.current[o.protocolo]) {
+      const existingMarker = markers.current[o.protocolo];
+      if (existingMarker) {
         // Marcador já existe, atualizar posição ou realce se necessário
-        markers.current[o.protocolo].setLngLat([o.lng, o.lat]);
+        existingMarker.setLngLat([o.lng, o.lat]);
       } else {
+
 
         // Criar elemento do marcador customizado
         const el = document.createElement("div");
