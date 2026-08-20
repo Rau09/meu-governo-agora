@@ -649,8 +649,8 @@ function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtiv
             <AlertTriangle className="size-6 text-destructive" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-foreground tracking-tight">Protocolos de Emergência</h2>
-            <p className="text-[11px] font-medium text-muted-foreground">Intervenção imediata recomendada pela IA Cantu.</p>
+            <h2 className="text-lg font-bold text-foreground tracking-tight">Célula de Resposta Imediata</h2>
+            <p className="text-[11px] font-medium text-muted-foreground">Alertas críticos priorizados pela análise regional preditiva.</p>
           </div>
         </div>
         <span className="rounded-full bg-destructive px-3 py-1 text-[10px] font-black text-white shadow-sm">
