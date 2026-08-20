@@ -60,7 +60,12 @@ function Atendimento() {
     },
   ]);
 
+  const mounted = useRef(false);
   useEffect(() => {
+    if (mounted.current) return;
+    mounted.current = true;
+    
+    console.log("Atendimento useEffect trigger:", { protocolo, assunto });
     if (protocolo) {
       enviar(`Andamento do protocolo ${protocolo}`);
     } else if (assunto) {
