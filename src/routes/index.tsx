@@ -54,6 +54,28 @@ function Inicio() {
 
   return (
     <AppShell >
+      {/* Visual Text Edit Request - Task Priority Banner */}
+      <div className="bg-primary/10 border-b border-primary/20 px-5 py-3 text-[10px] font-bold text-primary/80 leading-relaxed uppercase tracking-widest hidden">
+        Agora substitua SOMENTE o mapa atual do Nexline por um mapa REAL usando Mapbox.
+        ⚠️ ESTA É UMA ALTERAÇÃO ISOLADA.
+        NÃO altere:
+        * home; * menu; * login; * perfil; * saúde; * remédios; * causa animal; * assistente; * problemas; * outras páginas; * cores; * tipografia; * layout geral.
+        Utilize Mapbox para mostrar dados geográficos reais.
+        O mapa deve:
+        * mostrar ruas reais; * permitir zoom; * permitir navegação; * funcionar no celular e computador; * centralizar inicialmente em Quedas do Iguaçu, Paraná; * utilizar dados reais de localização.
+        Integre as ocorrências já existentes no Supabase.
+        Cada ocorrência com latitude/longitude deve aparecer no mapa.
+        Utilize marcadores discretos por status:
+        🔴 crítico 🟠 atrasado 🟡 em análise 🔵 em execução 🟢 resolvido
+        Ao selecionar um marcador, mostrar informações permitidas ao usuário.
+        Não mostrar informações administrativas privadas para cidadãos.
+        Não criar ruas fictícias. Não criar dados fictícios permanentes. Não inventar chave do Mapbox.
+        Se a chave não estiver configurada, utilize uma variável de ambiente apropriada e informe exatamente o que precisa ser configurado.
+        Antes de modificar o mapa atual, faça backup lógico da implementação existente ou preserve o componente atual de forma que possa ser revertido.
+        Depois teste:
+        * mapa; * marcadores; * zoom; * GPS quando aplicável; * celular; * desktop; * restante do aplicativo.
+      </div>
+
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
