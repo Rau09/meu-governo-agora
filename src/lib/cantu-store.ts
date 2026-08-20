@@ -301,6 +301,25 @@ export function useAgendamentos() {
   }, [session]);
 
   const criar = useCallback(async (a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    // Verificar conflitos no banco (remoto)
+    if (session?.user) {
+      const { data: conflitos, error: checkError } = await supabase
+        .from('agendamentos')
+        .select('id')
+        .eq('unidade', a.unidade)
+        .eq('data', a.data)
+        .eq('hora', a.hora)
+        .eq('servico', a.servico)
+        .limit(1);
+
+      if (checkError) throw new Error("Erro ao verificar disponibilidade.");
+      if (conflitos && conflitos.length > 0) {
+        throw new Error("Este horário já está preenchido para este serviço nesta unidade.");
+      }
+    }
+
     const atual = read<Agendamento[]>(KEY_AGENDA, []);
     const protocolo = Math.random().toString(36).slice(2, 9).toUpperCase();
     
@@ -315,9 +334,8 @@ export function useAgendamentos() {
     write(KEY_AGENDA, [novo, ...atual]);
 
     // Salvar remoto se logado
-    const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
-      await supabase.from('agendamentos').insert({
+      const { error } = await supabase.from('agendamentos').insert({
         user_id: session.user.id,
         protocolo: protocolo,
         area: a.area,
@@ -328,6 +346,10 @@ export function useAgendamentos() {
         nome_paciente: a.nome,
         status: "confirmado"
       });
+      if (error) {
+        console.error("Erro ao salvar agendamento no Supabase:", error);
+        throw new Error("Erro ao salvar agendamento no servidor.");
+      }
     }
 
     return novo;
