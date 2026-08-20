@@ -553,10 +553,10 @@ export function useOcorrencias() {
         protocolo: protocolo,
         categoria: o.categoria,
         descricao: o.descricao,
-        foto_url: o.foto,
-        lat: o.local?.lat,
-        lng: o.local?.lng,
-        endereco: o.endereco,
+        foto_url: o.foto ?? null,
+        lat: o.local?.lat ?? null,
+        lng: o.local?.lng ?? null,
+        endereco: o.endereco ?? null,
         status: "recebido"
       });
     }
