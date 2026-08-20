@@ -90,34 +90,40 @@ export function MapaOcorrencias({
         ))}
       </div>
 
-      <div className="relative mt-3 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-muted/30">
-        {/* Camadas do Mapa com Profundidade */}
-        <div className="absolute inset-0 opacity-20">
+      <div className="relative mt-3 aspect-[16/9] w-full overflow-hidden rounded-[2rem] border border-border bg-[#0f172a] shadow-inner">
+        {/* Grid Cibernético / Blueprint */}
+        <div className="absolute inset-0 opacity-10">
           <svg viewBox="0 0 100 56" className="size-full" preserveAspectRatio="none">
             <defs>
-              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-border" />
+              <pattern id="grid-3d" width="8" height="8" patternUnits="userSpaceOnUse">
+                <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#3b82f6" strokeWidth="0.2" />
               </pattern>
             </defs>
-            <rect width="100" height="56" fill="url(#grid)" />
+            <rect width="100" height="56" fill="url(#grid-3d)" />
           </svg>
         </div>
 
-        {/* Malha Viária Profissional */}
-        <svg viewBox="0 0 100 56" className="absolute inset-0 size-full" aria-hidden="true">
-          {/* Áreas Verdes / Parques */}
-          <path d="M10 10 Q 25 5 40 15 T 70 10 T 90 20 L 95 40 Q 80 50 60 45 T 30 50 T 5 35 Z" className="fill-success/5" />
+        {/* Camada de Topografia / Elevação */}
+        <svg viewBox="0 0 100 56" className="absolute inset-0 size-full opacity-5" preserveAspectRatio="none">
+          <path d="M0 10 Q 20 5 40 15 T 70 10 T 100 20 L 100 56 L 0 56 Z" fill="#3b82f6" />
+        </svg>
+
+        {/* Malha Viária de Alta Precisão */}
+        <svg viewBox="0 0 100 56" className="absolute inset-0 size-full" aria-hidden="true" preserveAspectRatio="none">
+          {/* Rios / Zonas Hídricas */}
+          <path d="M-10 40 C 20 45, 40 35, 60 50 S 80 40, 110 45" className="fill-none stroke-blue-500/20" strokeWidth="4" />
           
-          {/* Vias Principais */}
-          <g className="stroke-border/60" fill="none" strokeWidth="1.2" strokeLinecap="round">
-            <path d="M0 20 H100" />
-            <path d="M0 40 H100" />
-            <path d="M30 0 V56" />
-            <path d="M70 0 V56" />
+          {/* Rodovias e Acessos */}
+          <g className="stroke-white/5" fill="none" strokeWidth="0.8" strokeLinecap="round">
+            <path d="M0 15 L 100 15" />
+            <path d="M0 45 L 100 45" />
+            <path d="M25 0 L 25 56" />
+            <path d="M75 0 L 75 56" />
           </g>
 
-          {/* Vias Expressas / Eixo Principal */}
-          <path d="M0 28 C 30 25, 60 35, 100 30" className="fill-none stroke-primary/20" strokeWidth="3" strokeLinecap="round" />
+          {/* Eixo Arterial Regional */}
+          <path d="M0 30 C 25 28, 50 38, 100 32" className="fill-none stroke-primary/30" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M0 30 C 25 28, 50 38, 100 32" className="fill-none stroke-primary/60" strokeWidth="0.5" strokeDasharray="2 2" />
         </svg>
 
         {/* Nomes dos Bairros com Estética Clean */}
