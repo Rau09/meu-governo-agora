@@ -470,34 +470,12 @@ export type Ocorrencia = {
   protocolo: string;
   categoria: string;
   descricao: string;
-  foto: string | undefined;
-  local: { lat: number; lng: number } | undefined;
-  endereco: string | undefined;
+  foto?: string | null;
+  local?: { lat: number; lng: number } | null;
+  endereco?: string | null;
   criadoEm: string;
   status: StatusOcorrencia;
 };
-
-export const STATUS_OCORRENCIA: {
-  id: StatusOcorrencia;
-  rotulo: string;
-  emoji: string;
-  classe: string;
-  gravidade: number; // 1 (Normal) a 4 (Emergência)
-}[] = [
-  { id: "recebido", rotulo: "Recebido", emoji: "📥", classe: "bg-secondary text-muted-foreground", gravidade: 1 },
-  { id: "analise", rotulo: "Em análise", emoji: "🟡", classe: "bg-accent-soft text-accent-foreground", gravidade: 2 },
-  { id: "encaminhado", rotulo: "Encaminhado", emoji: "📤", classe: "bg-primary-soft text-primary", gravidade: 2 },
-  { id: "andamento", rotulo: "Em andamento", emoji: "🔵", classe: "bg-info text-white", gravidade: 3 },
-  { id: "resolvido", rotulo: "Resolvido", emoji: "🟢", classe: "bg-success/15 text-success", gravidade: 0 },
-];
-
-export type Ocorrencia = {
-  protocolo: string;
-  categoria: string;
-  descricao: string;
-  foto?: string;
-  local?: { lat: number; lng: number } | undefined;
-  endereco?: string;
   criadoEm: string;
   status: StatusOcorrencia;
 };
