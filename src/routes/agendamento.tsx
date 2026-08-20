@@ -59,12 +59,13 @@ function Agendamento() {
 
   // Efeito para sincronizar serviço e unidade quando a área muda
   useEffect(() => {
-    if (servicoInicial && AREAS_REAL.find(a => a.id === areaId)?.servicos.includes(servicoInicial)) {
+    if (!area) return;
+    if (servicoInicial && area.servicos.includes(servicoInicial)) {
       return;
     }
     setServico(area.servicos[0]);
     setUnidade(area.unidades[0]);
-  }, [areaId, area, AREAS_REAL, servicoInicial]);
+  }, [areaId, area, servicoInicial]);
 
   function trocarArea(id: string) {
     setAreaId(id);
