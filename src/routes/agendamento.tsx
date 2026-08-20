@@ -47,6 +47,8 @@ function Agendamento() {
   const [data, setData] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10));
   const [hora, setHora] = useState<string>("");
   const [feito, setFeito] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
 
   // Efeito para sincronizar serviço e unidade quando a área muda
   useEffect(() => {
