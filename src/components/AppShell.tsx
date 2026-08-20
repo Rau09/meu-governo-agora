@@ -20,11 +20,15 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const constraintsRef = useRef(null);
+  const { setAvatarOpen } = useLibras();
 
   return (
     <div className="min-h-dvh bg-secondary/40" ref={constraintsRef}>
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative overflow-hidden">
         <main className="pb-28">{children}</main>
+
+        <LibrasButton onOpen={() => setAvatarOpen(true)} constraintsRef={constraintsRef} />
+        <LibrasAvatar />
 
         <nav
           aria-label="Navegação principal"
