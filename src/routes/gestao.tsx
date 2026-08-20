@@ -331,7 +331,7 @@ function Painel({ onSair }: { onSair: () => void }) {
       </motion.div>
 
       {detalhe && (
-        <DetalheLista titulo={detalhe.titulo} nota={detalhe.nota} itens={detalhe.itens} onFechar={() => setDetalhe(null)} onMapa={(itens) => irParaMapa(itens)} />
+        <DetalheLista titulo={detalhe.titulo} nota={detalhe.nota} itens={detalhe.itens} onFechar={() => setDetalhe(null)} onMapa={(itens: OcorrenciaGestao[]) => irParaMapa(itens)} />
       )}
     </AppShell>
   );
