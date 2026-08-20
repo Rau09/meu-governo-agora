@@ -2,6 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Session } from "@supabase/supabase-js";
 
+/** Gera URL assinada temporária para fotos guardadas no bucket privado "ocorrencias". */
+async function resolverFoto(valor: string | null | undefined): Promise<string | null> {
+  if (!valor) return null;
+  if (valor.startsWith("http") || valor.startsWith("data:")) return valor;
+  const { data } = await supabase.storage.from("ocorrencias").createSignedUrl(valor, 60 * 60);
+  return data?.signedUrl ?? null;
+}
+
 export type Agendamento = {
   id: string;
   area: string;
