@@ -173,7 +173,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
     }
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: email.includes('@') ? email : `${email}@cantu.gov.br`,
+      email,
       password: senha,
     });
 
