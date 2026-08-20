@@ -75,21 +75,21 @@ export function MapaOcorrencias({
 
     // Remover marcadores que não estão mais visíveis
     const visiveisIds = new Set(visiveis.map(v => v.protocolo));
-    Object.keys(markers.current).forEach(id => {
-      if (!visiveisIds.has(id)) {
-        markers.current[id].remove();
-        delete markers.current[id];
-      }
+    visiveisIds.forEach(id => {
+      if (!markers.current[id]) return;
+      markers.current[id].remove();
+      delete markers.current[id];
     });
 
     // Adicionar/Atualizar marcadores
     visiveis.forEach(o => {
-      if (!o.lat || !o.lng) return;
+      if (!o.lat || !o.lng || !map.current) return;
 
       if (markers.current[o.protocolo]) {
         // Marcador já existe, atualizar posição ou realce se necessário
         markers.current[o.protocolo].setLngLat([o.lng, o.lat]);
       } else {
+
         // Criar elemento do marcador customizado
         const el = document.createElement("div");
         el.className = "custom-marker";
