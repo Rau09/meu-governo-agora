@@ -314,7 +314,7 @@ function Registro() {
       <div className="-mt-5 px-4 pb-10">
         {/* Progress Bar */}
         <div className="mb-6 flex gap-2">
-          {[1, 2, 3, 4].map((i) => (
+          {[2, 3, 4, 5].map((i) => (
             <div 
               key={i} 
               className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
