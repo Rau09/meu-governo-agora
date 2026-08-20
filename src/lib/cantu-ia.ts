@@ -8,7 +8,7 @@ import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento, use
  * gestão de causa animal, serviços urbanos e suporte ao cidadão.
  */
 
-export type Resposta = { texto: string; acao?: { rotulo: string; para: string } };
+export type Resposta = { texto: string; acao?: { rotulo: string; para: string; libras?: boolean } };
 
 function normalizar(p: string) {
   return p
@@ -35,6 +35,7 @@ const REGRAS: Regra[] = [
     chaves: ["oi", "ola", "bom", "dia", "tarde", "noite", "saudacoes", "tudo", "bem"],
     resposta: {
       texto: "Olá! Tudo bem por aqui, e com você? Sou a inteligência do NexLine. Como posso ser útil para você hoje na região Cantuquiriguaçu?",
+      acao: { rotulo: "Ver em Libras", para: "#", libras: true }
     }
   },
   {

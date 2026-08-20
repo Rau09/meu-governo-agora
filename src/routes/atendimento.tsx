@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight, Eye } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight, Eye, Hand } from "lucide-react";
+import { useLibras } from "@/lib/libras-translator";
 import { AppShell, TopBar } from "@/components/AppShell";
 
 import { responder } from "@/lib/cantu-ia";
@@ -24,7 +25,7 @@ export const Route = createFileRoute("/atendimento")({
   component: Atendimento,
 });
 
-type Msg = { de: "bot" | "eu"; texto: string; acao?: { rotulo: string; para: string } };
+type Msg = { de: "bot" | "eu"; texto: string; acao?: { rotulo: string; para: string; libras?: boolean } };
 
 const sugestoes = [
   "Como agendar consulta?",
@@ -46,6 +47,7 @@ const atalhos = [
 
 function Atendimento() {
   const { protocolo } = Route.useSearch();
+  const { traduzir } = useLibras();
   
   const [msgs, setMsgs] = useState<Msg[]>([
 
@@ -154,13 +156,21 @@ function Atendimento() {
                 {m.texto}
               </p>
               <div className="flex flex-wrap gap-2">
-                {m.acao && (
+                {m.acao && !m.acao.libras && (
                   <Link
                     to={m.acao.para}
                     className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-primary-soft px-3 text-[10px] font-black text-primary"
                   >
                     {m.acao.rotulo} <ArrowRight className="size-3" />
                   </Link>
+                )}
+                {m.acao?.libras && (
+                  <button
+                    onClick={() => traduzir(m.texto)}
+                    className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-primary-soft px-3 text-[10px] font-black text-primary"
+                  >
+                    <Hand className="size-3" /> {m.acao.rotulo}
+                  </button>
                 )}
               </div>
 
