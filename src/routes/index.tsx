@@ -56,65 +56,121 @@ function Inicio() {
     <AppShell >
 
       <div className="bg-primary/5 border-b border-primary/10 px-5 py-4 text-[9px] font-medium text-primary/60 leading-relaxed whitespace-pre-line">
-        Agora implemente uma camada de notificações, atualização em tempo real e histórico para as funcionalidades que já existem.
+        Agora faça uma AUDITORIA FINAL do Nexline.
 
-        ⚠️ NÃO altere outras funcionalidades sem necessidade.
+        ⚠️ NÃO faça redesign.
 
-        NOTIFICAÇÕES
+        O objetivo é corrigir pequenos problemas de qualidade e garantir estabilidade.
 
-        O cidadão deve receber notificações relevantes, por exemplo:
+        Verifique:
 
-        “Seu problema foi recebido.”
+        UX
 
-        “Seu problema está em execução.”
+        * carregamentos;
 
-        “Seu problema foi resolvido.”
+        * estados vazios;
 
-        “Seu agendamento é amanhã.”
+        * mensagens de erro;
 
-        “Seu medicamento está disponível.”
+        * mensagens de sucesso;
 
-        As notificações devem ser baseadas em eventos reais.
+        * botões sem função;
 
-        Não criar notificações falsas apenas para preencher a interface.
+        * links quebrados;
 
-        TEMPO REAL
+        * navegação;
 
-        Quando uma informação relevante mudar no backend, atualize a interface quando tecnicamente apropriado.
+        * formulários.
 
-        Exemplo:
+        RESPONSIVIDADE
 
-        Prefeitura altera:
+        Teste:
 
-        EM EXECUÇÃO → RESOLVIDO
+        * celular;
 
-        O cidadão recebe a atualização correspondente.
+        * tablet;
 
-        HISTÓRICO
+        * desktop.
 
-        Cada solicitação deve poder possuir um histórico seguro:
+        ACESSIBILIDADE
 
-        Recebida
+        Verifique:
 
-        ↓
+        * contraste;
 
-        Em análise
+        * tamanho dos textos;
 
-        ↓
+        * áreas de toque;
 
-        Em execução
+        * labels;
 
-        ↓
+        * navegação;
 
-        Resolvida
+        * leitura por tecnologias assistivas quando aplicável.
 
-        O cidadão vê apenas informações destinadas a ele.
+        SEGURANÇA
 
-        A prefeitura pode possuir informações administrativas adicionais conforme sua permissão.
+        Verifique:
 
-        Utilize Supabase Realtime quando apropriado.
+        * autenticação;
 
-        Teste todas as alterações sem quebrar o fluxo existente.
+        * permissões;
+
+        * acesso aos dados;
+
+        * RLS;
+
+        * chaves secretas;
+
+        * APIs;
+
+        * informações de outros usuários.
+
+        FUNCIONALIDADE
+
+        Teste principalmente:
+
+        * login;
+
+        * perfil;
+
+        * problemas;
+
+        * GPS;
+
+        * fotos;
+
+        * Mapbox;
+
+        * saúde;
+
+        * medicamentos;
+
+        * causa animal;
+
+        * assistente;
+
+        * notificações;
+
+        * histórico.
+
+        IDENTIDADE
+
+        Garanta que o nome atual do aplicativo seja Nexline em todos os locais apropriados.
+
+        Remova referências antigas ao nome Cantu Conecta que ainda façam parte da interface ou metadados.
+
+        REGRA FINAL
+
+        Não adicionar funcionalidades novas nesta etapa.
+
+        Não fazer redesign.
+
+        Não alterar o comportamento de funcionalidades que já estão funcionando.
+
+        Corrija somente problemas identificados e claramente necessários.
+
+        Depois da auditoria, informe quais problemas foram encontrados, quais foram corrigidos e quais dependem de configuração externa.
       </div>
 
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
