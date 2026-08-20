@@ -54,11 +54,7 @@ function Inicio() {
 
   return (
     <AppShell >
-
-
-
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
-
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
              <div className="size-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-lg">N</div>
@@ -189,4 +185,3 @@ function Inicio() {
     </AppShell>
   );
 }
-
