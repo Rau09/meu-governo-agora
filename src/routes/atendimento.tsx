@@ -7,10 +7,12 @@ import { responder } from "@/lib/cantu-ia";
 import { useLibras } from "@/lib/libras-translator";
 
 
-type Busca = { protocolo?: string };
+type Busca = { protocolo?: string | undefined; assunto?: string | undefined };
 export const Route = createFileRoute("/atendimento")({
-  validateSearch: (search: Record<string, unknown>): Busca =>
-    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
+  validateSearch: (search: Record<string, unknown>): Busca => ({
+    protocolo: typeof search['protocolo'] === "string" ? search['protocolo'] : undefined,
+    assunto: typeof search['assunto'] === "string" ? search['assunto'] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Atendimento 24/7 — NexLine" },
@@ -46,23 +48,41 @@ const atalhos = [
 ];
 
 function Atendimento() {
-  const { protocolo } = Route.useSearch();
+  const { protocolo, assunto } = Route.useSearch();
   const { translate } = useLibras();
-  
   const [msgs, setMsgs] = useState<Msg[]>([
-
     {
       de: "bot",
-      texto:
-        "Olá! Sou a assistente do NexLine. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
+      texto: "Olá! Sou a assistente do NexLine. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
     },
   ]);
 
   useEffect(() => {
-    if (protocolo) {
-      enviar(`Andamento do protocolo ${protocolo}`);
+    // Usar os valores da busca do TanStack Router diretamente
+    if (protocolo || assunto) {
+      const txt = protocolo 
+        ? `Andamento do protocolo ${protocolo}`
+        : decodeURIComponent(assunto!).startsWith('adoção-')
+          ? `Quero saber mais sobre a adoção do ${decodeURIComponent(assunto!).replace('adoção-', '')}`
+          : decodeURIComponent(assunto!);
+      
+      setMsgs(prev => {
+        if (prev.some(m => m.texto === txt)) return prev;
+        return [
+          ...prev,
+          { de: "eu", texto: txt }
+        ];
+      });
+      
+      setTimeout(() => {
+        const r = responder(txt);
+        setMsgs(prev => {
+          if (prev.some(m => m.texto === r.texto)) return prev;
+          return [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }];
+        });
+      }, 300);
     }
-  }, [protocolo]);
+  }, [protocolo, assunto]);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
 

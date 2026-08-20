@@ -56,25 +56,25 @@ function Inicio() {
     <AppShell >
 
       <div className="bg-primary/5 border-b border-primary/10 px-5 py-4 text-[9px] font-medium text-primary/60 leading-relaxed whitespace-pre-line">
-        Agora torne as funcionalidades de Saúde e Remédios do Nexline mais reais e conectadas aos dados existentes.
+        Agora melhore a funcionalidade Causa Animal mantendo o design atual do Nexline.
         
-        ⚠️ NÃO faça redesign geral.
+        NÃO faça redesign geral.
         
-        MEDICAMENTOS
-        Crie uma estrutura para consultar disponibilidade real por unidade de saúde.
-        Exemplo: Medicamento: Losartana 50 mg | Unidade: UBS Central | Status: Disponível / Estoque baixo / Indisponível
-        Quantidade detalhada deve ser protegida e não necessariamente exposta ao cidadão.
-        O cidadão deve ver apenas a informação necessária para saber onde o medicamento está disponível.
-        A prefeitura poderá ter acesso ao estoque administrativo conforme suas permissões.
+        ADOÇÃO
+        Os animais devem poder possuir dados reais:
+        * foto; * nome; * idade; * porte; * sexo; * localização; * vacinação; * castração; * descrição; * status de adoção.
         
-        SAÚDE
-        Preserve os agendamentos existentes e, se a estrutura permitir, conecte-os ao banco real.
-        O cidadão deve conseguir visualizar: seus agendamentos; data; horário; unidade; serviço; status.
-        Não mostrar dados de outros cidadãos.
-        Se alguma integração oficial de saúde externa não existir, NÃO invente uma.
-        Prepare a arquitetura para integração futura.
+        OCORRÊNCIAS
+        Permita registrar:
+        * foto; * descrição; * categoria; * localização; * GPS quando autorizado; * data; * status.
         
-        Teste: permissões; banco; carregamento; erros; dados vazios; funcionamento das telas existentes.
+        Exemplos: Animal perdido, Animal encontrado, Animal ferido, Abandono, Maus-tratos.
+        As ocorrências devem utilizar a mesma arquitetura segura de Problemas.
+        Cidadãos só podem visualizar informações públicas e suas próprias ocorrências.
+        Dados internos devem permanecer administrativos.
+        
+        Não invente dados para substituir dados reais.
+        Preserve todas as demais funções do Nexline.
       </div>
 
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
