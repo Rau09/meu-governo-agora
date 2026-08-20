@@ -514,9 +514,9 @@ export function useOcorrencias() {
             protocolo: d.protocolo,
             categoria: d.categoria,
             descricao: d.descricao,
-            foto: d.foto_url || undefined,
-            local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : undefined,
-            endereco: d.endereco || undefined,
+            foto: d.foto_url || null,
+            local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
+            endereco: d.endereco || null,
             criadoEm: d.criado_em || new Date().toISOString(),
             status: d.status as StatusOcorrencia,
           }));
