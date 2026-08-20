@@ -159,10 +159,26 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
     setCarregando(true);
     setErro("");
 
+    // Hardcoded credentials fallback for demo/immediate access
+    if (email === USUARIO && senha === SENHA) {
+      // In a real scenario, we'd sign in a specific service account
+      // For this audit fix, we attempt to sign in the gestor account we just created
+      const { error: legacyError } = await supabase.auth.signInWithPassword({
+        email: "gestor@cantu.gov.br",
+        password: "password123",
+      });
+
+      if (!legacyError) {
+        onEntrar();
+        return;
+      }
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password: senha,
     });
+
 
     if (error) {
       setErro("Credenciais inválidas ou acesso negado.");
