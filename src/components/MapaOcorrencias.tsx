@@ -31,9 +31,9 @@ function RealMap({
   selProtocolo,
 }: {
   visiveis: OcorrenciaGestao[];
-  destaque?: string[];
+  destaque?: string[] | undefined;
   onSelect: (o: OcorrenciaGestao) => void;
-  selProtocolo?: string;
+  selProtocolo?: string | undefined;
 }) {
   const center: [number, number] = [-25.4581, -52.9122]; // Quedas do Iguaçu / Cantu
   const [isLoaded, setIsLoaded] = useState(false);
