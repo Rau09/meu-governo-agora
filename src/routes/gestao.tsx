@@ -32,7 +32,6 @@ import {
 } from "@/lib/cantu-store";
 import {
   NIVEIS,
-  PERGUNTAS_IA,
   alertas,
   analisar,
   atrasada,
@@ -41,12 +40,10 @@ import {
   metaCategoria,
   nivel as nivelOcorrencia,
   prioridades,
-  responderIA,
   resumir,
   unificar,
   type OcorrenciaGestao,
 } from "@/lib/cantu-gestao";
-
 
 export const Route = createFileRoute("/gestao")({
   head: () => ({
@@ -195,7 +192,6 @@ function Painel({ onSair }: { onSair: () => void }) {
   const [detalhe, setDetalhe] = useState<{ titulo: string; nota?: string; itens: OcorrenciaGestao[] } | null>(null);
   const [mapaFiltro, setMapaFiltro] = useState("todos");
   const [destaque, setDestaque] = useState<string[]>([]);
-  const [respostaIA, setRespostaIA] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
 
   function setAcao(texto: string) {
@@ -287,64 +283,31 @@ function Painel({ onSair }: { onSair: () => void }) {
 
   return (
     <AppShell>
-      <TopBar 
-        titulo="Painel de Gestão" 
-        subtitulo="Inteligência Regional Cantuquiriguaçu" 
-      />
-
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="-mt-6 space-y-6 px-4 pb-24"
-      >
-        {/* Barra de Pesquisa e Filtros Rápidos */}
+      <TopBar titulo="Painel de Gestão" subtitulo="Inteligência Regional Cantuquiriguaçu" />
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="-mt-6 space-y-6 px-4 pb-24">
+        {/* Barra de Pesquisa */}
         <section className="flex gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Pesquisar protocolo..." 
-              className="h-12 w-full rounded-2xl border border-border bg-card pl-10 pr-4 text-sm outline-none focus:border-primary/50 transition-all"
-            />
+            <input type="text" placeholder="Pesquisar protocolo..." className="h-12 w-full rounded-2xl border border-border bg-card pl-10 pr-4 text-sm outline-none focus:border-primary/50 transition-all" />
           </div>
-          <button 
-            onClick={onSair}
-            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card border border-border text-destructive active:scale-95 transition-all shadow-sm"
-            title="Sair do Sistema"
-          >
+          <button onClick={onSair} className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card border border-border text-destructive active:scale-95 transition-all shadow-sm" title="Sair">
             <LogOut className="size-5" />
           </button>
         </section>
 
-        {/* Resumo Superior com Estética Aprimorada */}
+        {/* Resumo */}
         <section className="grid grid-cols-2 gap-4">
           {cards.slice(2, 4).map(({ icon: Icon, valor, label, nota, tom, itens }, i) => (
-            <motion.button
-              key={label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              onClick={() => setDetalhe({ titulo: label, nota, itens })}
-              className="rounded-[2rem] border border-border bg-card p-5 shadow-sm text-left relative overflow-hidden"
-            >
+            <motion.button key={label} onClick={() => setDetalhe({ titulo: label, nota, itens })} className="rounded-[2rem] border border-border bg-card p-5 shadow-sm text-left relative overflow-hidden">
               <div className={`flex size-10 items-center justify-center rounded-2xl mb-3 ${tom.includes("destructive") ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
                 <Icon className="size-5" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
               <p className="mt-1 text-2xl font-black text-foreground">{valor}</p>
-              {tom.includes("destructive") && valor > 0 && (
-                <span className="absolute right-4 top-4 flex size-2">
-                  <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-destructive opacity-75"></span>
-                  <span className="relative inline-flex size-2 rounded-full bg-destructive"></span>
-                </span>
-              )}
             </motion.button>
           ))}
         </section>
-
-        {/* 1. Protocolos Críticos / Emergência */}
-        <DetalhesEmergencia alertasAtivos={alertasAtivos} setDetalhe={setDetalhe} animar={animar} />
 
         {/* 2. Prioridades Estratégicas */}
         <section className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card">
@@ -357,23 +320,23 @@ function Painel({ onSair }: { onSair: () => void }) {
           </div>
           
           <div className="space-y-3">
-            {analise.criticas.slice(0, 3).map((o, idx) => (
+            {prioridades(lista).filter(p => p.nivel === 'critico').slice(0, 3).map((p: any, idx: number) => (
               <motion.button
-                key={o.protocolo}
+                key={p.id}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 + idx * 0.1 }}
                 whileHover={{ x: 4 }}
-                onClick={() => setDetalhe({ titulo: o.categoria, nota: o.bairro, itens: [o] })}
+                onClick={() => setDetalhe({ titulo: p.categoria, nota: p.bairro, itens: p.itens })}
                 className="group w-full relative flex items-center gap-4 rounded-3xl bg-secondary/30 p-4 transition-all hover:bg-secondary/50 text-left"
               >
                 <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-card border border-border text-xl">
-                  {metaCategoria(o.categoria).emoji}
+                  {metaCategoria(p.categoria).emoji}
                 </div>
                 <div className="flex-1 overflow-hidden">
-                  <h3 className="truncate text-xs font-bold text-foreground">{o.categoria}</h3>
+                  <h3 className="truncate text-xs font-bold text-foreground">{p.categoria}</h3>
                   <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
-                    {o.bairro} · <span className="text-destructive font-bold">{o.reclamacoes} reiterações</span>
+                    {p.bairro} · <span className="text-destructive font-bold">{p.total} solicitações</span>
                   </p>
                 </div>
                 <ChevronRight className="size-4 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
@@ -387,7 +350,10 @@ function Painel({ onSair }: { onSair: () => void }) {
           <MapaOcorrencias key={mapaFiltro} lista={lista} filtroInicial={mapaFiltro} destaque={destaque} />
         </section>
 
-        {/* 4. Monitoramento por Setor */}
+        {/* 4. Protocolos de Emergência */}
+        <DetalhesEmergencia alertasAtivos={alertasAtivos} setDetalhe={setDetalhe} animar={animar} />
+
+        {/* 5. Monitoramento por Setor */}
         <MonitoramentoSetor focos={focos} setDetalhe={setDetalhe} setAcao={setAcao} animar={animar} />
 
         {/* 5. Análise IA e Recomendação */}
@@ -486,153 +452,8 @@ function Painel({ onSair }: { onSair: () => void }) {
             </div>
           </div>
         </section>
-      </motion.div>
-    </AppShell>
-  );
-}
 
-function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtivos: any[], setDetalhe: any, animar: boolean }) {
-  return (
-    <section
-      style={{ transitionDelay: "550ms" }}
-      className={`rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-7 shadow-card transition-all duration-500 ease-out ${
-        animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-destructive/10">
-            <AlertTriangle className="size-6 text-destructive" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-foreground tracking-tight">Protocolos de Emergência</h2>
-            <p className="text-[11px] font-medium text-muted-foreground">Intervenção imediata recomendada pela IA Cantu.</p>
-          </div>
-        </div>
-        <span className="rounded-full bg-destructive px-3 py-1 text-[10px] font-black text-white shadow-sm">
-          {alertasAtivos.length} CRÍTICOS
-        </span>
-      </div>
-
-      <div className="mt-6 space-y-4">
-        {alertasAtivos.map((a) => (
-          <div key={a.id} className="group relative">
-            <button
-              type="button"
-              onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })}
-              className="w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-sm transition-all duration-300 hover:border-destructive/40 hover:shadow-float active:scale-[0.99]"
-            >
-              <div className="flex items-start gap-4">
-                <span className="flex size-10 items-center justify-center rounded-xl bg-secondary/50 text-2xl leading-none">{a.emoji}</span>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-bold text-foreground">{a.titulo}</p>
-                    <ChevronRight className="size-4 shrink-0 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
-                  </div>
-                  <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground font-medium">{a.detalhe}</p>
-                  
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest ${NIVEIS[a.nivel].classe}`}>
-                        {NIVEIS[a.nivel].rotulo}
-                      </span>
-                      <span className="text-[10px] font-bold text-destructive/80 flex items-center gap-1">
-                         <Clock3 className="size-3" /> {a.acao}
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-bold text-primary underline underline-offset-2">Resolver agora</span>
-                  </div>
-                </div>
-              </div>
-            </button>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any[], setDetalhe: any, setAcao: any, animar: boolean }) {
-  return (
-    <section style={{ transitionDelay: "650ms" }} className={animar ? "opacity-100" : "opacity-0"}>
-
-          <div className="mb-5 flex items-center justify-between px-2">
-            <div>
-              <h2 className="text-base font-bold text-foreground tracking-tight">Monitoramento por Setor</h2>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Visão Analítica Semanal</p>
-            </div>
-            <Link to="/gestao" className="text-[10px] font-bold text-primary uppercase tracking-wider">Ver Relatórios</Link>
-          </div>
-          
-          <div className="space-y-4">
-            {focos.map((p, i) => (
-              <div
-                key={p.id}
-                style={{ animationDelay: `${i * 100}ms` }}
-                className="animate-in rounded-[2rem] border border-border bg-card p-6 shadow-card transition-all duration-300 hover:border-primary/30"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                       <span className="text-lg">{metaCategoria(p.categoria).emoji}</span>
-                       <p className="text-base font-bold text-foreground tracking-tight">
-                         {p.categoria}
-                       </p>
-                    </div>
-                    <p className="text-[11px] font-bold text-muted-foreground mt-0.5">{p.bairro} — Cantuquiriguaçu</p>
-                  </div>
-                  <span className={`shrink-0 rounded-full px-3 py-1 text-[9px] font-black uppercase tracking-widest ${NIVEIS[p.nivel].classe}`}>
-                    {NIVEIS[p.nivel].rotulo}
-                  </span>
-                </div>
-                
-                <div className="mt-4 flex items-center gap-6">
-                   <div className="flex flex-col">
-                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Demanda</span>
-                     <span className="text-sm font-black text-foreground">{p.total} casos</span>
-                   </div>
-                   <div className="flex flex-col">
-                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Gravidade</span>
-                     <span className="text-sm font-black text-destructive">{p.atrasadas} críticas</span>
-                   </div>
-                   <div className="flex flex-col">
-                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Tendência</span>
-                     <span className="text-sm font-black text-success">+{p.variacao}% res.</span>
-                   </div>
-                </div>
-
-                <div className="mt-5 rounded-2xl bg-secondary/30 p-4 border border-border/50">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Sparkles className="size-3 text-primary" />
-                    <span className="text-[9px] font-black uppercase tracking-widest text-primary">Insight IA</span>
-                  </div>
-                  <p className="text-[11px] font-medium leading-relaxed text-muted-foreground italic">
-                    “{p.resumo}”
-                  </p>
-                </div>
-
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setDetalhe({ titulo: `${p.categoria} — ${p.bairro}`, nota: p.resumo, itens: p.itens })}
-                    className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-background py-3.5 text-[10px] font-bold text-foreground hover:bg-secondary active:scale-95 transition-all shadow-sm"
-                  >
-                    Analisar Dados
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAcao(`Equipe operacional designada para ${p.bairro}.`)}
-                    className="flex items-center justify-center gap-2 rounded-2xl bg-primary py-3.5 text-[10px] font-bold text-primary-foreground hover:bg-primary/90 active:scale-95 shadow-float transition-all"
-                  >
-                    Despachar Unidade
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 7. Monitoramento Detalhado (Substitui Log e Indicadores Antigos) */}
+        {/* 7. Monitoramento Detalhado */}
         <section className="space-y-6">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-base font-bold text-foreground">Operação & Monitoramento</h2>
@@ -643,9 +464,8 @@ function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any
             </div>
           </div>
 
-
           <ul className="grid grid-cols-2 gap-4">
-            {indices.map((ind, i) => (
+            {indices.map((ind: any, i: number) => (
               <motion.li 
                 key={ind.grupo}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -702,7 +522,7 @@ function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any
             <Filter className="size-4 text-muted-foreground/40" />
           </div>
           <ul className="space-y-4">
-            {porArea.map((a, i) => (
+            {porArea.map((a: any, i: number) => (
               <li key={a.nome}>
                 <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider mb-1.5">
                   <span className="text-muted-foreground">{a.nome}</span>
@@ -800,9 +620,6 @@ function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any
                         {a.nome} · {a.unidade} · {new Date(a.data + "T00:00").toLocaleDateString("pt-BR")}
                       </p>
                     </div>
-                    <span className="rounded-full bg-primary-soft px-3 py-1 text-[9px] font-black text-primary">
-                      #{a.id}
-                    </span>
                   </motion.li>
                 ))}
               </ul>
@@ -811,25 +628,152 @@ function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any
         </div>
       </motion.div>
 
-
-
       {detalhe && (
-        <DetalheLista
-          titulo={detalhe.titulo}
-          {...(detalhe.nota ? { nota: detalhe.nota } : {})}
-          itens={detalhe.itens}
-          onFechar={() => setDetalhe(null)}
-          onMapa={(itens) => irParaMapa(itens)}
-        />
-      )}
-
-
-      {aviso && (
-        <div className="fixed inset-x-0 bottom-24 z-50 mx-auto w-[min(92%,26rem)] animate-in rounded-2xl bg-primary p-3 text-center text-xs font-semibold text-primary-foreground shadow-float fade-in slide-in-from-bottom-2 duration-300">
-          ✅ {aviso}
-        </div>
+        <DetalheLista titulo={detalhe.titulo} nota={detalhe.nota} itens={detalhe.itens} onFechar={() => setDetalhe(null)} onMapa={(itens: OcorrenciaGestao[]) => irParaMapa(itens)} />
       )}
     </AppShell>
+  );
+}
+
+function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtivos: any[], setDetalhe: any, animar: boolean }) {
+  return (
+    <section
+      style={{ transitionDelay: "550ms" }}
+      className={`rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-7 shadow-card transition-all duration-500 ease-out ${
+        animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-destructive/10">
+            <AlertTriangle className="size-6 text-destructive" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-foreground tracking-tight">Protocolos de Emergência</h2>
+            <p className="text-[11px] font-medium text-muted-foreground">Intervenção imediata recomendada pela IA Cantu.</p>
+          </div>
+        </div>
+        <span className="rounded-full bg-destructive px-3 py-1 text-[10px] font-black text-white shadow-sm">
+          {alertasAtivos.length} CRÍTICOS
+        </span>
+      </div>
+
+      <div className="mt-6 space-y-4">
+        {alertasAtivos.map((a) => (
+          <div key={a.id} className="group relative">
+            <button
+              type="button"
+              onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })}
+              className="w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-sm transition-all duration-300 hover:border-destructive/40 hover:shadow-float active:scale-[0.99]"
+            >
+              <div className="flex items-start gap-4">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-secondary/50 text-2xl leading-none">{a.emoji}</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-bold text-foreground">{a.titulo}</p>
+                    <ChevronRight className="size-4 shrink-0 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground font-medium">{a.detalhe}</p>
+                  
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest ${NIVEIS[a.nivel as keyof typeof NIVEIS].classe}`}>
+                        {NIVEIS[a.nivel as keyof typeof NIVEIS].rotulo}
+                      </span>
+                      <span className="text-[10px] font-bold text-destructive/80 flex items-center gap-1">
+                         <Clock3 className="size-3" /> {a.acao}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-bold text-primary underline underline-offset-2">Resolver agora</span>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any[], setDetalhe: any, setAcao: any, animar: boolean }) {
+  return (
+    <section style={{ transitionDelay: "650ms" }} className={animar ? "opacity-100" : "opacity-0"}>
+      <div className="mb-5 flex items-center justify-between px-2">
+        <div>
+          <h2 className="text-base font-bold text-foreground tracking-tight">Monitoramento por Setor</h2>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Visão Analítica Semanal</p>
+        </div>
+        <Link to="/gestao" className="text-[10px] font-bold text-primary uppercase tracking-wider">Ver Relatórios</Link>
+      </div>
+      
+      <div className="space-y-4">
+        {focos.map((p, i) => (
+          <div
+            key={p.id}
+            style={{ animationDelay: `${i * 100}ms` }}
+            className="animate-in rounded-[2rem] border border-border bg-card p-6 shadow-card transition-all duration-300 hover:border-primary/30"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                   <span className="text-lg">{metaCategoria(p.categoria).emoji}</span>
+                   <p className="text-base font-bold text-foreground tracking-tight">
+                     {p.categoria}
+                   </p>
+                </div>
+                <p className="text-[11px] font-bold text-muted-foreground mt-0.5">{p.bairro} — Cantuquiriguaçu</p>
+              </div>
+              <span className={`shrink-0 rounded-full px-3 py-1 text-[9px] font-black uppercase tracking-widest ${NIVEIS[p.nivel as keyof typeof NIVEIS].classe}`}>
+                {NIVEIS[p.nivel as keyof typeof NIVEIS].rotulo}
+              </span>
+            </div>
+            
+            <div className="mt-4 flex items-center gap-6">
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Demanda</span>
+                 <span className="text-sm font-black text-foreground">{p.total} casos</span>
+               </div>
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Gravidade</span>
+                 <span className="text-sm font-black text-destructive">{p.atrasadas} críticas</span>
+               </div>
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Tendência</span>
+                 <span className="text-sm font-black text-success">+{p.variacao}% res.</span>
+               </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl bg-secondary/30 p-4 border border-border/50">
+              <div className="flex items-center gap-2 mb-1.5">
+                <Sparkles className="size-3 text-primary" />
+                <span className="text-[9px] font-black uppercase tracking-widest text-primary">Insight IA</span>
+              </div>
+              <p className="text-[11px] font-medium leading-relaxed text-muted-foreground italic">
+                “{p.resumo}”
+              </p>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setDetalhe({ titulo: `${p.categoria} — ${p.bairro}`, nota: p.resumo, itens: p.itens })}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-background py-3.5 text-[10px] font-bold text-foreground hover:bg-secondary active:scale-95 transition-all shadow-sm"
+              >
+                Analisar Dados
+              </button>
+              <button
+                type="button"
+                onClick={() => setAcao(`Equipe operacional designada para ${p.bairro}.`)}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-primary py-3.5 text-[10px] font-bold text-primary-foreground hover:bg-primary/90 active:scale-95 shadow-float transition-all"
+              >
+                Despachar Unidade
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -841,7 +785,7 @@ function DetalheLista({
   onMapa,
 }: {
   titulo: string;
-  nota?: string;
+  nota?: string | null | undefined;
   itens: OcorrenciaGestao[];
   onFechar: () => void;
   onMapa: (itens: OcorrenciaGestao[]) => void;
@@ -911,8 +855,6 @@ function DetalheLista({
     </div>
   );
 }
-
-
 
 function CardOcorrencia({
   ocorrencia,
