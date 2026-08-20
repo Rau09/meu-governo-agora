@@ -98,7 +98,7 @@ function Agendamento() {
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            {AREAS.map((a) => (
+            {AREAS_REAL.map((a) => (
               <button
                 key={a.id}
                 type="button"
