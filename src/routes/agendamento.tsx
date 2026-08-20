@@ -213,7 +213,7 @@ function Agendamento() {
         <button
           type="button"
           onClick={confirmar}
-          disabled={!hora || enviando}
+          disabled={!hora || enviando || !area}
           className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card transition-opacity disabled:opacity-40"
         >
           {enviando ? (
