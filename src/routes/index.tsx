@@ -1,5 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Stethoscope,
   PawPrint,
@@ -48,26 +47,13 @@ const acoesRapidas = [
 ] as const;
 
 function Inicio() {
-  const { cidadao, desbloqueado } = useCidadao();
-  const navigate = useNavigate();
+  const { cidadao } = useCidadao();
   const { agendamentos } = useAgendamentos();
   const { ocorrencias } = useOcorrencias();
-
-  useEffect(() => {
-    if (!cidadao || !desbloqueado) {
-      navigate({ to: "/registro" });
-    }
-  }, [cidadao, desbloqueado, navigate]);
-
-  if (!cidadao || !desbloqueado) {
-    return null; // Evita flash de conteúdo antes do redirecionamento
-  }
-
   const proximo = agendamentos[0];
 
   return (
     <AppShell >
-
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
