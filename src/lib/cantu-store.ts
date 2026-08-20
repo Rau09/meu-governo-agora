@@ -753,16 +753,16 @@ export function useOcorrenciasAnimais() {
 
         const { data, error } = await query.order('criado_em', { ascending: false });
         if (data && !error) {
-          const remote: OcorrenciaAnimal[] = data.map(d => ({
+          const remote: OcorrenciaAnimal[] = await Promise.all(data.map(async d => ({
             protocolo: d.protocolo,
             categoria: d.categoria,
             descricao: d.descricao,
-            foto: d.foto_url,
+            foto: await resolverFoto(d.foto_url),
             local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
             endereco: d.endereco,
             criadoEm: d.criado_em || new Date().toISOString(),
             status: d.status || "recebido",
-          }));
+          })));
           setOcorrencias(remote);
           if (!isGestor && !isAdmin) {
             write(KEY_OCOR_ANIMAL, remote);
