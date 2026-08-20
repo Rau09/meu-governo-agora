@@ -56,6 +56,57 @@ export type Database = {
         }
         Relationships: []
       }
+      animais: {
+        Row: {
+          castrado: boolean | null
+          criado_em: string | null
+          descricao: string | null
+          especie: string
+          fotos: string[] | null
+          id: string
+          idade: string | null
+          localizacao: string | null
+          nome: string
+          porte: string | null
+          raca: string | null
+          sexo: string | null
+          status: string | null
+          vacinado: boolean | null
+        }
+        Insert: {
+          castrado?: boolean | null
+          criado_em?: string | null
+          descricao?: string | null
+          especie?: string
+          fotos?: string[] | null
+          id?: string
+          idade?: string | null
+          localizacao?: string | null
+          nome: string
+          porte?: string | null
+          raca?: string | null
+          sexo?: string | null
+          status?: string | null
+          vacinado?: boolean | null
+        }
+        Update: {
+          castrado?: boolean | null
+          criado_em?: string | null
+          descricao?: string | null
+          especie?: string
+          fotos?: string[] | null
+          id?: string
+          idade?: string | null
+          localizacao?: string | null
+          nome?: string
+          porte?: string | null
+          raca?: string | null
+          sexo?: string | null
+          status?: string | null
+          vacinado?: boolean | null
+        }
+        Relationships: []
+      }
       estoque_medicamentos: {
         Row: {
           id: string
@@ -160,6 +211,48 @@ export type Database = {
           lng?: number | null
           protocolo?: string
           status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ocorrencias_animais: {
+        Row: {
+          categoria: string
+          criado_em: string | null
+          descricao: string
+          endereco: string | null
+          foto_url: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          protocolo: string
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          categoria: string
+          criado_em?: string | null
+          descricao: string
+          endereco?: string | null
+          foto_url?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          protocolo: string
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          categoria?: string
+          criado_em?: string | null
+          descricao?: string
+          endereco?: string | null
+          foto_url?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          protocolo?: string
+          status?: string | null
           user_id?: string | null
         }
         Relationships: []
