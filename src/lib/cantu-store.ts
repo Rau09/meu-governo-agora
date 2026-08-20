@@ -234,32 +234,90 @@ export function useCidadao() {
 
 export function useAgendamentos() {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
+  const { session } = useCidadao();
 
   useEffect(() => {
-    const sync = () => setAgendamentos(read<Agendamento[]>(KEY_AGENDA, []));
-    sync();
-    window.addEventListener("cantu-store", sync);
-    return () => window.removeEventListener("cantu-store", sync);
-  }, []);
+    // Sincronizar local
+    const syncLocal = () => setAgendamentos(read<Agendamento[]>(KEY_AGENDA, []));
+    syncLocal();
+    window.addEventListener("cantu-store", syncLocal);
 
-  const criar = useCallback((a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
+    // Sincronizar remoto se logado
+    if (session?.user) {
+      const fetchRemoto = async () => {
+        const { data, error } = await supabase
+          .from('agendamentos')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .order('criado_em', { ascending: false });
+
+        if (data && !error) {
+          const remoteAgendas: Agendamento[] = data.map(d => ({
+            id: d.protocolo, // Usamos protocolo como ID visual
+            area: d.area,
+            servico: d.servico,
+            unidade: d.unidade,
+            data: d.data,
+            hora: d.hora,
+            nome: d.nome_paciente,
+            criadoEm: d.criado_em || new Date().toISOString(),
+            status: d.status as any,
+          }));
+          setAgendamentos(remoteAgendas);
+          write(KEY_AGENDA, remoteAgendas);
+        }
+      };
+      fetchRemoto();
+    }
+
+    return () => window.removeEventListener("cantu-store", syncLocal);
+  }, [session]);
+
+  const criar = useCallback(async (a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
     const atual = read<Agendamento[]>(KEY_AGENDA, []);
+    const protocolo = Math.random().toString(36).slice(2, 9).toUpperCase();
+    
     const novo: Agendamento = {
       ...a,
-      id: Math.random().toString(36).slice(2, 9).toUpperCase(),
+      id: protocolo,
       criadoEm: new Date().toISOString(),
       status: "confirmado",
     };
+
+    // Salvar local
     write(KEY_AGENDA, [novo, ...atual]);
+
+    // Salvar remoto se logado
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('agendamentos').insert({
+        user_id: session.user.id,
+        protocolo: protocolo,
+        area: a.area,
+        servico: a.servico,
+        unidade: a.unidade,
+        data: a.data,
+        hora: a.hora,
+        nome_paciente: a.nome,
+        status: "confirmado"
+      });
+    }
+
     return novo;
   }, []);
 
-  const cancelar = useCallback((id: string) => {
+  const cancelar = useCallback(async (id: string) => {
     const atual = read<Agendamento[]>(KEY_AGENDA, []);
     write(
       KEY_AGENDA,
       atual.filter((a) => a.id !== id),
     );
+
+    // Cancelar remoto (usando protocolo que mapeamos para ID)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('agendamentos').delete().eq('protocolo', id).eq('user_id', session.user.id);
+    }
   }, []);
 
   return { agendamentos, criar, cancelar };
