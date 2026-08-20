@@ -1,4 +1,4 @@
-import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento } from "@/lib/cantu-store";
+import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento, useCidadao } from "@/lib/cantu-store";
 
 /**
  * Inteligência Artificial Cantu Conecta (NexLine).
@@ -31,6 +31,24 @@ type Regra = {
 };
 
 const REGRAS: Regra[] = [
+  {
+    chaves: ["oi", "ola", "bom", "dia", "tarde", "noite", "saudacoes", "tudo", "bem"],
+    resposta: {
+      texto: "Olá! Tudo bem por aqui, e com você? Sou a inteligência do NexLine. Como posso ser útil para você hoje na região Cantuquiriguaçu?",
+    }
+  },
+  {
+    chaves: ["quem", "voce", "oque", "faz", "ajuda", "funcao", "ia", "bot"],
+    resposta: {
+      texto: "Eu sou o assistente digital integrado da Cantuquiriguaçu. Minha função é facilitar sua vida: posso agendar consultas, verificar remédios nas UBS, acompanhar protocolos de obras e até ajudar na causa animal. O que precisa agora?",
+    }
+  },
+  {
+    chaves: ["obrigado", "valeu", "tchau", "ate", "agradecido", "ajudou"],
+    resposta: {
+      texto: "Imagina, estou aqui para isso! Se precisar de mais alguma coisa, é só me chamar. Tenha um excelente dia!",
+    }
+  },
   {
     chaves: ["consulta", "consultar", "medico", "clinico", "saude", "ubs", "posto", "dentista", "odonto", "exame", "pediatra", "especialista", "cardiologista", "ginecologista"],
     resposta: {
@@ -162,6 +180,17 @@ function consultarProtocolo(pergunta: string): Resposta | null {
 
 export function responder(pergunta: string): Resposta {
   const t = tokens(pergunta);
+  const pLower = pergunta.toLowerCase();
+  
+  // Tentar responder de forma mais direta a saudações e conversa básica
+  if (t.some(x => ["oi", "ola", "hey"].includes(x)) && t.length <= 2) {
+    return { texto: "Olá! Como posso ajudar você hoje?" };
+  }
+
+  if (pLower.includes("tudo bem") || pLower.includes("como vai")) {
+    return { texto: "Tudo ótimo por aqui! Trabalhando para facilitar o acesso aos serviços da nossa cidade. E com você, como estão as coisas?" };
+  }
+
   if (t.length === 0) {
     return { 
       texto: "Entendi. Poderia fornecer mais detalhes sobre como posso ajudar você hoje? Estou pronto para auxiliar com agendamentos, medicamentos ou serviços urbanos." 
@@ -178,7 +207,7 @@ export function responder(pergunta: string): Resposta {
     if (especifico) return especifico;
     return {
       texto:
-        "Você pode consultar o estoque em tempo real de todas as unidades de saúde em nossa Central de Medicamentos. Qual fármaco você está procurando?",
+        "Entendi que você procura por medicamentos. Você pode consultar o estoque em tempo real de todas as unidades de saúde em nossa Central de Medicamentos. Qual fármaco específico você está procurando?",
       acao: { rotulo: "Consultar Medicamentos", para: "/medicamentos" },
     };
   }
@@ -190,7 +219,7 @@ export function responder(pergunta: string): Resposta {
   if (t.some((x) => CHAVES_PROBLEMA.includes(x))) {
     return {
       texto:
-        "Identifiquei um relato de infraestrutura. Por favor, utilize o módulo de Ocorrências para anexar uma foto e localização GPS. Isso agiliza a resposta da Secretaria de Obras.",
+        "Compreendo o problema relatado. Para que a Secretaria de Obras possa intervir, o ideal é registrar uma ocorrência formal com foto e localização. Posso te levar para a tela de registro agora?",
       acao: { rotulo: "Relatar Ocorrência", para: "/ocorrencia" },
     };
   }
@@ -206,9 +235,9 @@ export function responder(pergunta: string): Resposta {
   
   if (melhor) return melhor.regra.resposta;
 
-  // Fallback Inteligente
+  // Resposta de fallback mais "humana"
   return {
     texto:
-      "Ainda não possuo uma resposta específica para esse tema, mas posso ajudar você a navegar pelos serviços de saúde, agendamentos, causa animal ou infraestrutura da Cantuquiriguaçu. O que deseja fazer?",
+      "Ainda estou aprimorando minhas habilidades de conversação, mas conheço muito sobre a Cantuquiriguaçu! Posso te ajudar com saúde, agendamentos, remédios ou infraestrutura. O que gostaria de ver primeiro?",
   };
 }
