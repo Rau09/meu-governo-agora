@@ -67,27 +67,69 @@ const SENHA = "quedas2026";
 
 function Gestao() {
   const [logado, setLogado] = useState(false);
+  const [gestor, setGestor] = useState(false);
   const [pronto, setPronto] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLogado(sessionStorage.getItem(CHAVE) === "1");
-    setPronto(true);
+    async function checkAuth() {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        setLogado(false);
+        setGestor(false);
+        setLoading(false);
+        setPronto(true);
+        return;
+      }
+
+      setLogado(true);
+
+      // Verificar se é gestor no banco de dados
+      const { data: isGestor } = await supabase.rpc('has_role', {
+        _user_id: session.user.id,
+        _role: 'gestor'
+      });
+
+      const { data: isAdmin } = await supabase.rpc('has_role', {
+        _user_id: session.user.id,
+        _role: 'admin'
+      });
+
+      setGestor(!!(isGestor || isAdmin));
+      setLoading(false);
+      setPronto(true);
+    }
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkAuth();
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  if (!pronto) {
+  if (loading || !pronto) {
     return (
-      <AppShell >
-        <TopBar titulo="Painel de Gestão" subtitulo="Acesso restrito" />
+      <AppShell>
+        <div className="flex min-h-[60vh] flex-col items-center justify-center p-4 text-center">
+          <div className="size-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="mt-4 text-sm font-medium text-muted-foreground tracking-tight">Verificando credenciais...</p>
+        </div>
       </AppShell>
     );
   }
 
-  if (!logado) {
+  // Se não estiver logado OU não for gestor, mostra a tela de Login
+  // Para manter a "separação segura", não dizemos que o usuário está logado mas sem permissão,
+  // apenas tratamos como acesso restrito.
+  if (!logado || !gestor) {
     return (
       <Login
         onEntrar={() => {
-          sessionStorage.setItem(CHAVE, "1");
-          setLogado(true);
+          // A função onEntrar aqui serve para avisar o componente que o estado mudou após login
+          // A verificação real acontece no useEffect do checkAuth
         }}
       />
     );
@@ -95,9 +137,10 @@ function Gestao() {
 
   return (
     <Painel
-      onSair={() => {
-        sessionStorage.removeItem(CHAVE);
+      onSair={async () => {
+        await supabase.auth.signOut();
         setLogado(false);
+        setGestor(false);
       }}
     />
   );
