@@ -200,8 +200,7 @@ export function useCidadao() {
         municipio: c.municipio,
         estado: c.estado,
         preferencias: c.preferencias,
-        updated_at: new Date().toISOString(),
-      });
+      } as any);
     }
   }, []);
 
