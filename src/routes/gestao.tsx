@@ -12,7 +12,14 @@ import {
   Sparkles,
   X,
   AlertTriangle,
+  LayoutDashboard,
+  ShieldCheck,
+  TrendingUp,
+  BrainCircuit,
+  Filter,
+  Search
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { AppShell, TopBar } from "@/components/AppShell";
 import { MapaOcorrencias } from "@/components/MapaOcorrencias";
 import {
@@ -279,166 +286,276 @@ function Painel({ onSair }: { onSair: () => void }) {
   ];
 
   return (
-    <AppShell >
-      <TopBar titulo="Painel de Gestão Pública" subtitulo="Inteligência Regional Cantuquiriguaçu" />
+    <AppShell>
+      <TopBar 
+        titulo="Painel de Gestão" 
+        subtitulo="Inteligência Regional Cantuquiriguaçu" 
+      />
 
-      <div className="-mt-6 space-y-6 px-4 pb-12">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
-              Centro de Comando Operacional
-            </p>
-            <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-tight">
-              {new Date().toLocaleDateString('pt-BR')} · Status: Ativo
-            </p>
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="-mt-6 space-y-6 px-4 pb-24"
+      >
+        {/* Barra de Pesquisa e Filtros Rápidos */}
+        <section className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <input 
+              type="text" 
+              placeholder="Pesquisar protocolo..." 
+              className="h-12 w-full rounded-2xl border border-border bg-card pl-10 pr-4 text-sm outline-none focus:border-primary/50 transition-all"
+            />
           </div>
-          <button
+          <button 
             onClick={onSair}
-            className="flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary-soft px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary transition-all hover:bg-primary/20 active:scale-95 shadow-sm"
+            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card border border-border text-destructive active:scale-95 transition-all shadow-sm"
+            title="Sair do Sistema"
           >
-            <LogOut className="size-3" /> Encerrar Sessão
+            <LogOut className="size-5" />
           </button>
-        </div>
+        </section>
 
-        {/* 1. Dashboard de Indicadores Críticos */}
+        {/* Resumo Superior com Estética Aprimorada */}
         <section className="grid grid-cols-2 gap-4">
-          {cards.map(({ icon: Icon, valor, label, nota, tom, itens }, i) => (
-            <button
+          {cards.slice(2, 4).map(({ icon: Icon, valor, label, nota, tom, itens }, i) => (
+            <motion.button
               key={label}
-              type="button"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.1 }}
+              whileHover={{ scale: 1.02 }}
               onClick={() => setDetalhe({ titulo: label, nota, itens })}
-              style={{ transitionDelay: `${i * 70}ms` }}
-              className={`relative overflow-hidden rounded-[2rem] border border-border bg-card p-5 text-left shadow-card transition-all duration-300 hover:border-primary/50 hover:shadow-float active:scale-[0.98] ${
-                animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-              }`}
+              className="rounded-[2rem] border border-border bg-card p-5 shadow-sm text-left relative overflow-hidden"
             >
-              <div className="flex items-center justify-between">
-                <div className={`flex size-10 items-center justify-center rounded-2xl ${tom.includes("destructive") ? "bg-destructive/10 text-destructive" : tom.includes("success") ? "bg-success/10 text-success" : "bg-primary-soft text-primary"}`}>
-                  <Icon className="size-5" />
-                </div>
-                {tom.includes("destructive") && valor > 0 && (
-                  <span className="flex size-2">
-                    <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-destructive opacity-75"></span>
-                    <span className="relative inline-flex size-2 rounded-full bg-destructive"></span>
-                  </span>
-                )}
+              <div className={`flex size-10 items-center justify-center rounded-2xl mb-3 ${tom.includes("destructive") ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
+                <Icon className="size-5" />
               </div>
-              <div className="mt-4">
-                <p className="font-display text-3xl font-bold tracking-tight text-foreground">{valor}</p>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5">{label}</p>
-              </div>
-              <div className="mt-3 flex items-center gap-1.5">
-                <p className={`text-[10px] font-bold ${tom.includes("destructive") ? "text-destructive" : "text-muted-foreground/70"}`}>
-                  {nota}
-                </p>
-              </div>
-            </button>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
+              <p className="mt-1 text-2xl font-black text-foreground">{valor}</p>
+              {tom.includes("destructive") && valor > 0 && (
+                <span className="absolute right-4 top-4 flex size-2">
+                  <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-destructive opacity-75"></span>
+                  <span className="relative inline-flex size-2 rounded-full bg-destructive"></span>
+                </span>
+              )}
+            </motion.button>
           ))}
-          
-          {/* Card Especial: Medicamentos */}
-          <button
-            type="button"
-            onClick={() => irParaMapa([], "saude")}
-            style={{ transitionDelay: `350ms` }}
-            className={`col-span-2 relative overflow-hidden rounded-[2.5rem] border border-border bg-card p-6 text-left shadow-card transition-all duration-300 hover:border-primary/50 hover:shadow-float active:scale-[0.98] ${
-              animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex size-12 items-center justify-center rounded-[1.25rem] bg-accent-soft text-accent">
-                  <span className="text-2xl">💊</span>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-foreground">{resumo.medicamentosEmFalta.length}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Itens em Falta Crítica</p>
-                </div>
-              </div>
-              <div className="flex -space-x-2">
-                 {resumo.medicamentosEmFalta.slice(0, 3).map((m, i) => (
-                   <div key={i} className="flex size-8 items-center justify-center rounded-full border-2 border-card bg-secondary text-[10px] font-bold shadow-sm">
-                     {m.nome.charAt(0)}
-                   </div>
-                 ))}
-                 {resumo.medicamentosEmFalta.length > 3 && (
-                   <div className="flex size-8 items-center justify-center rounded-full border-2 border-card bg-primary text-[10px] font-bold text-primary-foreground shadow-sm">
-                     +{resumo.medicamentosEmFalta.length - 3}
-                   </div>
-                 )}
-              </div>
-            </div>
-          </button>
         </section>
 
-        {/* 2. Central de Monitoramento (Mapa) */}
-        <section 
-          ref={mapaRef}
-          style={{ transitionDelay: "450ms" }}
-          className={`scroll-mt-4 transition-all duration-700 ${animar ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-        >
-          <MapaOcorrencias key={mapaFiltro} lista={lista} filtroInicial={mapaFiltro} destaque={destaque} />
-        </section>
+        {/* 1. Protocolos Críticos / Emergência */}
+        <DetalhesEmergencia alertasAtivos={alertasAtivos} setDetalhe={setDetalhe} animar={animar} />
 
-        {/* 3. Área de Intervenção Imediata (Precisa de Atenção) */}
-        <section
-          style={{ transitionDelay: "550ms" }}
-          className={`rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-7 shadow-card transition-all duration-500 ease-out ${
-            animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex size-11 items-center justify-center rounded-2xl bg-destructive/10">
-                <AlertTriangle className="size-6 text-destructive" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-foreground tracking-tight">Protocolos de Emergência</h2>
-                <p className="text-[11px] font-medium text-muted-foreground">Intervenção imediata recomendada pela IA Cantu.</p>
-              </div>
+        {/* 2. Prioridades Estratégicas */}
+        <section className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card">
+          <div className="mb-5 flex items-center justify-between px-1">
+            <div>
+              <h2 className="text-sm font-bold text-foreground">Ações Prioritárias</h2>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Foco Operacional Imediato</p>
             </div>
-            <span className="rounded-full bg-destructive px-3 py-1 text-[10px] font-black text-white shadow-sm">
-              {alertasAtivos.length} CRÍTICOS
-            </span>
+            <ShieldCheck className="size-5 text-primary/40" />
           </div>
-
-          <div className="mt-6 space-y-4">
-            {alertasAtivos.map((a) => (
-              <div key={a.id} className="group relative">
-                <button
-                  type="button"
-                  onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })}
-                  className="w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-sm transition-all duration-300 hover:border-destructive/40 hover:shadow-float active:scale-[0.99]"
-                >
-                  <div className="flex items-start gap-4">
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-secondary/50 text-2xl leading-none">{a.emoji}</span>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-bold text-foreground">{a.titulo}</p>
-                        <ChevronRight className="size-4 shrink-0 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
-                      </div>
-                      <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground font-medium">{a.detalhe}</p>
-                      
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest ${NIVEIS[a.nivel].classe}`}>
-                            {NIVEIS[a.nivel].rotulo}
-                          </span>
-                          <span className="text-[10px] font-bold text-destructive/80 flex items-center gap-1">
-                             <Clock3 className="size-3" /> {a.acao}
-                          </span>
-                        </div>
-                        <span className="text-[10px] font-bold text-primary underline underline-offset-2">Resolver agora</span>
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              </div>
+          
+          <div className="space-y-3">
+            {analise.criticas.slice(0, 3).map((o, idx) => (
+              <motion.button
+                key={o.protocolo}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + idx * 0.1 }}
+                whileHover={{ x: 4 }}
+                onClick={() => setDetalhe({ titulo: o.categoria, nota: o.bairro, itens: [o] })}
+                className="group w-full relative flex items-center gap-4 rounded-3xl bg-secondary/30 p-4 transition-all hover:bg-secondary/50 text-left"
+              >
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-card border border-border text-xl">
+                  {metaCategoria(o.categoria).emoji}
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <h3 className="truncate text-xs font-bold text-foreground">{o.categoria}</h3>
+                  <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                    {o.bairro} · <span className="text-destructive font-bold">{o.reclamacoes} reiterações</span>
+                  </p>
+                </div>
+                <ChevronRight className="size-4 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
+              </motion.button>
             ))}
           </div>
         </section>
 
-        {/* 4. Focos Regionais e Indicadores Setoriais */}
-        <section style={{ transitionDelay: "650ms" }} className={animar ? "opacity-100" : "opacity-0"}>
+        {/* 3. Mapa Interativo */}
+        <section ref={mapaRef} className="scroll-mt-4 rounded-[2.5rem] overflow-hidden border border-border shadow-card">
+          <MapaOcorrencias key={mapaFiltro} lista={lista} filtroInicial={mapaFiltro} destaque={destaque} />
+        </section>
+
+        {/* 4. Monitoramento por Setor */}
+        <MonitoramentoSetor focos={focos} setDetalhe={setDetalhe} setAcao={setAcao} animar={animar} />
+
+        {/* 5. Análise IA e Recomendação */}
+        <section className="rounded-[2.5rem] bg-primary p-7 text-primary-foreground shadow-lg shadow-primary/20 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16 blur-3xl pointer-events-none" />
+          
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="flex size-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md border border-white/20">
+              <BrainCircuit className="size-7" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold tracking-tight">Cantu IA Strategist</h2>
+              <p className="text-[10px] font-medium opacity-80 uppercase tracking-widest">Análise Regional Preditiva</p>
+            </div>
+          </div>
+
+          <div className="mt-6 relative z-10">
+            <p className="text-[13px] font-medium leading-relaxed opacity-90 italic border-l-2 border-white/30 pl-4">
+              "{analise.texto}"
+            </p>
+            
+            <div className="mt-5 rounded-2xl bg-white/10 border border-white/10 p-4 backdrop-blur-sm">
+              <p className="text-[10px] font-bold uppercase tracking-wider opacity-70 mb-1">Decisão Sugerida</p>
+              <p className="text-xs font-bold leading-relaxed">{analise.recomendacao}</p>
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-2 relative z-10">
+            <button 
+              onClick={() => setVerRecomendacao(!verRecomendacao)}
+              className="w-full rounded-2xl bg-white/20 py-3.5 text-[11px] font-bold backdrop-blur-md transition-all hover:bg-white/30 active:scale-[0.98] border border-white/10"
+            >
+              {verRecomendacao ? "Recolher Relatório" : "Ver Detalhes do Relatório"}
+            </button>
+            
+            <AnimatePresence>
+              {verRecomendacao && (
+                <motion.ul 
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="mt-2 space-y-2 overflow-hidden text-[11px] font-medium"
+                >
+                  {[
+                    `Mobilizar unidade técnica para ${analise.bairroFoco}.`,
+                    `Priorizar auditoria dos ${resumo.atrasadas} processos em atraso.`,
+                    `Monitorar KPI de ${analise.categoriaFoco.toLowerCase()} no próximo ciclo.`
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex gap-2 items-start py-1">
+                      <span className="font-bold text-white/60">{idx + 1}.</span>
+                      <span className="opacity-90">{item}</span>
+                    </li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+        </section>
+
+        {/* 6. Indicadores de Performance */}
+        <section className="rounded-[2.5rem] border border-border bg-card p-7 shadow-card">
+          <div className="mb-6 flex items-center justify-between px-1">
+            <div>
+              <h2 className="text-base font-bold text-foreground tracking-tight">Métricas de Eficiência</h2>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Performance Regional Cantu</p>
+            </div>
+            <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/10">
+              <TrendingUp className="size-5 text-primary" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">SLA Médio</p>
+              <p className="text-2xl font-black text-primary tracking-tighter">4.2 <span className="text-[10px] font-bold uppercase tracking-normal">dias</span></p>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "70%" }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="h-full bg-primary" 
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Resolução</p>
+              <p className="text-2xl font-black text-success tracking-tighter">92%</p>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "92%" }}
+                  transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+                  className="h-full bg-success" 
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      </motion.div>
+    </AppShell>
+  );
+}
+
+function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtivos: any[], setDetalhe: any, animar: boolean }) {
+  return (
+    <section
+      style={{ transitionDelay: "550ms" }}
+      className={`rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-7 shadow-card transition-all duration-500 ease-out ${
+        animar ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-destructive/10">
+            <AlertTriangle className="size-6 text-destructive" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-foreground tracking-tight">Protocolos de Emergência</h2>
+            <p className="text-[11px] font-medium text-muted-foreground">Intervenção imediata recomendada pela IA Cantu.</p>
+          </div>
+        </div>
+        <span className="rounded-full bg-destructive px-3 py-1 text-[10px] font-black text-white shadow-sm">
+          {alertasAtivos.length} CRÍTICOS
+        </span>
+      </div>
+
+      <div className="mt-6 space-y-4">
+        {alertasAtivos.map((a) => (
+          <div key={a.id} className="group relative">
+            <button
+              type="button"
+              onClick={() => setDetalhe({ titulo: a.titulo, nota: a.detalhe, itens: a.itens })}
+              className="w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-sm transition-all duration-300 hover:border-destructive/40 hover:shadow-float active:scale-[0.99]"
+            >
+              <div className="flex items-start gap-4">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-secondary/50 text-2xl leading-none">{a.emoji}</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-bold text-foreground">{a.titulo}</p>
+                    <ChevronRight className="size-4 shrink-0 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground font-medium">{a.detalhe}</p>
+                  
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest ${NIVEIS[a.nivel].classe}`}>
+                        {NIVEIS[a.nivel].rotulo}
+                      </span>
+                      <span className="text-[10px] font-bold text-destructive/80 flex items-center gap-1">
+                         <Clock3 className="size-3" /> {a.acao}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-bold text-primary underline underline-offset-2">Resolver agora</span>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any[], setDetalhe: any, setAcao: any, animar: boolean }) {
+  return (
+    <section style={{ transitionDelay: "650ms" }} className={animar ? "opacity-100" : "opacity-0"}>
+
           <div className="mb-5 flex items-center justify-between px-2">
             <div>
               <h2 className="text-base font-bold text-foreground tracking-tight">Monitoramento por Setor</h2>
@@ -515,142 +632,25 @@ function Painel({ onSair }: { onSair: () => void }) {
           </div>
         </section>
 
-        {/* 5. Atividade Recente (Log de Operação) */}
-        <section style={{ transitionDelay: "750ms" }} className={`rounded-[2.5rem] border border-border bg-card p-7 shadow-card transition-all duration-500 ${animar ? "opacity-100" : "opacity-0"}`}>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-base font-bold text-foreground tracking-tight">Fluxo de Operação Real-Time</h2>
-            <div className="flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-success animate-pulse" />
-              <span className="text-[9px] font-black text-success uppercase tracking-widest">Live</span>
-            </div>
-          </div>
-          
-          <div className="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-border/50">
-            {[
-              { time: "Há 8 min", desc: "Solicitação #CT-892 encaminhada para Obras", icon: "📤", color: "text-primary" },
-              { time: "Há 21 min", desc: "Protocolo de Iluminação Pública resolvido — Centro", icon: "🟢", color: "text-success" },
-              { time: "Há 34 min", desc: "Novo registro de Causa Animal — Bela Vista", icon: "🐾", color: "text-accent" },
-              { time: "Há 52 min", desc: "Relatório de Saúde Semanal consolidado pela IA", icon: "📊", color: "text-primary" }
-            ].map((log, idx) => (
-              <div key={idx} className="flex items-start gap-4 relative z-10">
-                <div className="flex size-6 items-center justify-center rounded-full bg-card border-2 border-border shadow-sm text-xs">
-                  {log.icon}
-                </div>
-                <div className="flex-1">
-                  <p className="text-[11px] font-bold text-foreground">{log.desc}</p>
-                  <p className="text-[9px] font-medium text-muted-foreground mt-0.5">{log.time}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <button className="mt-8 w-full rounded-2xl border border-border bg-secondary/50 py-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-secondary transition-all">
-            Ver Log Completo
-          </button>
-        </section>
-
-        {/* 6. Análise Estratégica IA Cantu */}
-        <section className="rounded-3xl border border-border bg-card p-6 shadow-card relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -translate-y-16 translate-x-16 blur-3xl pointer-events-none" />
-          
-          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] text-primary">
-            <Sparkles className="size-4 animate-pulse" /> 
-            <span>Inteligência Cantu Conecta</span>
-          </div>
-          
-          <div className="mt-5 flex flex-col gap-5">
-            <div className="relative">
-              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary/20 rounded-full" />
-              <p className="pl-5 text-sm font-medium leading-relaxed text-foreground italic">
-                "{analise.texto}"
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-2xl bg-success/5 p-4 border border-success/10">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-success/70 mb-1">Status Global</p>
-                <p className="text-xs font-bold text-success flex items-center gap-2">
-                  <span className="size-2 rounded-full bg-success animate-pulse" />
-                  Operação Estável
-                </p>
-              </div>
-              <div className="rounded-2xl bg-primary/5 p-4 border border-primary/10">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 mb-1">Processamento</p>
-                <p className="text-xs font-bold text-primary">Inteligência em Tempo Real</p>
-              </div>
+        {/* 7. Monitoramento Detalhado (Substitui Log e Indicadores Antigos) */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-base font-bold text-foreground">Operação & Monitoramento</h2>
+            <div className="flex items-center gap-2">
+              <span className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-sm">
+                <LayoutDashboard className="size-4" />
+              </span>
             </div>
           </div>
 
-          <div className="mt-5 rounded-2xl border-l-4 border-primary bg-primary-soft p-5">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">Recomendação Estratégica</p>
-            <p className="mt-2 text-sm font-semibold leading-relaxed text-foreground">{analise.recomendacao}</p>
-            {verRecomendacao && (
-              <ul className="mt-4 space-y-3 border-t border-primary/10 pt-4 text-[12px] font-medium text-muted-foreground">
-                <li className="flex gap-3">
-                  <span className="font-bold text-primary">01.</span>
-                  <span>Mobilizar unidade técnica para {analise.bairroFoco}.</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="font-bold text-primary">02.</span>
-                  <span>Priorizar auditoria dos {resumo.atrasadas} processos em atraso.</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="font-bold text-primary">03.</span>
-                  <span>Monitorar KPI de {analise.categoriaFoco.toLowerCase()} no próximo ciclo.</span>
-                </li>
-              </ul>
-            )}
-          </div>
-
-          <div className="mt-5 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setVerRecomendacao((v) => !v)}
-              className="rounded-full border border-border bg-background px-4 py-2 text-[10px] font-bold hover:bg-secondary active:scale-95 transition-all"
-            >
-              {verRecomendacao ? "Recolher Relatório" : "Ver Relatório"}
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                setDetalhe({
-                  titulo: analise.categoriaFoco,
-                  nota: `${analise.pctCategoria}% da demanda ativa`,
-                  itens: ativos.filter((o) => o.categoria === analise.categoriaFoco),
-                })
-              }
-              className="rounded-full border border-border bg-background px-4 py-2 text-[10px] font-bold hover:bg-secondary active:scale-95 transition-all"
-            >
-              Auditar Dados
-            </button>
-          </div>
-
-          <div className="-mx-6 mt-6 flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {PERGUNTAS_IA.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setRespostaIA(responderIA(p.id, lista))}
-                className="shrink-0 rounded-full border border-border bg-background px-4 py-2 text-[11px] font-bold text-muted-foreground transition-all hover:border-primary/30 hover:text-primary active:scale-95"
-              >
-                {p.texto}
-              </button>
-            ))}
-          </div>
-
-          {respostaIA && (
-            <div className="animate-in mt-4 rounded-3xl bg-primary-soft p-5 text-sm font-medium leading-relaxed text-primary-foreground/90 shadow-sm fade-in slide-in-from-bottom-2 duration-300">
-              🤖 {respostaIA}
-            </div>
-          )}
-        </section>
-
-        {/* 6. Indicadores */}
-        <section>
-          <h2 className="mb-4 text-sm font-bold text-foreground px-1">Indicadores de Desempenho</h2>
           <ul className="grid grid-cols-2 gap-4">
-            {indices.map((ind) => (
-              <li key={ind.grupo}>
+            {indices.map((ind, i) => (
+              <motion.li 
+                key={ind.grupo}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 * i }}
+              >
                 <button
                   type="button"
                   onClick={() =>
@@ -660,42 +660,59 @@ function Painel({ onSair }: { onSair: () => void }) {
                       itens: ind.itens,
                     })
                   }
-                  className="h-full w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-float active:scale-[0.98]"
+                  className="group h-full w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-card transition-all duration-300 hover:border-primary/30 hover:shadow-float active:scale-[0.98]"
                 >
-                  <p className="text-[11px] font-extrabold uppercase tracking-wider text-muted-foreground">{ind.grupo}</p>
-                  <p className="mt-2 font-display text-2xl font-bold text-foreground">{ind.abertas}</p>
-                  <p className="text-[10px] font-bold text-muted-foreground/60 uppercase">Solicitações</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{ind.grupo}</p>
+                  <div className="mt-3 flex items-end justify-between">
+                    <p className="font-display text-3xl font-black text-foreground tracking-tighter">{ind.abertas}</p>
+                    <div className={`mb-1 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black uppercase ${ind.tendencia >= 0 ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"}`}>
+                      {ind.tendencia >= 0 ? "↑" : "↓"} {Math.abs(ind.tendencia)}%
+                    </div>
+                  </div>
                   
-                  <div className="mt-4 space-y-1.5">
-                    <p className="text-[10px] font-semibold text-muted-foreground">
-                      {ind.execucao} em execução
-                    </p>
-                    <p className={`text-[10px] font-bold ${ind.atrasadas > 0 ? "text-destructive" : "text-success"}`}>
-                      {ind.atrasadas} em atraso
-                    </p>
-                    <p className={`text-[10px] font-black ${ind.tendencia >= 0 ? "text-destructive" : "text-success"}`}>
-                      {ind.tendencia >= 0 ? "↑" : "↓"} {Math.abs(ind.tendencia)}% vs. anterior
-                    </p>
+                  <div className="mt-5 space-y-2">
+                    <div className="flex items-center justify-between text-[10px] font-bold">
+                      <span className="text-muted-foreground">Execução</span>
+                      <span className="text-foreground">{ind.execucao}</span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(ind.execucao / (ind.abertas || 1)) * 100}%` }}
+                        className="h-full bg-primary/60" 
+                      />
+                    </div>
+                    {ind.atrasadas > 0 && (
+                      <p className="text-[9px] font-black text-destructive uppercase tracking-widest flex items-center gap-1">
+                        <AlertTriangle className="size-2.5" /> {ind.atrasadas} críticas em atraso
+                      </p>
+                    )}
                   </div>
                 </button>
-              </li>
+              </motion.li>
             ))}
           </ul>
         </section>
 
-        <section className="rounded-3xl border border-border bg-card p-4 shadow-card">
-          <h2 className="text-sm font-bold">Demanda por Área</h2>
-          <ul className="mt-3 space-y-3">
+        {/* 8. Demanda Consolidada por Área */}
+        <section className="rounded-[2.5rem] border border-border bg-card p-7 shadow-card">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-base font-bold text-foreground tracking-tight">Carga de Trabalho por Setor</h2>
+            <Filter className="size-4 text-muted-foreground/40" />
+          </div>
+          <ul className="space-y-4">
             {porArea.map((a, i) => (
               <li key={a.nome}>
-                <div className="flex justify-between text-xs font-medium">
-                  <span>{a.nome}</span>
-                  <span className="text-muted-foreground">{a.total}</span>
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider mb-1.5">
+                  <span className="text-muted-foreground">{a.nome}</span>
+                  <span className="text-primary">{a.total} agendamentos</span>
                 </div>
-                <div className="mt-1 h-2 overflow-hidden rounded-full bg-secondary">
-                  <div
-                    className="h-2 rounded-full bg-primary transition-[width] duration-700 ease-out"
-                    style={{ width: animar ? `${a.pct}%` : "0%", transitionDelay: `${300 + i * 90}ms` }}
+                <div className="h-3 overflow-hidden rounded-full bg-secondary/50 border border-border/10 p-0.5">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: animar ? `${a.pct}%` : "0%" }}
+                    transition={{ duration: 1, delay: 0.3 + i * 0.1 }}
+                    className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary shadow-sm"
                   />
                 </div>
               </li>
@@ -703,81 +720,96 @@ function Painel({ onSair }: { onSair: () => void }) {
           </ul>
         </section>
 
-        <section>
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
-              Solicitações dos cidadãos
-            </h2>
-            <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold">
-              {ocorrencias.length}
-            </span>
-          </div>
+        {/* 9. Solicitações e Fila de Atendimento */}
+        <div className="grid grid-cols-1 gap-6">
+          <section className="space-y-4">
+            <div className="flex items-center justify-between px-2">
+              <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                Ocorrências Recentes
+              </h2>
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-black text-primary">
+                {ocorrencias.length} TOTAL
+              </span>
+            </div>
 
-          {ocorrencias.length === 0 ? (
-            <p className="rounded-3xl bg-secondary p-4 text-xs text-muted-foreground">
-              Nenhum problema comunicado até o momento.
-            </p>
-          ) : (
-            <ul className="space-y-4">
-              {ocorrencias.map((o, i) => (
-                <CardOcorrencia key={o.protocolo} ocorrencia={o} indice={i} onStatus={atualizarStatus} />
-              ))}
-            </ul>
-          )}
-        </section>
+            {ocorrencias.length === 0 ? (
+              <div className="rounded-[2rem] border border-dashed border-border bg-card/50 p-10 text-center">
+                <Inbox className="size-10 text-muted-foreground/20 mx-auto mb-3" />
+                <p className="text-xs font-bold text-muted-foreground italic">
+                  Nenhum registro pendente no sistema.
+                </p>
+              </div>
+            ) : (
+              <ul className="space-y-4">
+                {ocorrencias.slice(0, 5).map((o, i) => (
+                  <CardOcorrencia key={o.protocolo} ocorrencia={o} indice={i} onStatus={atualizarStatus} />
+                ))}
+              </ul>
+            )}
+          </section>
 
-        <section>
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
-              Fila de atendimentos
-            </h2>
-            <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold">{fila.length}</span>
-          </div>
+          <section className="space-y-4">
+            <div className="flex items-center justify-between px-2">
+              <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                Fila de Atendimentos
+              </h2>
+              <span className="rounded-full bg-secondary px-3 py-1 text-[10px] font-black text-muted-foreground">
+                {fila.length} AGENDADOS
+              </span>
+            </div>
 
-          <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {[{ id: "todas", nome: "Todas" }, ...AREAS.map((a) => ({ id: a.nome, nome: a.nome }))].map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setFiltro(f.id)}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
-                  filtro === f.id
-                    ? "bg-primary text-primary-foreground shadow-card"
-                    : "bg-secondary text-secondary-foreground"
-                }`}
-              >
-                {f.nome}
-              </button>
-            ))}
-          </div>
-
-          {fila.length === 0 ? (
-            <p className="rounded-3xl bg-secondary p-4 text-xs text-muted-foreground">
-              Nenhum agendamento nesta fila.
-            </p>
-          ) : (
-            <ul className="space-y-3">
-              {fila.map((a, i) => (
-                <li
-                  key={a.id}
-                  style={{ animationDelay: `${i * 45}ms` }}
-                  className="flex animate-in items-center gap-4 rounded-3xl border border-border bg-card p-4 shadow-card fade-in slide-in-from-bottom-2 duration-500 transition-transform hover:-translate-y-0.5"
+            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {[{ id: "todas", nome: "Todas" }, ...AREAS.map((a) => ({ id: a.nome, nome: a.nome }))].map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setFiltro(f.id)}
+                  className={`shrink-0 rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${
+                    filtro === f.id
+                      ? "bg-primary text-primary-foreground shadow-float"
+                      : "bg-card border border-border text-muted-foreground hover:bg-secondary"
+                  }`}
                 >
-                  <CheckCircle2 className="size-5 text-success" />
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold">{a.servico}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {a.nome} · {a.unidade} · {new Date(a.data + "T00:00").toLocaleDateString("pt-BR")} {a.hora}
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-primary-soft px-2 py-1 text-[10px] font-bold text-primary">
-                    #{a.id}
-                  </span>
-                </li>
+                  {f.nome}
+                </button>
               ))}
-            </ul>
-          )}
-        </section>
-      </div>
+            </div>
+
+            {fila.length === 0 ? (
+              <div className="rounded-[2rem] border border-dashed border-border bg-card/50 p-10 text-center">
+                <p className="text-xs font-bold text-muted-foreground italic">
+                  Fila vazia para este setor.
+                </p>
+              </div>
+            ) : (
+              <ul className="space-y-3">
+                {fila.slice(0, 10).map((a, i) => (
+                  <motion.li
+                    key={a.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-4 rounded-3xl border border-border bg-card p-5 shadow-sm transition-all hover:shadow-md"
+                  >
+                    <div className="flex size-10 items-center justify-center rounded-2xl bg-success/10 text-success">
+                      <CheckCircle2 className="size-5" />
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                      <p className="text-xs font-bold truncate">{a.servico}</p>
+                      <p className="text-[10px] font-medium text-muted-foreground truncate">
+                        {a.nome} · {a.unidade} · {new Date(a.data + "T00:00").toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-primary-soft px-3 py-1 text-[9px] font-black text-primary">
+                      #{a.id}
+                    </span>
+                  </motion.li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+      </motion.div>
+
 
       {detalhe && (
         <DetalheLista
@@ -788,6 +820,7 @@ function Painel({ onSair }: { onSair: () => void }) {
           onMapa={(itens) => irParaMapa(itens)}
         />
       )}
+
 
       {aviso && (
         <div className="fixed inset-x-0 bottom-24 z-50 mx-auto w-[min(92%,26rem)] animate-in rounded-2xl bg-primary p-3 text-center text-xs font-semibold text-primary-foreground shadow-float fade-in slide-in-from-bottom-2 duration-300">
