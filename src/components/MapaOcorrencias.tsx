@@ -75,11 +75,14 @@ export function MapaOcorrencias({
 
     // Remover marcadores que não estão mais visíveis
     const visiveisIds = new Set(visiveis.map(v => v.protocolo));
-    visiveisIds.forEach(id => {
-      if (!markers.current[id]) return;
-      markers.current[id].remove();
-      delete markers.current[id];
+    Object.keys(markers.current).forEach(id => {
+      const marker = markers.current[id];
+      if (!visiveisIds.has(id) && marker) {
+        marker.remove();
+        delete markers.current[id];
+      }
     });
+
 
     // Adicionar/Atualizar marcadores
     visiveis.forEach(o => {
