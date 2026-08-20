@@ -187,16 +187,17 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
           <div className="mt-8 space-y-5">
             <div>
-              <label className="text-xs font-bold text-muted-foreground" htmlFor="usuario">
-                Usuário
+              <label className="text-xs font-bold text-muted-foreground" htmlFor="email">
+                E-mail Institucional
               </label>
               <input
-                id="usuario"
-                value={usuario}
-                onChange={(e) => setUsuario(e.target.value)}
-                autoComplete="username"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 className="mt-2 w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-sm outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10"
-                placeholder="Identificador do servidor"
+                placeholder="exemplo@prefeitura.gov.br"
               />
             </div>
 
