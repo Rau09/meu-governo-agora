@@ -58,37 +58,30 @@ function Atendimento() {
   ]);
 
   useEffect(() => {
-    const checkSearch = () => {
-      const sp = new URLSearchParams(window.location.search);
-      const pVal = sp.get('protocolo');
-      const aVal = sp.get('assunto');
+    // Usar os valores da busca do TanStack Router diretamente
+    if (protocolo || assunto) {
+      const txt = protocolo 
+        ? `Andamento do protocolo ${protocolo}`
+        : decodeURIComponent(assunto!).startsWith('adoção-')
+          ? `Quero saber mais sobre a adoção do ${decodeURIComponent(assunto!).replace('adoção-', '')}`
+          : decodeURIComponent(assunto!);
       
-      if (pVal || aVal) {
-        const txt = pVal 
-          ? `Andamento do protocolo ${pVal}`
-          : decodeURIComponent(aVal!).startsWith('adoção-')
-            ? `Quero saber mais sobre a adoção do ${decodeURIComponent(aVal!).replace('adoção-', '')}`
-            : decodeURIComponent(aVal!);
-        
+      setMsgs(prev => {
+        if (prev.some(m => m.texto === txt)) return prev;
+        return [
+          ...prev,
+          { de: "eu", texto: txt }
+        ];
+      });
+      
+      setTimeout(() => {
+        const r = responder(txt);
         setMsgs(prev => {
-          if (prev.some(m => m.texto === txt)) return prev;
-          return [
-            ...prev,
-            { de: "eu", texto: txt }
-          ];
+          if (prev.some(m => m.texto === r.texto)) return prev;
+          return [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }];
         });
-        
-        setTimeout(() => {
-          const r = responder(txt);
-          setMsgs(prev => {
-            if (prev.some(m => m.texto === r.texto)) return prev;
-            return [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }];
-          });
-        }, 300);
-      }
-    };
-
-    checkSearch();
+      }, 300);
+    }
   }, [protocolo, assunto]);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
