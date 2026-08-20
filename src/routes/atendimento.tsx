@@ -7,10 +7,12 @@ import { responder } from "@/lib/cantu-ia";
 import { useLibras } from "@/lib/libras-translator";
 
 
-type Busca = { protocolo?: string };
+type Busca = { protocolo?: string; assunto?: string };
 export const Route = createFileRoute("/atendimento")({
-  validateSearch: (search: Record<string, unknown>): Busca =>
-    typeof search['protocolo'] === "string" ? { protocolo: search['protocolo'] } : {},
+  validateSearch: (search: Record<string, unknown>): Busca => ({
+    protocolo: typeof search['protocolo'] === "string" ? search['protocolo'] : undefined,
+    assunto: typeof search['assunto'] === "string" ? search['assunto'] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Atendimento 24/7 — NexLine" },
@@ -46,7 +48,7 @@ const atalhos = [
 ];
 
 function Atendimento() {
-  const { protocolo } = Route.useSearch();
+  const { protocolo, assunto } = Route.useSearch();
   const { translate } = useLibras();
   
   const [msgs, setMsgs] = useState<Msg[]>([
@@ -61,8 +63,14 @@ function Atendimento() {
   useEffect(() => {
     if (protocolo) {
       enviar(`Andamento do protocolo ${protocolo}`);
+    } else if (assunto) {
+      if (assunto.startsWith('adoção-')) {
+        enviar(`Quero saber mais sobre a adoção do ${assunto.replace('adoção-', '')}`);
+      } else {
+        enviar(assunto);
+      }
     }
-  }, [protocolo]);
+  }, [protocolo, assunto]);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
 
