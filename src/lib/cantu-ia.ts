@@ -32,6 +32,24 @@ type Regra = {
 
 const REGRAS: Regra[] = [
   {
+    chaves: ["oi", "ola", "bom", "dia", "tarde", "noite", "saudacoes", "tudo", "bem"],
+    resposta: {
+      texto: "Olá! Tudo bem por aqui, e com você? Sou a inteligência do NexLine. Como posso ser útil para você hoje na região Cantuquiriguaçu?",
+    }
+  },
+  {
+    chaves: ["quem", "voce", "oque", "faz", "ajuda", "funcao", "ia", "bot"],
+    resposta: {
+      texto: "Eu sou o assistente digital integrado da Cantuquiriguaçu. Minha função é facilitar sua vida: posso agendar consultas, verificar remédios nas UBS, acompanhar protocolos de obras e até ajudar na causa animal. O que precisa agora?",
+    }
+  },
+  {
+    chaves: ["obrigado", "valeu", "tchau", "ate", "agradecido", "ajudou"],
+    resposta: {
+      texto: "Imagina, estou aqui para isso! Se precisar de mais alguma coisa, é só me chamar. Tenha um excelente dia!",
+    }
+  },
+  {
     chaves: ["consulta", "consultar", "medico", "clinico", "saude", "ubs", "posto", "dentista", "odonto", "exame", "pediatra", "especialista", "cardiologista", "ginecologista"],
     resposta: {
       texto:
