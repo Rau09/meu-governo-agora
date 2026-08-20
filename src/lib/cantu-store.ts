@@ -466,6 +466,17 @@ export const CATEGORIAS_OCORRENCIA = [
 
 export type StatusOcorrencia = "recebido" | "analise" | "encaminhado" | "andamento" | "resolvido";
 
+export type Ocorrencia = {
+  protocolo: string;
+  categoria: string;
+  descricao: string;
+  foto: string | undefined;
+  local: { lat: number; lng: number } | undefined;
+  endereco: string | undefined;
+  criadoEm: string;
+  status: StatusOcorrencia;
+};
+
 export const STATUS_OCORRENCIA: {
   id: StatusOcorrencia;
   rotulo: string;
