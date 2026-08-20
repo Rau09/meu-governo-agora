@@ -1,10 +1,6 @@
 import { type ReactNode, useRef } from "react";
-import { AnimatePresence } from "framer-motion";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, Building2, Hand } from "lucide-react";
-import { useState } from "react";
-import { LibrasAvatar } from "./LibrasAvatar";
-import { motion } from "framer-motion";
+import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, Building2 } from "lucide-react";
 
 const nav = [
   { to: "/", label: "Início", icon: Home },
@@ -21,33 +17,11 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const constraintsRef = useRef(null);
-  const [librasAberto, setLibrasAberto] = useState(false);
 
   return (
     <div className="min-h-dvh bg-secondary/40" ref={constraintsRef}>
       <div className="mx-auto min-h-dvh w-full max-w-[430px] bg-background shadow-float relative overflow-hidden">
         <main className="pb-28">{children}</main>
-
-        <motion.button
-          drag
-          dragConstraints={constraintsRef}
-          onClick={() => setLibrasAberto(true)}
-          className="fixed bottom-32 right-6 z-50 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-2xl active:scale-95 transition-transform"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Hand className="size-7" />
-          <span className="absolute -top-1 -right-1 flex h-4 w-4">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-white text-[8px] font-black text-primary items-center justify-center">
-              🤟
-            </span>
-          </span>
-        </motion.button>
-
-        <AnimatePresence>
-          {librasAberto && <LibrasAvatar onClose={() => setLibrasAberto(false)} />}
-        </AnimatePresence>
 
         <nav
           aria-label="Navegação principal"
