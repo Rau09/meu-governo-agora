@@ -1,6 +1,9 @@
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, Building2 } from "lucide-react";
+import { Home, Stethoscope, PawPrint, MessageCircle, UserRound, Building2, HandMetal } from "lucide-react";
+import { motion, useDragControls } from "framer-motion";
+import { useLibras } from "@/lib/libras-translator";
+import { LibrasAvatar } from "./LibrasAvatar";
 
 const nav = [
   { to: "/", label: "Início", icon: Home },
