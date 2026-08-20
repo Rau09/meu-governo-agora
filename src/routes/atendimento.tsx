@@ -194,6 +194,12 @@ function Atendimento() {
             </div>
           </div>
         ))}
+        {pensando && (
+          <div className="flex items-center gap-2 px-1 text-xs font-semibold text-muted-foreground">
+            <Bot className="size-4 animate-pulse" />
+            <span>Pensando...</span>
+          </div>
+        )}
         <div ref={fim} />
       </div>
 
