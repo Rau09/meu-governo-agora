@@ -119,9 +119,12 @@ function Medicamentos() {
             <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Building2 className="size-5" />
             </div>
-            <p className="mt-4 text-2xl font-black text-foreground">4</p>
+            <p className="mt-4 text-2xl font-black text-foreground">
+              {new Set(MEDICAMENTOS_REAL.map((m: any) => m.unidade)).size || 0}
+            </p>
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Unidades Atendendo</p>
           </div>
+
         </section>
 
         {/* 3. Lista de Medicamentos */}
@@ -140,9 +143,10 @@ function Medicamentos() {
             </div>
           ) : (
             <ul className="space-y-3">
-              {lista.map((m, i) => {
+              {lista.map((m: any, i: number) => {
                 const st = statusMedicamento(m.quantidade);
-                const isDemo = m.unidade === "Farmácia Municipal";
+                const isDemo = false; // Removendo flag estática já que os dados são do banco
+
                 return (
                   <li key={`${m.nome}-${m.unidade}`} style={{ animationDelay: `${i * 40}ms` }} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                     <button
