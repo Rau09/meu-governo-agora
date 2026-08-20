@@ -163,6 +163,20 @@ function Registro() {
   }
 
   /* ---- Cadastro ---- */
+  async function handleGoogleLogin() {
+    setEnviando(true);
+    setErro("");
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}/auth/callback`,
+    });
+
+    if (result.error) {
+      setErro("Erro ao iniciar login com Google.");
+      setEnviando(false);
+    }
+    // Redirecionamento acontece automaticamente se result.redirected é true
+  }
+
   async function enviar() {
     if (form.nome.trim().split(/\s+/).length < 2) {
       setErro("Informe seu nome completo (nome e sobrenome).");
@@ -192,8 +206,14 @@ function Registro() {
     
     setErro("");
     setEnviando(true);
+
+    // No novo modelo, incentivamos o uso do login social ou e-mail/senha seguro.
+    // Para manter compatibilidade com o "PIN" local, salvamos apenas localmente 
+    // se não houver sessão ativa. Mas o ideal é convidar para login social.
     const salt = gerarSalt();
-    salvar({
+    const pinHash = await hashPin(pin, salt);
+
+    await salvar({
       nome: form.nome.trim().slice(0, 80),
       cpf: form.cpf,
       telefone: form.telefone,
@@ -202,9 +222,10 @@ function Registro() {
       estado: form.estado,
       preferencias: form.preferencias,
       salt,
-      pinHash: await hashPin(pin, salt),
+      pinHash,
       consentimentoEm: new Date().toISOString(),
     });
+
     setEnviando(false);
     navigate({ to: "/saude" });
   }
