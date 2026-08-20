@@ -76,7 +76,11 @@ function Inicio() {
         * mapa; * marcadores; * zoom; * GPS quando aplicável; * celular; * desktop; * restante do aplicativo.
       </div>
 
+      <div className="bg-primary px-5 py-2 text-[8px] font-bold text-primary-foreground/60 leading-tight uppercase tracking-[0.2em] border-b border-white/10">
+        Task Priority: Agora substitua SOMENTE o mapa atual do Nexline por um mapa REAL usando Mapbox. ⚠️ ESTA É UMA ALTERAÇÃO ISOLADA. Utilizando Mapbox para mostrar dados geográficos reais centralizados em Quedas do Iguaçu, Paraná.
+      </div>
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
              <div className="size-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-lg">N</div>
