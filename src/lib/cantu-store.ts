@@ -613,10 +613,10 @@ export function useOcorrencias() {
     write(KEY_OCOR, [nova, ...atual]);
 
     // Salvar remoto se logado
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      await supabase.from('ocorrencias').insert({
-        user_id: session.user.id,
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+    if (currentSession?.user) {
+      const { error } = await supabase.from('ocorrencias').insert({
+        user_id: currentSession.user.id,
         protocolo: protocolo,
         categoria: o.categoria,
         descricao: o.descricao,
@@ -626,10 +626,12 @@ export function useOcorrencias() {
         endereco: o.endereco ?? null,
         status: "recebido"
       });
+      if (error) console.error("Erro ao salvar ocorrência no Supabase:", error);
     }
 
     return nova;
   }, []);
+
 
   const atualizarStatus = useCallback(async (protocolo: string, status: StatusOcorrencia) => {
     const atual = read<Ocorrencia[]>(KEY_OCOR, []);
