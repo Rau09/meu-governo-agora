@@ -110,11 +110,13 @@ function ComunicarProblema() {
     try {
       let fotoUrl = null;
 
-      // 1. Upload da foto se existir
+      // 1. Upload da foto se existir (armazenada na pasta privada do usuário)
       if (foto) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("Sessão expirada");
+
         const fileExt = foto.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `${fileName}`;
+        const filePath = `${user.id}/${crypto.randomUUID()}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
           .from('ocorrencias')
@@ -122,11 +124,7 @@ function ComunicarProblema() {
 
         if (uploadError) throw uploadError;
 
-        const { data: { publicUrl } } = supabase.storage
-          .from('ocorrencias')
-          .getPublicUrl(filePath);
-        
-        fotoUrl = publicUrl;
+        fotoUrl = filePath;
       }
 
       // 2. Criar ocorrência
