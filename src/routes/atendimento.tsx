@@ -64,10 +64,11 @@ function Atendimento() {
     if (protocolo) {
       enviar(`Andamento do protocolo ${protocolo}`);
     } else if (assunto) {
-      if (assunto.startsWith('adoção-')) {
-        enviar(`Quero saber mais sobre a adoção do ${assunto.replace('adoção-', '')}`);
+      const decoded = decodeURIComponent(assunto);
+      if (decoded.startsWith('adoção-')) {
+        enviar(`Quero saber mais sobre a adoção do ${decoded.replace('adoção-', '')}`);
       } else {
-        enviar(assunto);
+        enviar(decoded);
       }
     }
   }, [protocolo, assunto]);
