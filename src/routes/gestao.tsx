@@ -379,8 +379,8 @@ function DetalhesEmergencia({ alertasAtivos, setDetalhe, animar }: { alertasAtiv
                   
                   <div className="mt-4 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest ${NIVEIS[a.nivel].classe}`}>
-                        {NIVEIS[a.nivel].rotulo}
+                      <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest ${NIVEIS[a.nivel as keyof typeof NIVEIS].classe}`}>
+                        {NIVEIS[a.nivel as keyof typeof NIVEIS].rotulo}
                       </span>
                       <span className="text-[10px] font-bold text-destructive/80 flex items-center gap-1">
                          <Clock3 className="size-3" /> {a.acao}
