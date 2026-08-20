@@ -245,46 +245,48 @@ export function useAgendamentos() {
     // Sincronizar remoto se logado
     if (session?.user) {
       const fetchRemoto = async () => {
-        // Verificar se é gestor
-        const { data: isGestor } = await supabase.rpc('has_role', {
-          _user_id: session.user.id,
-          _role: 'gestor'
-        });
-        const { data: isAdmin } = await supabase.rpc('has_role', {
-          _user_id: session.user.id,
-          _role: 'admin'
-        });
+        try {
+          // Verificar se é gestor
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', session.user.id);
+          
+          const roles = roleData?.map(r => r.role) || [];
+          const isStaff = roles.includes('gestor') || roles.includes('admin');
 
-        let query = supabase.from('agendamentos').select('*');
-        
-        // Se não for gestor/admin, filtra apenas os próprios
-        if (!isGestor && !isAdmin) {
-          query = query.eq('user_id', session.user.id);
-        }
-
-        const { data, error } = await query.order('criado_em', { ascending: false });
-
-        if (data && !error) {
-          const remoteAgendas: Agendamento[] = data.map(d => ({
-            id: d.protocolo,
-            area: d.area,
-            servico: d.servico,
-            unidade: d.unidade,
-            data: d.data,
-            hora: d.hora,
-            nome: d.nome_paciente,
-            criadoEm: d.criado_em || new Date().toISOString(),
-            status: d.status as any,
-          }));
-          setAgendamentos(remoteAgendas);
-          // Só salva no local se for o próprio usuário (evita misturar dados de gestão no local)
-          if (!isGestor && !isAdmin) {
-            write(KEY_AGENDA, remoteAgendas);
+          let query = supabase.from('agendamentos').select('*');
+          
+          if (!isStaff) {
+            query = query.eq('user_id', session.user.id);
           }
+
+          const { data, error } = await query.order('criado_em', { ascending: false });
+
+          if (data && !error) {
+            const remoteAgendas: Agendamento[] = data.map(d => ({
+              id: d.protocolo,
+              area: d.area,
+              servico: d.servico,
+              unidade: d.unidade,
+              data: d.data,
+              hora: d.hora,
+              nome: d.nome_paciente,
+              criadoEm: d.criado_em || new Date().toISOString(),
+              status: d.status as any,
+            }));
+            setAgendamentos(remoteAgendas);
+            if (!isStaff) {
+              write(KEY_AGENDA, remoteAgendas);
+            }
+          }
+        } catch (err) {
+          console.error("Erro ao carregar agendamentos:", err);
         }
       };
       fetchRemoto();
     }
+
 
     return () => window.removeEventListener("cantu-store", syncLocal);
   }, [session]);
