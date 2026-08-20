@@ -325,6 +325,69 @@ function Registro() {
         </div>
 
         <div className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card min-h-[300px] flex flex-col">
+          {passo === 5 && (
+            <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <ShieldCheck className="size-6" />
+                <h2 className="font-bold text-lg">Preferências & Privacidade</h2>
+              </div>
+              
+              <div className="space-y-2">
+                <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Desejo receber alertas de:</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    "Consultas", "Vacinação", "Obras", "Causa Animal"
+                  ].map(pref => (
+                    <button
+                      key={pref}
+                      type="button"
+                      onClick={() => {
+                        const current = form.preferencias;
+                        setForm({
+                          ...form,
+                          preferencias: current.includes(pref)
+                            ? current.filter(p => p !== pref)
+                            : [...current, pref]
+                        });
+                      }}
+                      className={`px-3 py-2 rounded-xl text-[10px] font-bold border transition-all ${
+                        form.preferencias.includes(pref)
+                          ? "bg-primary/10 border-primary text-primary"
+                          : "bg-secondary border-border text-muted-foreground"
+                      }`}
+                    >
+                      {pref}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <label className="flex items-start gap-3 rounded-2xl bg-secondary p-5 text-xs text-muted-foreground border border-border cursor-pointer active:scale-[0.98] transition-transform">
+                <input
+                  type="checkbox"
+                  checked={aceite}
+                  onChange={(e) => setAceite(e.target.checked)}
+                  className="mt-0.5 size-5 accent-[hsl(var(--primary))]"
+                />
+                <span className="leading-relaxed">
+                  Autorizo o uso dos meus dados para fins de agendamento e serviços públicos na região Cantuquiriguaçu, conforme a LGPD.
+                </span>
+              </label>
+
+              <div className="space-y-3">
+                {[
+                  "Dados criptografados de ponta a ponta",
+                  "Privacidade garantida por padrão",
+                  "Exclusão de dados a qualquer momento",
+                ].map((b) => (
+                  <div key={b} className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                    <CheckCircle2 className="size-4 text-success shrink-0" /> {b}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {passo === 2 && (
             <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center gap-3 text-primary mb-2">
