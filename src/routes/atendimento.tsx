@@ -61,32 +61,28 @@ function Atendimento() {
   ]);
 
   useEffect(() => {
-    // Usar um timer maior para garantir que o componente e o motor de IA estejam prontos
-    const timer = setTimeout(() => {
-      const sp = new URLSearchParams(window.location.search);
-      const p = sp.get('protocolo');
-      const a = sp.get('assunto');
+    const sp = new URLSearchParams(window.location.search);
+    const p = sp.get('protocolo');
+    const a = sp.get('assunto');
+    
+    if (p || a) {
+      const txt = p 
+        ? `Andamento do protocolo ${p}`
+        : decodeURIComponent(a!).startsWith('adoção-')
+          ? `Quero saber mais sobre a adoção do ${decodeURIComponent(a!).replace('adoção-', '')}`
+          : decodeURIComponent(a!);
+
+      setMsgs([
+        {
+          de: "bot",
+          texto: "Olá! Sou a assistente do NexLine. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
+        },
+        { de: "eu", texto: txt }
+      ]);
       
-      if (p) {
-        setMsgs(prev => [...prev, { de: "eu", texto: `Andamento do protocolo ${p}` }]);
-        setTimeout(() => {
-          const r = responder(`Andamento do protocolo ${p}`);
-          setMsgs(prev => [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
-        }, 500);
-      } else if (a) {
-        const decoded = decodeURIComponent(a);
-        const txt = decoded.startsWith('adoção-') 
-          ? `Quero saber mais sobre a adoção do ${decoded.replace('adoção-', '')}`
-          : decoded;
-          
-        setMsgs(prev => [...prev, { de: "eu", texto: txt }]);
-        setTimeout(() => {
-          const r = responder(txt);
-          setMsgs(prev => [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
-        }, 500);
-      }
-    }, 800);
-    return () => clearTimeout(timer);
+      const r = responder(txt);
+      setMsgs(prev => [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
+    }
   }, []);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
