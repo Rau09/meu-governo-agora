@@ -79,6 +79,7 @@ function Agendamento() {
     setFeito(null);
     
     try {
+      if (!area) throw new Error("Área não selecionada.");
       const novo = await criar({
         area: area.nome,
         servico,
