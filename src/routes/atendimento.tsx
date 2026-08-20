@@ -65,8 +65,6 @@ function Atendimento() {
     const prot = searchParams.get('protocolo');
     const ass = searchParams.get('assunto');
     
-    console.log("Atendimento raw search:", { prot, ass });
-    
     if (prot) {
       enviar(`Andamento do protocolo ${prot}`);
     } else if (ass) {
@@ -78,17 +76,6 @@ function Atendimento() {
       }
     }
   }, []);
-    if (protocolo) {
-      enviar(`Andamento do protocolo ${protocolo}`);
-    } else if (assunto) {
-      const decoded = decodeURIComponent(assunto);
-      if (decoded.startsWith('adoção-')) {
-        enviar(`Quero saber mais sobre a adoção do ${decoded.replace('adoção-', '')}`);
-      } else {
-        enviar(decoded);
-      }
-    }
-  }, [protocolo, assunto]);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
 
