@@ -203,6 +203,36 @@ export type Database = {
         }
         Relationships: []
       }
+      servicos_municipais: {
+        Row: {
+          cor_classe: string
+          criado_em: string | null
+          id: string
+          nome: string
+          servicos: string[]
+          slug: string
+          unidades: string[]
+        }
+        Insert: {
+          cor_classe: string
+          criado_em?: string | null
+          id?: string
+          nome: string
+          servicos: string[]
+          slug: string
+          unidades: string[]
+        }
+        Update: {
+          cor_classe?: string
+          criado_em?: string | null
+          id?: string
+          nome?: string
+          servicos?: string[]
+          slug?: string
+          unidades?: string[]
+        }
+        Relationships: []
+      }
       unidades_saude: {
         Row: {
           criado_em: string | null
