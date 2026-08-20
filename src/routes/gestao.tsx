@@ -643,6 +643,7 @@ function MonitoramentoSetor({ focos, setDetalhe, setAcao, animar }: { focos: any
             </div>
           </div>
 
+
           <ul className="grid grid-cols-2 gap-4">
             {indices.map((ind, i) => (
               <motion.li 
