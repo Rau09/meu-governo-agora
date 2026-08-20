@@ -58,28 +58,33 @@ function Atendimento() {
   ]);
 
   useEffect(() => {
-    const sp = new URLSearchParams(window.location.search);
-    const pVal = sp.get('protocolo');
-    const aVal = sp.get('assunto');
-    
-    if (pVal || aVal) {
-      const txt = pVal 
-        ? `Andamento do protocolo ${pVal}`
-        : decodeURIComponent(aVal!).startsWith('adoção-')
-          ? `Quero saber mais sobre a adoção do ${decodeURIComponent(aVal!).replace('adoção-', '')}`
-          : decodeURIComponent(aVal!);
+    // Aumentar o delay para garantir que o componente montou e as funções estão no escopo
+    const timer = setTimeout(() => {
+      const sp = new URLSearchParams(window.location.search);
+      const pVal = sp.get('protocolo');
+      const aVal = sp.get('assunto');
       
-      setMsgs(prev => [
-        ...prev,
-        { de: "eu", texto: txt }
-      ]);
-      
-      // Pequeno delay para a resposta parecer natural
-      setTimeout(() => {
+      console.log("Atendimento useEffect check:", { pVal, aVal });
+
+      if (pVal || aVal) {
+        const txt = pVal 
+          ? `Andamento do protocolo ${pVal}`
+          : decodeURIComponent(aVal!).startsWith('adoção-')
+            ? `Quero saber mais sobre a adoção do ${decodeURIComponent(aVal!).replace('adoção-', '')}`
+            : decodeURIComponent(aVal!);
+        
+        console.log("Atendimento injecting msg:", txt);
+
+        setMsgs(prev => [
+          ...prev,
+          { de: "eu", texto: txt }
+        ]);
+        
         const r = responder(txt);
         setMsgs(prev => [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
-      }, 500);
-    }
+      }
+    }, 500);
+    return () => clearTimeout(timer);
   }, []);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
