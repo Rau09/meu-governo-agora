@@ -1,22 +1,128 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { MapPin, X } from "lucide-react";
 import {
   BAIRROS,
   FILTROS_MAPA,
   NIVEIS,
   atrasada,
-  concentracao,
-  diasAberto,
   metaCategoria,
   nivel,
+  diasAberto,
+  concentracao,
   type OcorrenciaGestao,
 } from "@/lib/cantu-gestao";
 import { STATUS_OCORRENCIA } from "@/lib/cantu-store";
 
+// Importação dinâmica do Leaflet para evitar problemas de SSR
+let MapContainer: any;
+let TileLayer: any;
+let Marker: any;
+let useMap: any;
+let L: any;
+
 /**
- * Mapa de ocorrências (mapa esquemático da cidade, sem dependências externas).
- * Os marcadores vêm da mesma lista usada pelo resto do painel.
+ * Componente de Mapa Real usando Leaflet.
+ * Renderizado apenas no cliente para evitar erros de SSR.
  */
+function RealMap({
+  visiveis,
+  destaque,
+  onSelect,
+  selProtocolo,
+}: {
+  visiveis: OcorrenciaGestao[];
+  destaque?: string[];
+  onSelect: (o: OcorrenciaGestao) => void;
+  selProtocolo?: string;
+}) {
+  const center: [number, number] = [-25.4581, -52.9122]; // Quedas do Iguaçu / Cantu
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Carrega o Leaflet apenas no lado do cliente
+    Promise.all([
+      import("react-leaflet"),
+      import("leaflet")
+    ]).then(([ReactLeaflet, Leaflet]) => {
+      MapContainer = ReactLeaflet.MapContainer;
+      TileLayer = ReactLeaflet.TileLayer;
+      Marker = ReactLeaflet.Marker;
+      useMap = ReactLeaflet.useMap;
+      L = Leaflet.default;
+      setIsLoaded(true);
+    });
+  }, []);
+
+  if (!isLoaded) {
+    return (
+      <div className="flex size-full items-center justify-center bg-secondary/20">
+        <span className="text-xs font-bold text-muted-foreground animate-pulse uppercase tracking-widest">
+          Carregando Base Geográfica...
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <MapContainer
+      center={center}
+      zoom={14}
+      scrollWheelZoom={true}
+      className="size-full z-0"
+      zoomControl={false}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+      />
+      
+      {visiveis.map((o) => {
+        const n = nivel(o);
+        const meta = metaCategoria(o.categoria);
+        const isSelected = selProtocolo === o.protocolo;
+        const isHighlighted = destaque?.includes(o.protocolo);
+        
+        // Custom marker using divIcon for NexLine style
+        const icon = L.divIcon({
+          className: 'custom-div-icon',
+          html: `
+            <div class="relative flex size-8 items-center justify-center rounded-xl border-2 shadow-lg transition-all duration-300 ${
+              o.status === "resolvido"
+                ? "border-green-500/50 bg-green-500/20 opacity-60"
+                : n === "critico"
+                  ? "border-red-500 bg-red-500/20 animate-bounce shadow-red-500/20"
+                  : n === "alta"
+                    ? "border-amber-500 bg-amber-500/20"
+                    : "border-primary/40 bg-white/90"
+            } ${isSelected ? "scale-125 ring-2 ring-primary z-50" : ""} ${isHighlighted ? "ring-2 ring-primary ring-offset-2 z-40" : ""}">
+              <span class="text-base">${meta.emoji}</span>
+              ${n === "critico" ? `
+                <span class="absolute -right-1 -top-1 flex size-3">
+                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+                  <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                </span>
+              ` : ''}
+            </div>
+          `,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+        });
+
+        return (
+          <Marker
+            key={o.protocolo}
+            position={[o.lat, o.lng]}
+            icon={icon}
+            eventHandlers={{
+              click: () => onSelect(o),
+            }}
+          />
+        );
+      })}
+    </MapContainer>
+  );
+}
+
 export function MapaOcorrencias({
   lista,
   filtroInicial = "todos",
@@ -34,22 +140,6 @@ export function MapaOcorrencias({
     () => (filtro === "todos" ? ativos : ativos.filter((o) => metaCategoria(o.categoria).filtro === filtro)),
     [ativos, filtro],
   );
-
-  const limites = useMemo(() => {
-    const lats = BAIRROS.map((b) => b.lat);
-    const lngs = BAIRROS.map((b) => b.lng);
-    return {
-      minLat: Math.min(...lats) - 0.012,
-      maxLat: Math.max(...lats) + 0.012,
-      minLng: Math.min(...lngs) - 0.014,
-      maxLng: Math.max(...lngs) + 0.014,
-    };
-  }, []);
-
-  const pos = (o: { lat: number; lng: number }) => ({
-    left: `${((o.lng - limites.minLng) / (limites.maxLng - limites.minLng)) * 100}%`,
-    top: `${(1 - (o.lat - limites.minLat) / (limites.maxLat - limites.minLat)) * 100}%`,
-  });
 
   const conc = useMemo(() => {
     const cat = filtro === "todos" ? undefined : visiveis[0]?.categoria;
@@ -90,86 +180,24 @@ export function MapaOcorrencias({
         ))}
       </div>
 
-      <div className="relative mt-3 aspect-[16/9] w-full overflow-hidden rounded-[2rem] border border-border bg-[#f8f9fa] shadow-inner">
-        {/* Google Maps inspired base style */}
-        <div className="absolute inset-0">
-          <svg viewBox="0 0 100 56" className="size-full" preserveAspectRatio="none">
-            {/* Soft Green areas (Parks/Nature) */}
-            <path d="M0 0 L40 0 L35 15 L0 20 Z M70 0 L100 0 L100 30 L80 25 Z" fill="#e8f5e9" />
-            
-            {/* Water areas (Lakes/Rivers) */}
-            <path d="M-10 45 C 20 42, 40 48, 60 43 S 80 47, 110 44 L 110 56 L -10 56 Z" fill="#c6e2ff" />
-          </svg>
-        </div>
-
-        {/* Street Network (Modern Google Maps aesthetic) */}
-        <svg viewBox="0 0 100 56" className="absolute inset-0 size-full" aria-hidden="true" preserveAspectRatio="none">
-          {/* Secondary Roads (White) */}
-          <g className="stroke-white" fill="none" strokeWidth="0.8" strokeLinecap="round">
-            <path d="M10 0 V56 M20 0 V56 M40 0 V56 M60 0 V56 M80 0 V56 M90 0 V56" />
-            <path d="M0 10 H100 M0 20 H100 M0 40 H100 M0 50 H100" />
-          </g>
-
-          {/* Main Arteries (Soft Yellow/Orange) */}
-          <path d="M0 30 C 25 29, 50 31, 100 30" className="fill-none stroke-[#fff9c4]" strokeWidth="3" strokeLinecap="round" />
-          <path d="M30 0 C 29 25, 31 50, 30 56" className="fill-none stroke-[#fff9c4]" strokeWidth="2.5" strokeLinecap="round" />
-          
-          {/* Highway outlines for depth */}
-          <path d="M0 30 C 25 29, 50 31, 100 30" className="fill-none stroke-[#fdd835]/30" strokeWidth="4" />
-        </svg>
-
-        {/* Nomes dos Bairros com Estética Clean */}
-        {BAIRROS.map((b) => (
-          <div
-            key={b.nome}
-            style={pos(b)}
-            className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
-          >
-            <span className="whitespace-nowrap rounded-md bg-background/60 px-1.5 py-0.5 text-[8px] font-bold tracking-widest text-muted-foreground/80 backdrop-blur-[2px]">
-              {b.nome.toUpperCase()}
-            </span>
-          </div>
-        ))}
-
-        {/* Halo de concentração (Heatmap effect) */}
-        {conc && conc.qtd >= 3 && (
-          <div
-            style={pos(BAIRROS.find((b) => b.nome === conc.bairro) ?? BAIRROS[0]!)}
-            className="pointer-events-none absolute size-32 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full bg-destructive/10 blur-xl"
-          />
-        )}
-
-        {/* Marcadores Estilizados */}
-        {visiveis.map((o) => {
-          const n = nivel(o);
-          const realce = destaque?.includes(o.protocolo);
-          return (
-            <button
-              key={o.protocolo}
-              type="button"
-              onClick={() => setSel(o)}
-              aria-label={`${o.categoria} em ${o.bairro}`}
-              style={pos(o)}
-              className={`absolute flex size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl border-2 shadow-lg transition-all duration-300 hover:scale-125 hover:z-10 active:scale-95 ${
-                o.status === "resolvido"
-                  ? "border-success/50 bg-success/20 opacity-60"
-                  : n === "critico"
-                    ? "border-destructive bg-destructive/20 animate-bounce shadow-destructive/20"
-                    : n === "alta"
-                      ? "border-accent bg-accent/20"
-                      : "border-primary/40 bg-card/90"
-              } ${realce ? "ring-2 ring-primary ring-offset-2 ring-offset-background z-20" : ""} ${sel?.protocolo === o.protocolo ? "scale-125 ring-2 ring-primary z-20" : ""}`}
-            >
-              <span className="text-base">{metaCategoria(o.categoria).emoji}</span>
-              {n === "critico" && (
-                <span className="absolute -right-1 -top-1 flex size-3">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"></span>
-                  <span className="relative inline-flex size-3 rounded-full bg-destructive"></span>
+      <div className="relative mt-3 aspect-[16/9] w-full overflow-hidden rounded-[2rem] border border-border bg-[#f8f9fa] shadow-inner isolate">
+        <RealMap 
+          visiveis={visiveis} 
+          destaque={destaque} 
+          onSelect={setSel} 
+          selProtocolo={sel?.protocolo}
+        />
+        
+        {/* Nomes dos Bairros - Apenas como Labels fixos ou podemos deixar o Leaflet lidar com isso */}
+        <div className="pointer-events-none absolute bottom-4 left-4 z-10 space-y-1">
+          {BAIRROS.slice(0, 3).map((b) => (
+             <div key={b.nome} className="inline-block mr-2">
+                <span className="whitespace-nowrap rounded-md bg-white/80 px-1.5 py-0.5 text-[8px] font-bold tracking-widest text-muted-foreground/80 backdrop-blur-[2px] border border-border/50">
+                  {b.nome.toUpperCase()}
                 </span>
-              )}
-            </button>
-          );
-        })}
+             </div>
+          ))}
+        </div>
       </div>
 
       {conc && conc.qtd >= 2 && (
