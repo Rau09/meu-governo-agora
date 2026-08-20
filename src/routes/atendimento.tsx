@@ -61,24 +61,32 @@ function Atendimento() {
   ]);
 
   useEffect(() => {
-    // Timeout para garantir que o componente montou e as funções estão prontas
-    const t = setTimeout(() => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const prot = searchParams.get('protocolo');
-      const ass = searchParams.get('assunto');
+    // Usar um timer maior para garantir que o componente e o motor de IA estejam prontos
+    const timer = setTimeout(() => {
+      const sp = new URLSearchParams(window.location.search);
+      const p = sp.get('protocolo');
+      const a = sp.get('assunto');
       
-      if (prot) {
-        enviar(`Andamento do protocolo ${prot}`);
-      } else if (ass) {
-        const decoded = decodeURIComponent(ass);
-        if (decoded.startsWith('adoção-')) {
-          enviar(`Quero saber mais sobre a adoção do ${decoded.replace('adoção-', '')}`);
-        } else {
-          enviar(decoded);
-        }
+      if (p) {
+        setMsgs(prev => [...prev, { de: "eu", texto: `Andamento do protocolo ${p}` }]);
+        setTimeout(() => {
+          const r = responder(`Andamento do protocolo ${p}`);
+          setMsgs(prev => [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
+        }, 500);
+      } else if (a) {
+        const decoded = decodeURIComponent(a);
+        const txt = decoded.startsWith('adoção-') 
+          ? `Quero saber mais sobre a adoção do ${decoded.replace('adoção-', '')}`
+          : decoded;
+          
+        setMsgs(prev => [...prev, { de: "eu", texto: txt }]);
+        setTimeout(() => {
+          const r = responder(txt);
+          setMsgs(prev => [...prev, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
+        }, 500);
       }
-    }, 100);
-    return () => clearTimeout(t);
+    }, 800);
+    return () => clearTimeout(timer);
   }, []);
   const [texto, setTexto] = useState("");
   const fim = useRef<HTMLDivElement>(null);
