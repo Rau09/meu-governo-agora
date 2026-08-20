@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, Pill, AlertTriangle, CheckCircle2, Building2, MapPin, ChevronRight, Info, AlertCircle, BarChart3, Clock } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { MEDICAMENTOS, statusMedicamento, type Medicamento } from "@/lib/cantu-store";
+import { MEDICAMENTOS, statusMedicamento, type Medicamento, useMedicamentos } from "@/lib/cantu-store";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/medicamentos")({
