@@ -8,7 +8,7 @@ import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento, use
  * gestão de causa animal, serviços urbanos e suporte ao cidadão.
  */
 
-export type Resposta = { texto: string; acao?: { rotulo: string; para: string } };
+export type Resposta = { texto: string; acao?: { rotulo: string; para: string }; generico?: boolean };
 
 function normalizar(p: string) {
   return p
@@ -255,8 +255,9 @@ export function responder(pergunta: string): Resposta {
   
   if (melhor) return melhor.regra.resposta;
 
-  // Resposta de fallback fluida
+  // Resposta de fallback fluida (será substituída pela IA avançada quando disponível)
   return {
+    generico: true,
     texto:
       "Ainda estou aprendendo a conversar sobre alguns assuntos, mas conheço tudo sobre os serviços da NexLine na nossa região! Posso te ajudar com saúde, zeladoria urbana ou causa animal. O que acha de começarmos por um desses?",
   };
