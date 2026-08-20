@@ -28,17 +28,17 @@ export const Route = createFileRoute("/agendamento")({
 function Agendamento() {
   const { servico: servicoInicial } = Route.useSearch();
   const { cidadao } = useCidadao();
+  const AREAS_REAL = useServicos();
   
   const { agendamentos, criar, cancelar } = useAgendamentos();
 
-
   const areaInicial = useMemo(
-    () => AREAS.find((a) => a.servicos.some((s) => s === servicoInicial))?.id ?? AREAS[0].id,
-    [servicoInicial],
+    () => AREAS_REAL.find((a) => a.servicos.some((s) => s === servicoInicial))?.id ?? AREAS_REAL[0].id,
+    [servicoInicial, AREAS_REAL],
   );
 
   const [areaId, setAreaId] = useState<string>(areaInicial);
-  const area = AREAS.find((a) => a.id === areaId) ?? AREAS[0];
+  const area = useMemo(() => AREAS_REAL.find((a) => a.id === areaId) ?? AREAS_REAL[0], [areaId, AREAS_REAL]);
   const [servico, setServico] = useState<string>(servicoInicial ?? area.servicos[0]);
   const [unidade, setUnidade] = useState<string>(
     cidadao?.municipio ? `${area.unidades[0]} (${cidadao.municipio})` : area.unidades[0]
@@ -47,12 +47,19 @@ function Agendamento() {
   const [hora, setHora] = useState<string>("");
   const [feito, setFeito] = useState<string | null>(null);
 
+  // Efeito para sincronizar serviço e unidade quando a área muda
+  useEffect(() => {
+    if (servicoInicial && AREAS_REAL.find(a => a.id === areaId)?.servicos.includes(servicoInicial)) {
+      return;
+    }
+    setServico(area.servicos[0]);
+    setUnidade(area.unidades[0]);
+  }, [areaId, area, AREAS_REAL, servicoInicial]);
+
   function trocarArea(id: string) {
-    const nova = AREAS.find((a) => a.id === id) ?? AREAS[0];
     setAreaId(id);
-    setServico(nova.servicos[0]);
-    setUnidade(nova.unidades[0]);
   }
+
 
   async function confirmar() {
     if (!hora) return;
