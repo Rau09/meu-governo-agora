@@ -32,57 +32,57 @@ type Regra = {
 
 const REGRAS: Regra[] = [
   {
-    chaves: ["consulta", "consultar", "medico", "clinico", "saude", "ubs", "posto", "dentista", "odonto", "exame", "pediatra"],
+    chaves: ["consulta", "consultar", "medico", "clinico", "saude", "ubs", "posto", "dentista", "odonto", "exame", "pediatra", "especialista", "cardiologista", "ginecologista"],
     resposta: {
       texto:
-        "Consultas e exames ficam em Agendar > Saúde: você escolhe a UBS, o dia e o horário. Em caso de urgência, procure o Pronto Atendimento ou ligue 192.",
-      acao: { rotulo: "Agendar consulta", para: "/agendamento" },
+        "O sistema de agendamento permite marcar consultas com clínicos gerais, dentistas e especialistas disponíveis na rede. Para exames laboratoriais ou de imagem, você deve anexar a guia médica digitalizada ou informar o código da requisição.",
+      acao: { rotulo: "Iniciar Agendamento", para: "/agendamento" },
     },
   },
   {
-    chaves: ["vacina", "vacinacao", "imunizacao"],
+    chaves: ["vacina", "vacinacao", "imunizacao", "dose", "gripe", "covid", "campanha"],
     resposta: {
       texto:
-        "A vacinação é por ordem de chegada nas UBS, das 08h às 16h. Você também pode reservar horário pelo app.",
-      acao: { rotulo: "Agendar vacinação", para: "/agendamento" },
+        "As campanhas de vacinação seguem o cronograma nacional. Você pode verificar o estoque de doses e as unidades com vacinadores ativos agora. Lembre-se de levar sua Carteira de Vacinação e o Cartão SUS.",
+      acao: { rotulo: "Ver Calendário/Vagas", para: "/agendamento" },
     },
   },
   {
-    chaves: ["iptu", "imposto", "boleto", "tributo", "segunda", "via", "alvara"],
+    chaves: ["iptu", "imposto", "boleto", "tributo", "segunda", "via", "alvara", "divida", "ativa", "certidao", "negativa"],
     resposta: {
       texto:
-        "Segunda via de IPTU, alvarás e protocolos ficam em Serviços > Cidadania e Tributos. Tenha em mãos o número do cadastro do imóvel.",
-      acao: { rotulo: "Ver serviços", para: "/servicos" },
+        "Para emissão de tributos, o NexLine integra com o Portal do Contribuinte. Você pode emitir guias de IPTU, ISS e Certidões Negativas utilizando seu CPF ou Inscrição Imobiliária.",
+      acao: { rotulo: "Portal de Tributos", para: "/servicos" },
     },
   },
   {
-    chaves: ["matricula", "escola", "creche", "transporte", "escolar", "cmei", "educacao", "historico"],
+    chaves: ["matricula", "escola", "creche", "transporte", "escolar", "cmei", "educacao", "historico", "vaga", "transferencia"],
     resposta: {
       texto:
-        "Matrícula, vaga em creche e transporte escolar estão em Serviços > Educação. Leve RG, CPF e comprovante de residência no dia do atendimento.",
-      acao: { rotulo: "Ver serviços", para: "/servicos" },
+        "A gestão educacional inclui solicitação de vagas em CMEIs, renovação de matrículas e consulta ao itinerário do transporte escolar. Os editais de convocação são atualizados semanalmente.",
+      acao: { rotulo: "Educação e Vagas", para: "/servicos" },
     },
   },
   {
-    chaves: ["horario", "funcionamento", "aberto", "atende", "expediente"],
+    chaves: ["horario", "funcionamento", "aberto", "atende", "expediente", "feriado", "plantao"],
     resposta: {
-      texto: "O app funciona 24 horas por dia. O atendimento presencial no Paço Municipal é das 08h às 17h.",
+      texto: "Os serviços digitais NexLine operam 24/7. Unidades Administrativas atendem das 08h às 17h. Unidades de Pronto Atendimento (PA) e hospitais operam em regime de plantão 24h.",
     },
   },
   {
-    chaves: ["cadastro", "acesso", "conta", "pin", "senha", "registrar", "cadastrar"],
+    chaves: ["cadastro", "acesso", "conta", "pin", "senha", "registrar", "cadastrar", "biometria", "perfil"],
     resposta: {
       texto:
-        "Seu acesso é criado em Meu Cadastro, com CPF, telefone e um PIN de 6 dígitos. O PIN fica guardado só em forma de código protegido no próprio aparelho.",
-      acao: { rotulo: "Meu cadastro", para: "/registro" },
+        "Sua Identidade Digital NexLine é protegida por criptografia de ponta a ponta. O PIN de 6 dígitos é armazenado localmente no hardware de segurança do seu dispositivo (Enclave Seguro/TEE).",
+      acao: { rotulo: "Gerenciar Identidade", para: "/registro" },
     },
   },
   {
-    chaves: ["agendamento", "agendar", "marcar", "remarcar", "cancelar", "horarios"],
+    chaves: ["agendamento", "agendar", "marcar", "remarcar", "cancelar", "horarios", "confirmar", "minhas", "consultas"],
     resposta: {
       texto:
-        "Para marcar, cancelar ou ver seus horários, use a aba Agendar. Ali aparecem também os atendimentos já confirmados.",
-      acao: { rotulo: "Ir para Agendar", para: "/agendamento" },
+        "No painel de agendamentos você visualiza o histórico completo, status das solicitações e pode realizar o cancelamento com até 24h de antecedência para liberar a vaga a outro cidadão.",
+      acao: { rotulo: "Meus Agendamentos", para: "/agendamento" },
     },
   },
 ];
