@@ -4,6 +4,7 @@ import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, 
 import { AppShell, TopBar } from "@/components/AppShell";
 
 import { responder } from "@/lib/cantu-ia";
+import { perguntarIA } from "@/lib/ia.functions";
 import { useLibras } from "@/lib/libras-translator";
 
 
@@ -64,11 +65,12 @@ function Atendimento() {
     }
   }, [protocolo]);
   const [texto, setTexto] = useState("");
+  const [pensando, setPensando] = useState(false);
   const fim = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fim.current?.scrollIntoView({ behavior: "smooth" });
-  }, [msgs]);
+  }, [msgs, pensando]);
 
   async function enviar(valor: string) {
     const pergunta = valor.trim();
