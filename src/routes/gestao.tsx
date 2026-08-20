@@ -320,23 +320,23 @@ function Painel({ onSair }: { onSair: () => void }) {
           </div>
           
           <div className="space-y-3">
-            {analise.criticas.slice(0, 3).map((o, idx) => (
+            {prioridades(lista).filter(p => p.nivel === 'critico').slice(0, 3).map((p: any, idx: number) => (
               <motion.button
-                key={o.protocolo}
+                key={p.id}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 + idx * 0.1 }}
                 whileHover={{ x: 4 }}
-                onClick={() => setDetalhe({ titulo: o.categoria, nota: o.bairro, itens: [o] })}
+                onClick={() => setDetalhe({ titulo: p.categoria, nota: p.bairro, itens: p.itens })}
                 className="group w-full relative flex items-center gap-4 rounded-3xl bg-secondary/30 p-4 transition-all hover:bg-secondary/50 text-left"
               >
                 <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-card border border-border text-xl">
-                  {metaCategoria(o.categoria).emoji}
+                  {metaCategoria(p.categoria).emoji}
                 </div>
                 <div className="flex-1 overflow-hidden">
-                  <h3 className="truncate text-xs font-bold text-foreground">{o.categoria}</h3>
+                  <h3 className="truncate text-xs font-bold text-foreground">{p.categoria}</h3>
                   <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
-                    {o.bairro} · <span className="text-destructive font-bold">{o.reclamacoes} reiterações</span>
+                    {p.bairro} · <span className="text-destructive font-bold">{p.total} solicitações</span>
                   </p>
                 </div>
                 <ChevronRight className="size-4 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
