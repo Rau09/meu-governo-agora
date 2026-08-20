@@ -620,16 +620,16 @@ export function useOcorrencias() {
         const { data, error } = await query.order('criado_em', { ascending: false });
 
         if (data && !error) {
-          const remoteOcor: Ocorrencia[] = data.map(d => ({
+          const remoteOcor: Ocorrencia[] = await Promise.all(data.map(async d => ({
             protocolo: d.protocolo,
             categoria: d.categoria,
             descricao: d.descricao,
-            foto: d.foto_url || null,
+            foto: await resolverFoto(d.foto_url),
             local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
             endereco: d.endereco || null,
             criadoEm: d.criado_em || new Date().toISOString(),
             status: d.status as StatusOcorrencia,
-          }));
+          })));
           setOcorrencias(remoteOcor);
           // Só salva no local se for o próprio usuário
           if (!isGestor && !isAdmin) {
