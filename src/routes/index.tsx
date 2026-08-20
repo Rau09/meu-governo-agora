@@ -56,49 +56,65 @@ function Inicio() {
     <AppShell >
 
       <div className="bg-primary/5 border-b border-primary/10 px-5 py-4 text-[9px] font-medium text-primary/60 leading-relaxed whitespace-pre-line">
-        Agora melhore o Assistente do Nexline para que ele seja realmente útil, sem permitir acesso indevido a informações.
+        Agora implemente uma camada de notificações, atualização em tempo real e histórico para as funcionalidades que já existem.
 
-        ⚠️ NÃO transforme o assistente em um sistema com acesso irrestrito ao banco.
+        ⚠️ NÃO altere outras funcionalidades sem necessidade.
 
-        O Assistente deve responder com base apenas nas informações às quais o usuário possui permissão.
+        NOTIFICAÇÕES
 
-        Exemplos:
+        O cidadão deve receber notificações relevantes, por exemplo:
 
-        “Qual UBS está mais próxima?”
+        “Seu problema foi recebido.”
 
-        → consultar dados públicos/localização.
+        “Seu problema está em execução.”
 
-        “Onde posso encontrar meu medicamento?”
+        “Seu problema foi resolvido.”
 
-        → consultar disponibilidade permitida.
+        “Seu agendamento é amanhã.”
 
-        “Qual é o status do meu problema?”
+        “Seu medicamento está disponível.”
 
-        → consultar somente as solicitações daquele usuário.
+        As notificações devem ser baseadas em eventos reais.
 
-        “Quero registrar um problema.”
+        Não criar notificações falsas apenas para preencher a interface.
 
-        → orientar ou iniciar o fluxo existente.
+        TEMPO REAL
 
-        O assistente NÃO deve:
+        Quando uma informação relevante mudar no backend, atualize a interface quando tecnicamente apropriado.
 
-        * revelar dados de outros cidadãos;
+        Exemplo:
 
-        * revelar dados administrativos privados;
+        Prefeitura altera:
 
-        * revelar credenciais;
+        EM EXECUÇÃO → RESOLVIDO
 
-        * revelar informações internas;
+        O cidadão recebe a atualização correspondente.
 
-        * inventar informações.
+        HISTÓRICO
 
-        Se não souber algo, deve informar que não possui aquela informação.
+        Cada solicitação deve poder possuir um histórico seguro:
 
-        Utilize backend/Edge Functions quando necessário para proteger chaves e integrações.
+        Recebida
 
-        Não coloque chaves secretas diretamente no frontend.
+        ↓
 
-        Preserve a interface atual do Assistente.
+        Em análise
+
+        ↓
+
+        Em execução
+
+        ↓
+
+        Resolvida
+
+        O cidadão vê apenas informações destinadas a ele.
+
+        A prefeitura pode possuir informações administrativas adicionais conforme sua permissão.
+
+        Utilize Supabase Realtime quando apropriado.
+
+        Teste todas as alterações sem quebrar o fluxo existente.
       </div>
 
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
