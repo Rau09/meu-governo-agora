@@ -284,14 +284,15 @@ function Painel({ onSair }: { onSair: () => void }) {
   }
 
   const porArea = useMemo(() => {
-    const base = AREAS.map((a) => ({ nome: a.nome, total: 0 }));
+    const base = AREAS_REAL.map((a: any) => ({ nome: a.nome, total: 0 }));
     for (const ag of agendamentos) {
       const item = base.find((b) => b.nome === ag.area);
       if (item) item.total += 1;
     }
     const max = Math.max(1, ...base.map((b) => b.total));
     return base.map((b) => ({ ...b, pct: Math.round((b.total / max) * 100) }));
-  }, [agendamentos]);
+  }, [agendamentos, AREAS_REAL]);
+
 
   const fila = useMemo(
     () => (filtro === "todas" ? agendamentos : agendamentos.filter((a) => a.area === filtro)),
