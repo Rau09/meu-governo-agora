@@ -309,20 +309,315 @@ function Painel({ onSair }: { onSair: () => void }) {
           ))}
         </section>
 
-        <DetalhesEmergencia alertasAtivos={alertasAtivos} setDetalhe={setDetalhe} animar={animar} />
+        {/* 2. Prioridades Estratégicas */}
+        <section className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card">
+          <div className="mb-5 flex items-center justify-between px-1">
+            <div>
+              <h2 className="text-sm font-bold text-foreground">Ações Prioritárias</h2>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Foco Operacional Imediato</p>
+            </div>
+            <ShieldCheck className="size-5 text-primary/40" />
+          </div>
+          
+          <div className="space-y-3">
+            {analise.criticas.slice(0, 3).map((o, idx) => (
+              <motion.button
+                key={o.protocolo}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + idx * 0.1 }}
+                whileHover={{ x: 4 }}
+                onClick={() => setDetalhe({ titulo: o.categoria, nota: o.bairro, itens: [o] })}
+                className="group w-full relative flex items-center gap-4 rounded-3xl bg-secondary/30 p-4 transition-all hover:bg-secondary/50 text-left"
+              >
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-card border border-border text-xl">
+                  {metaCategoria(o.categoria).emoji}
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <h3 className="truncate text-xs font-bold text-foreground">{o.categoria}</h3>
+                  <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                    {o.bairro} · <span className="text-destructive font-bold">{o.reclamacoes} reiterações</span>
+                  </p>
+                </div>
+                <ChevronRight className="size-4 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
+              </motion.button>
+            ))}
+          </div>
+        </section>
+
+        {/* 3. Mapa Interativo */}
+        <section ref={mapaRef} className="scroll-mt-4 rounded-[2.5rem] overflow-hidden border border-border shadow-card">
+          <MapaOcorrencias key={mapaFiltro} lista={lista} filtroInicial={mapaFiltro} destaque={destaque} />
+        </section>
+
+        {/* 4. Monitoramento por Setor */}
         <MonitoramentoSetor focos={focos} setDetalhe={setDetalhe} setAcao={setAcao} animar={animar} />
 
+        {/* 5. Análise IA e Recomendação */}
+        <section className="rounded-[2.5rem] bg-primary p-7 text-primary-foreground shadow-lg shadow-primary/20 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16 blur-3xl pointer-events-none" />
+          
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="flex size-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md border border-white/20">
+              <BrainCircuit className="size-7" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold tracking-tight">Cantu IA Strategist</h2>
+              <p className="text-[10px] font-medium opacity-80 uppercase tracking-widest">Análise Regional Preditiva</p>
+            </div>
+          </div>
+
+          <div className="mt-6 relative z-10">
+            <p className="text-[13px] font-medium leading-relaxed opacity-90 italic border-l-2 border-white/30 pl-4">
+              "{analise.texto}"
+            </p>
+            
+            <div className="mt-5 rounded-2xl bg-white/10 border border-white/10 p-4 backdrop-blur-sm">
+              <p className="text-[10px] font-bold uppercase tracking-wider opacity-70 mb-1">Decisão Sugerida</p>
+              <p className="text-xs font-bold leading-relaxed">{analise.recomendacao}</p>
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-2 relative z-10">
+            <button 
+              onClick={() => setVerRecomendacao(!verRecomendacao)}
+              className="w-full rounded-2xl bg-white/20 py-3.5 text-[11px] font-bold backdrop-blur-md transition-all hover:bg-white/30 active:scale-[0.98] border border-white/10"
+            >
+              {verRecomendacao ? "Recolher Relatório" : "Ver Detalhes do Relatório"}
+            </button>
+            
+            <AnimatePresence>
+              {verRecomendacao && (
+                <motion.ul 
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="mt-2 space-y-2 overflow-hidden text-[11px] font-medium"
+                >
+                  {[
+                    `Mobilizar unidade técnica para ${analise.bairroFoco}.`,
+                    `Priorizar auditoria dos ${resumo.atrasadas} processos em atraso.`,
+                    `Monitorar KPI de ${analise.categoriaFoco.toLowerCase()} no próximo ciclo.`
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex gap-2 items-start py-1">
+                      <span className="font-bold text-white/60">{idx + 1}.</span>
+                      <span className="opacity-90">{item}</span>
+                    </li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+        </section>
+
+        {/* 6. Indicadores de Performance */}
+        <section className="rounded-[2.5rem] border border-border bg-card p-7 shadow-card">
+          <div className="mb-6 flex items-center justify-between px-1">
+            <div>
+              <h2 className="text-base font-bold text-foreground tracking-tight">Métricas de Eficiência</h2>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Performance Regional Cantu</p>
+            </div>
+            <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/10">
+              <TrendingUp className="size-5 text-primary" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">SLA Médio</p>
+              <p className="text-2xl font-black text-primary tracking-tighter">4.2 <span className="text-[10px] font-bold uppercase tracking-normal">dias</span></p>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "70%" }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="h-full bg-primary" 
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Resolução</p>
+              <p className="text-2xl font-black text-success tracking-tighter">92%</p>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "92%" }}
+                  transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+                  className="h-full bg-success" 
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Monitoramento Detalhado */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-base font-bold text-foreground">Operação & Monitoramento</h2>
+            <div className="flex items-center gap-2">
+              <span className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-sm">
+                <LayoutDashboard className="size-4" />
+              </span>
+            </div>
+          </div>
+
+          <ul className="grid grid-cols-2 gap-4">
+            {indices.map((ind, i) => (
+              <motion.li 
+                key={ind.grupo}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 * i }}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDetalhe({
+                      titulo: ind.grupo,
+                      nota: `${ind.abertas} abertas · ${ind.execucao} em execução · ${ind.atrasadas} atrasadas`,
+                      itens: ind.itens,
+                    })
+                  }
+                  className="group h-full w-full rounded-[2rem] border border-border bg-card p-5 text-left shadow-card transition-all duration-300 hover:border-primary/30 hover:shadow-float active:scale-[0.98]"
+                >
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{ind.grupo}</p>
+                  <div className="mt-3 flex items-end justify-between">
+                    <p className="font-display text-3xl font-black text-foreground tracking-tighter">{ind.abertas}</p>
+                    <div className={`mb-1 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black uppercase ${ind.tendencia >= 0 ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"}`}>
+                      {ind.tendencia >= 0 ? "↑" : "↓"} {Math.abs(ind.tendencia)}%
+                    </div>
+                  </div>
+                  
+                  <div className="mt-5 space-y-2">
+                    <div className="flex items-center justify-between text-[10px] font-bold">
+                      <span className="text-muted-foreground">Execução</span>
+                      <span className="text-foreground">{ind.execucao}</span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(ind.execucao / (ind.abertas || 1)) * 100}%` }}
+                        className="h-full bg-primary/60" 
+                      />
+                    </div>
+                    {ind.atrasadas > 0 && (
+                      <p className="text-[9px] font-black text-destructive uppercase tracking-widest flex items-center gap-1">
+                        <AlertTriangle className="size-2.5" /> {ind.atrasadas} críticas em atraso
+                      </p>
+                    )}
+                  </div>
+                </button>
+              </motion.li>
+            ))}
+          </ul>
+        </section>
+
+        {/* 8. Demanda Consolidada por Área */}
+        <section className="rounded-[2.5rem] border border-border bg-card p-7 shadow-card">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-base font-bold text-foreground tracking-tight">Carga de Trabalho por Setor</h2>
+            <Filter className="size-4 text-muted-foreground/40" />
+          </div>
+          <ul className="space-y-4">
+            {porArea.map((a, i) => (
+              <li key={a.nome}>
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider mb-1.5">
+                  <span className="text-muted-foreground">{a.nome}</span>
+                  <span className="text-primary">{a.total} agendamentos</span>
+                </div>
+                <div className="h-3 overflow-hidden rounded-full bg-secondary/50 border border-border/10 p-0.5">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: animar ? `${a.pct}%` : "0%" }}
+                    transition={{ duration: 1, delay: 0.3 + i * 0.1 }}
+                    className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary shadow-sm"
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* 9. Solicitações e Fila de Atendimento */}
         <div className="grid grid-cols-1 gap-6">
           <section className="space-y-4">
-            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground/60 px-2">Ocorrências Recentes</h2>
+            <div className="flex items-center justify-between px-2">
+              <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                Ocorrências Recentes
+              </h2>
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-black text-primary">
+                {ocorrencias.length} TOTAL
+              </span>
+            </div>
+
             {ocorrencias.length === 0 ? (
               <div className="rounded-[2rem] border border-dashed border-border bg-card/50 p-10 text-center">
-                <p className="text-xs font-bold text-muted-foreground italic">Nenhum registro.</p>
+                <Inbox className="size-10 text-muted-foreground/20 mx-auto mb-3" />
+                <p className="text-xs font-bold text-muted-foreground italic">
+                  Nenhum registro pendente no sistema.
+                </p>
               </div>
             ) : (
               <ul className="space-y-4">
                 {ocorrencias.slice(0, 5).map((o, i) => (
                   <CardOcorrencia key={o.protocolo} ocorrencia={o} indice={i} onStatus={atualizarStatus} />
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-center justify-between px-2">
+              <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                Fila de Atendimentos
+              </h2>
+              <span className="rounded-full bg-secondary px-3 py-1 text-[10px] font-black text-muted-foreground">
+                {fila.length} AGENDADOS
+              </span>
+            </div>
+
+            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {[{ id: "todas", nome: "Todas" }, ...AREAS.map((a) => ({ id: a.nome, nome: a.nome }))].map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setFiltro(f.id)}
+                  className={`shrink-0 rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${
+                    filtro === f.id
+                      ? "bg-primary text-primary-foreground shadow-float"
+                      : "bg-card border border-border text-muted-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {f.nome}
+                </button>
+              ))}
+            </div>
+
+            {fila.length === 0 ? (
+              <div className="rounded-[2rem] border border-dashed border-border bg-card/50 p-10 text-center">
+                <p className="text-xs font-bold text-muted-foreground italic">
+                  Fila vazia para este setor.
+                </p>
+              </div>
+            ) : (
+              <ul className="space-y-3">
+                {fila.slice(0, 10).map((a, i) => (
+                  <motion.li
+                    key={a.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-4 rounded-3xl border border-border bg-card p-5 shadow-sm transition-all hover:shadow-md"
+                  >
+                    <div className="flex size-10 items-center justify-center rounded-2xl bg-success/10 text-success">
+                      <CheckCircle2 className="size-5" />
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                      <p className="text-xs font-bold truncate">{a.servico}</p>
+                      <p className="text-[10px] font-medium text-muted-foreground truncate">
+                        {a.nome} · {a.unidade} · {new Date(a.data + "T00:00").toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                  </motion.li>
                 ))}
               </ul>
             )}
