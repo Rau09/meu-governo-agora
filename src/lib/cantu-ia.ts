@@ -255,8 +255,9 @@ export function responder(pergunta: string): Resposta {
   
   if (melhor) return melhor.regra.resposta;
 
-  // Resposta de fallback fluida
+  // Resposta de fallback fluida (será substituída pela IA avançada quando disponível)
   return {
+    generico: true,
     texto:
       "Ainda estou aprendendo a conversar sobre alguns assuntos, mas conheço tudo sobre os serviços da NexLine na nossa região! Posso te ajudar com saúde, zeladoria urbana ou causa animal. O que acha de começarmos por um desses?",
   };
