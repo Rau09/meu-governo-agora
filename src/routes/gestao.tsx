@@ -519,7 +519,7 @@ function Painel({ onSair }: { onSair: () => void }) {
             <Filter className="size-4 text-muted-foreground/40" />
           </div>
           <ul className="space-y-4">
-            {porArea.map((a, i) => (
+            {porArea.map((a: any, i: number) => (
               <li key={a.nome}>
                 <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider mb-1.5">
                   <span className="text-muted-foreground">{a.nome}</span>
