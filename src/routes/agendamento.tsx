@@ -54,9 +54,9 @@ function Agendamento() {
     setUnidade(nova.unidades[0]);
   }
 
-  function confirmar() {
+  async function confirmar() {
     if (!hora) return;
-    const novo = criar({
+    const novo = await criar({
       area: area.nome,
       servico,
       unidade,
