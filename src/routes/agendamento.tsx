@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { CalendarCheck, CheckCircle2, Trash2, MapPin, Clock, Eye } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 
-import { AREAS, HORARIOS, useAgendamentos, useCidadao } from "@/lib/cantu-store";
+import { AREAS, HORARIOS, useAgendamentos, useCidadao, useServicos } from "@/lib/cantu-store";
 
 
 type Busca = { servico?: string };
