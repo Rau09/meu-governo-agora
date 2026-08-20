@@ -35,6 +35,7 @@ const REGRAS: Regra[] = [
     chaves: ["oi", "ola", "bom", "dia", "tarde", "noite", "saudacoes", "tudo", "bem"],
     resposta: {
       texto: "Olá! Tudo bem por aqui, e com você? Sou a inteligência do NexLine. Como posso ser útil para você hoje na região Cantuquiriguaçu?",
+      acao: { rotulo: "Ver em Libras", para: "#", libras: true }
     }
   },
   {

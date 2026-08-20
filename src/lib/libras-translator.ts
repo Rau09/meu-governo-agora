@@ -55,7 +55,7 @@ export const useLibras = create<LibrasState>((set, get) => ({
   cancelar: () => set({ traduzindo: false, textoAtual: "", sinalAtual: null, progresso: 0 }),
 
   traduzir: async (texto) => {
-    const palavras = texto.toLowerCase().split(/\s+/);
+    const palavras = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/\s+/);
     set({ traduzindo: true, textoAtual: texto, progresso: 0, pausado: false });
 
     for (const palavra of palavras) {
