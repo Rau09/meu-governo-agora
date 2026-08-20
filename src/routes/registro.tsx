@@ -325,7 +325,7 @@ function Registro() {
         </div>
 
         <div className="rounded-[2.5rem] border border-border bg-card p-6 shadow-card min-h-[300px] flex flex-col">
-          {passo === 1 && (
+          {passo === 2 && (
             <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center gap-3 text-primary mb-2">
                 <User className="size-6" />
@@ -356,7 +356,7 @@ function Registro() {
             </div>
           )}
 
-          {passo === 2 && (
+          {passo === 3 && (
             <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center gap-3 text-primary mb-2">
                 <MapPin className="size-6" />
@@ -385,8 +385,6 @@ function Registro() {
                 onClick={() => {
                   if ("geolocation" in navigator) {
                     navigator.geolocation.getCurrentPosition((pos) => {
-                      // In a real app we'd reverse geocode. 
-                      // For now, we'll just give a feedback.
                       setErro("Localização capturada com sucesso!");
                       setTimeout(() => setErro(""), 2000);
                     });
@@ -396,16 +394,10 @@ function Registro() {
               >
                 <MapPin className="size-4 text-primary" /> Usar minha localização
               </button>
-              <div className="p-4 rounded-2xl bg-secondary/50 border border-border flex items-start gap-3">
-                <ShieldCheck className="size-5 text-success mt-0.5" />
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Esses dados ajudam a prefeitura a planejar serviços específicos para a sua região na Cantuquiriguaçu.
-                </p>
-              </div>
             </div>
           )}
 
-          {passo === 3 && (
+          {passo === 4 && (
             <div className="space-y-6 flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center gap-3 text-primary mb-2">
                 <Lock className="size-6" />
