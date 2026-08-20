@@ -66,16 +66,26 @@ function Agendamento() {
 
   async function confirmar() {
     if (!hora) return;
-    const novo = await criar({
-      area: area.nome,
-      servico,
-      unidade,
-      data,
-      hora,
-      nome: cidadao?.nome ?? "Cidadão",
-    });
-    setFeito(novo.id);
-    setHora("");
+    setEnviando(true);
+    setErro(null);
+    setFeito(null);
+    
+    try {
+      const novo = await criar({
+        area: area.nome,
+        servico,
+        unidade,
+        data,
+        hora,
+        nome: cidadao?.nome ?? "Cidadão",
+      });
+      setFeito(novo.id);
+      setHora("");
+    } catch (err: any) {
+      setErro(err.message || "Ocorreu um erro ao realizar o agendamento.");
+    } finally {
+      setEnviando(false);
+    }
   }
 
   return (
@@ -185,14 +195,24 @@ function Agendamento() {
           </p>
         )}
 
+        {erro && (
+          <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-xs font-bold text-destructive">
+            {erro}
+          </div>
+        )}
+
         <button
           type="button"
           onClick={confirmar}
-          disabled={!hora}
+          disabled={!hora || enviando}
           className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card transition-opacity disabled:opacity-40"
         >
-          <CalendarCheck className="size-5" />
-          Confirmar agendamento
+          {enviando ? (
+            <span className="size-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+          ) : (
+            <CalendarCheck className="size-5" />
+          )}
+          {enviando ? "Confirmando..." : "Confirmar agendamento"}
         </button>
 
         {agendamentos.length > 0 && (
