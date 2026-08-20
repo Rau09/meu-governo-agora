@@ -1,10 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { Search, Pill, AlertTriangle, CheckCircle2, Building2, MapPin, ChevronRight, Info, AlertCircle, BarChart3, Clock } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
-import { statusMedicamento, type Medicamento, useMedicamentos, useCidadao } from "@/lib/cantu-store";
-import { supabase } from "@/integrations/supabase/client";
-
+import { MEDICAMENTOS, statusMedicamento, type Medicamento } from "@/lib/cantu-store";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/medicamentos")({
@@ -37,43 +35,24 @@ function Medicamentos() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<string>("todos");
   const [detalhe, setDetalhe] = useState<Medicamento | null>(null);
-  const MEDICAMENTOS_REAL = useMedicamentos();
-  const { session } = useCidadao();
-  const [isStaff, setIsStaff] = useState(false);
-
-  useEffect(() => {
-    async function checkRole() {
-      if (!session?.user) return;
-      const { data } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', session.user.id);
-      
-      const roles = data?.map((r: any) => r.role) || [];
-      setIsStaff(roles.includes('gestor') || roles.includes('admin'));
-    }
-    checkRole();
-  }, [session]);
-
 
   const stats = useMemo(() => {
-    const todos = MEDICAMENTOS_REAL.length;
-    const disponiveis = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'disponivel').length;
-    const baixo = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'baixo').length;
-    const indisponiveis = MEDICAMENTOS_REAL.filter(m => statusMedicamento(m.quantidade).id === 'indisponivel').length;
+    const todos = MEDICAMENTOS.length;
+    const disponiveis = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'disponivel').length;
+    const baixo = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'baixo').length;
+    const indisponiveis = MEDICAMENTOS.filter(m => statusMedicamento(m.quantidade).id === 'indisponivel').length;
     return { todos, disponiveis, baixo, indisponiveis };
-  }, [MEDICAMENTOS_REAL]);
+  }, []);
 
   const lista = useMemo(() => {
     const termo = busca.trim().toLowerCase();
-    return MEDICAMENTOS_REAL.filter((m) => {
+    return MEDICAMENTOS.filter((m) => {
       const st = statusMedicamento(m.quantidade).id;
       const casaTexto =
         !termo || m.nome.toLowerCase().includes(termo) || m.unidade.toLowerCase().includes(termo);
       return casaTexto && (filtro === "todos" || st === filtro);
     });
-  }, [busca, filtro, MEDICAMENTOS_REAL]);
-
+  }, [busca, filtro]);
 
   return (
     <AppShell >
@@ -138,12 +117,9 @@ function Medicamentos() {
             <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Building2 className="size-5" />
             </div>
-            <p className="mt-4 text-2xl font-black text-foreground">
-              {new Set(MEDICAMENTOS_REAL.map((m: any) => m.unidade)).size || 0}
-            </p>
+            <p className="mt-4 text-2xl font-black text-foreground">4</p>
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Unidades Atendendo</p>
           </div>
-
         </section>
 
         {/* 3. Lista de Medicamentos */}
@@ -162,10 +138,9 @@ function Medicamentos() {
             </div>
           ) : (
             <ul className="space-y-3">
-              {lista.map((m: any, i: number) => {
+              {lista.map((m, i) => {
                 const st = statusMedicamento(m.quantidade);
-                const isDemo = false; // Removendo flag estática já que os dados são do banco
-
+                const isDemo = m.unidade === "Farmácia Municipal";
                 return (
                   <li key={`${m.nome}-${m.unidade}`} style={{ animationDelay: `${i * 40}ms` }} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                     <button
@@ -191,10 +166,12 @@ function Medicamentos() {
                               }`}>
                                 {st.rotulo}
                               </span>
+                              {isDemo && (
+                                <span className="text-[9px] font-bold text-muted-foreground/60 italic">Ref: 08/12/2025</span>
+                              )}
                             </div>
                           </div>
                         </div>
-
                         <ChevronRight className="size-5 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
                       </div>
                       
@@ -320,22 +297,18 @@ function Medicamentos() {
              <p className="text-sm font-bold text-primary mt-1">{detalhe.unidade}</p>
              
              <div className="mt-8 space-y-6">
-                 <div className="grid grid-cols-1 gap-4">
-                   {isStaff && (
-                     <div className="rounded-2xl bg-secondary/50 p-4">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Estoque Administrativo</p>
-                        <p className="text-xl font-black text-foreground mt-1">{detalhe.quantidade} unidades</p>
-                     </div>
-                   )}
+                <div className="grid grid-cols-2 gap-4">
                    <div className="rounded-2xl bg-secondary/50 p-4">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status de Disponibilidade</p>
-
-                      <p className={`text-lg font-black mt-1 ${statusMedicamento(detalhe.quantidade).id === 'indisponivel' ? 'text-destructive' : statusMedicamento(detalhe.quantidade).id === 'baixo' ? 'text-warning' : 'text-success'}`}>
-                        {statusMedicamento(detalhe.quantidade).emoji} {statusMedicamento(detalhe.quantidade).rotulo}
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Estoque</p>
+                      <p className="text-xl font-black text-foreground mt-1">{detalhe.quantidade} unid.</p>
+                   </div>
+                   <div className="rounded-2xl bg-secondary/50 p-4">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status</p>
+                      <p className={`text-sm font-black mt-1 ${statusMedicamento(detalhe.quantidade).id === 'indisponivel' ? 'text-destructive' : 'text-success'}`}>
+                        {statusMedicamento(detalhe.quantidade).rotulo}
                       </p>
                    </div>
                 </div>
-
                 
                 <div className="space-y-4">
                    <div className="flex items-start gap-3">

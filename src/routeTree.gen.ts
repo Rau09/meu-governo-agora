@@ -17,12 +17,10 @@ import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as GestaoRouteImport } from './routes/gestao'
 import { Route as MedicamentosRouteImport } from './routes/medicamentos'
 import { Route as OcorrenciaRouteImport } from './routes/ocorrencia'
-import { Route as OcorrenciaAnimalRouteImport } from './routes/ocorrencia-animal'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as RegistroRouteImport } from './routes/registro'
 import { Route as SaudeRouteImport } from './routes/saude'
 import { Route as ServicosRouteImport } from './routes/servicos'
-import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,11 +62,6 @@ const OcorrenciaRoute = OcorrenciaRouteImport.update({
   path: '/ocorrencia',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OcorrenciaAnimalRoute = OcorrenciaAnimalRouteImport.update({
-  id: '/ocorrencia-animal',
-  path: '/ocorrencia-animal',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PerfilRoute = PerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
@@ -89,11 +82,6 @@ const ServicosRoute = ServicosRouteImport.update({
   path: '/servicos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/auth/callback',
-  path: '/auth/callback',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -104,12 +92,10 @@ export interface FileRoutesByFullPath {
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
-  '/ocorrencia-animal': typeof OcorrenciaAnimalRoute
   '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
   '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
-  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -120,12 +106,10 @@ export interface FileRoutesByTo {
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
-  '/ocorrencia-animal': typeof OcorrenciaAnimalRoute
   '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
   '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
-  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -137,12 +121,10 @@ export interface FileRoutesById {
   '/gestao': typeof GestaoRoute
   '/medicamentos': typeof MedicamentosRoute
   '/ocorrencia': typeof OcorrenciaRoute
-  '/ocorrencia-animal': typeof OcorrenciaAnimalRoute
   '/perfil': typeof PerfilRoute
   '/registro': typeof RegistroRoute
   '/saude': typeof SaudeRoute
   '/servicos': typeof ServicosRoute
-  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -155,12 +137,10 @@ export interface FileRouteTypes {
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
-    | '/ocorrencia-animal'
     | '/perfil'
     | '/registro'
     | '/saude'
     | '/servicos'
-    | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -171,12 +151,10 @@ export interface FileRouteTypes {
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
-    | '/ocorrencia-animal'
     | '/perfil'
     | '/registro'
     | '/saude'
     | '/servicos'
-    | '/auth/callback'
   id:
     | '__root__'
     | '/'
@@ -187,12 +165,10 @@ export interface FileRouteTypes {
     | '/gestao'
     | '/medicamentos'
     | '/ocorrencia'
-    | '/ocorrencia-animal'
     | '/perfil'
     | '/registro'
     | '/saude'
     | '/servicos'
-    | '/auth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -204,12 +180,10 @@ export interface RootRouteChildren {
   GestaoRoute: typeof GestaoRoute
   MedicamentosRoute: typeof MedicamentosRoute
   OcorrenciaRoute: typeof OcorrenciaRoute
-  OcorrenciaAnimalRoute: typeof OcorrenciaAnimalRoute
   PerfilRoute: typeof PerfilRoute
   RegistroRoute: typeof RegistroRoute
   SaudeRoute: typeof SaudeRoute
   ServicosRoute: typeof ServicosRoute
-  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -270,13 +244,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OcorrenciaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ocorrencia-animal': {
-      id: '/ocorrencia-animal'
-      path: '/ocorrencia-animal'
-      fullPath: '/ocorrencia-animal'
-      preLoaderRoute: typeof OcorrenciaAnimalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/perfil': {
       id: '/perfil'
       path: '/perfil'
@@ -305,13 +272,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/auth/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -324,12 +284,10 @@ const rootRouteChildren: RootRouteChildren = {
   GestaoRoute: GestaoRoute,
   MedicamentosRoute: MedicamentosRoute,
   OcorrenciaRoute: OcorrenciaRoute,
-  OcorrenciaAnimalRoute: OcorrenciaAnimalRoute,
   PerfilRoute: PerfilRoute,
   RegistroRoute: RegistroRoute,
   SaudeRoute: SaudeRoute,
   ServicosRoute: ServicosRoute,
-  AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

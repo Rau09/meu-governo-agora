@@ -1,14 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Session } from "@supabase/supabase-js";
-
-/** Gera URL assinada temporária para fotos guardadas no bucket privado "ocorrencias". */
-async function resolverFoto(valor: string | null | undefined): Promise<string | null> {
-  if (!valor) return null;
-  if (valor.startsWith("http") || valor.startsWith("data:")) return valor;
-  const { data } = await supabase.storage.from("ocorrencias").createSignedUrl(valor, 60 * 60);
-  return data?.signedUrl ?? null;
-}
 
 export type Agendamento = {
   id: string;
@@ -41,7 +31,6 @@ const KEY_AGENDA = "cantu.agendamentos";
 const KEY_SESSAO = "cantu.sessao";
 const KEY_TENTATIVAS = "cantu.tentativas";
 const KEY_OCOR = "cantu.ocorrencias";
-const KEY_OCOR_ANIMAL = "cantu.ocorrencias_animais";
 const KEY_ANIMAIS = "cantu.animais";
 
 function read<T>(key: string, fallback: T): T {
@@ -134,83 +123,21 @@ export function limparTentativas() {
 
 export function useCidadao() {
   const [cidadao, setCidadao] = useState<Cidadao | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
   const [desbloqueado, setDesbloqueado] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Sincronizar sessão do Supabase
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    // 2. Sincronizar dados do perfil do LocalStorage (Preservando app atual)
     const sync = () => {
       setCidadao(read<Cidadao | null>(KEY_USER, null));
       setDesbloqueado(window.sessionStorage.getItem(KEY_SESSAO) === "1");
     };
     sync();
     window.addEventListener("cantu-store", sync);
-
-    return () => {
-      subscription.unsubscribe();
-      window.removeEventListener("cantu-store", sync);
-    };
+    return () => window.removeEventListener("cantu-store", sync);
   }, []);
 
-  // Sincronizar Perfil do Banco quando logado
-  useEffect(() => {
-    if (!session?.user) return;
-
-    const fetchProfile = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
-      
-      if (data && !error) {
-        // Se temos dados no banco, priorizamos eles sobre o localStorage
-        const profileData: Cidadao = {
-          nome: data.nome,
-          cpf: data.cpf || "",
-          telefone: data.telefone || "",
-          bairro: data.bairro || "",
-          municipio: data.municipio || "Quedas do Iguaçu",
-          estado: data.estado || "PR",
-          preferencias: data.preferencias || [],
-        };
-        write(KEY_USER, profileData);
-      }
-    };
-
-    fetchProfile();
-  }, [session]);
-
-  const salvar = useCallback(async (c: Cidadao) => {
-    // Salvar localmente para manter UX fluida
+  const salvar = useCallback((c: Cidadao) => {
     window.sessionStorage.setItem(KEY_SESSAO, "1");
     write(KEY_USER, c);
-
-    // Se estiver logado no Supabase, salvar no banco também
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      await supabase.from('profiles').upsert({
-        id: session.user.id,
-        nome: c.nome,
-        cpf: c.cpf,
-        telefone: c.telefone,
-        bairro: c.bairro,
-        municipio: c.municipio,
-        estado: c.estado,
-        preferencias: c.preferencias,
-      } as any);
-    }
   }, []);
 
   const desbloquear = useCallback(async (pin: string) => {
@@ -230,148 +157,48 @@ export function useCidadao() {
     window.dispatchEvent(new Event("cantu-store"));
   }, []);
 
-  const sair = useCallback(async () => {
-    await supabase.auth.signOut();
+  const sair = useCallback(() => {
     window.sessionStorage.removeItem(KEY_SESSAO);
     limparTentativas();
     write(KEY_USER, null);
   }, []);
 
-  return { cidadao, session, desbloqueado, loading, salvar, sair, desbloquear, bloquear };
+  return { cidadao, desbloqueado, salvar, sair, desbloquear, bloquear };
 }
 
 
 export function useAgendamentos() {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
-  const { session } = useCidadao();
 
   useEffect(() => {
-    // Sincronizar local
-    const syncLocal = () => setAgendamentos(read<Agendamento[]>(KEY_AGENDA, []));
-    syncLocal();
-    window.addEventListener("cantu-store", syncLocal);
+    const sync = () => setAgendamentos(read<Agendamento[]>(KEY_AGENDA, []));
+    sync();
+    window.addEventListener("cantu-store", sync);
+    return () => window.removeEventListener("cantu-store", sync);
+  }, []);
 
-    // Sincronizar remoto se logado
-    if (session?.user) {
-      const fetchRemoto = async () => {
-        try {
-          // Verificar se é gestor
-          const { data: roleData } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', session.user.id);
-          
-          const roles = roleData?.map(r => r.role) || [];
-          const isStaff = roles.includes('gestor') || roles.includes('admin');
-
-          let query = supabase.from('agendamentos').select('*');
-          
-          if (!isStaff) {
-            query = query.eq('user_id', session.user.id);
-          }
-
-          const { data, error } = await query.order('criado_em', { ascending: false });
-
-          if (data && !error) {
-            const remoteAgendas: Agendamento[] = data.map(d => ({
-              id: d.protocolo,
-              area: d.area,
-              servico: d.servico,
-              unidade: d.unidade,
-              data: d.data,
-              hora: d.hora,
-              nome: d.nome_paciente,
-              criadoEm: d.criado_em || new Date().toISOString(),
-              status: d.status as any,
-            }));
-            setAgendamentos(remoteAgendas);
-            if (!isStaff) {
-              write(KEY_AGENDA, remoteAgendas);
-            }
-          }
-        } catch (err) {
-          console.error("Erro ao carregar agendamentos:", err);
-        }
-      };
-      fetchRemoto();
-    }
-
-
-    return () => window.removeEventListener("cantu-store", syncLocal);
-  }, [session]);
-
-  const criar = useCallback(async (a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    // Verificar conflitos no banco (remoto)
-    if (session?.user) {
-      const { data: conflitos, error: checkError } = await supabase
-        .from('agendamentos')
-        .select('id')
-        .eq('unidade', a.unidade)
-        .eq('data', a.data)
-        .eq('hora', a.hora)
-        .eq('servico', a.servico)
-        .limit(1);
-
-      if (checkError) throw new Error("Erro ao verificar disponibilidade.");
-      if (conflitos && conflitos.length > 0) {
-        throw new Error("Este horário já está preenchido para este serviço nesta unidade.");
-      }
-    }
-
+  const criar = useCallback((a: Omit<Agendamento, "id" | "criadoEm" | "status">) => {
     const atual = read<Agendamento[]>(KEY_AGENDA, []);
-    const protocolo = Math.random().toString(36).slice(2, 9).toUpperCase();
-    
     const novo: Agendamento = {
       ...a,
-      id: protocolo,
+      id: Math.random().toString(36).slice(2, 9).toUpperCase(),
       criadoEm: new Date().toISOString(),
       status: "confirmado",
     };
-
-    // Salvar local
     write(KEY_AGENDA, [novo, ...atual]);
-
-    // Salvar remoto se logado
-    if (session?.user) {
-      const { error } = await supabase.from('agendamentos').insert({
-        user_id: session.user.id,
-        protocolo: protocolo,
-        area: a.area,
-        servico: a.servico,
-        unidade: a.unidade,
-        data: a.data,
-        hora: a.hora,
-        nome_paciente: a.nome,
-        status: "confirmado"
-      });
-      if (error) {
-        console.error("Erro ao salvar agendamento no Supabase:", error);
-        throw new Error("Erro ao salvar agendamento no servidor.");
-      }
-    }
-
     return novo;
   }, []);
 
-  const cancelar = useCallback(async (id: string) => {
+  const cancelar = useCallback((id: string) => {
     const atual = read<Agendamento[]>(KEY_AGENDA, []);
     write(
       KEY_AGENDA,
       atual.filter((a) => a.id !== id),
     );
-
-    // Cancelar remoto
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      await supabase.from('agendamentos').delete().eq('protocolo', id).eq('user_id', session.user.id);
-    }
   }, []);
 
   return { agendamentos, criar, cancelar };
 }
-
 
 export const MUNICIPIOS_CANTU = [
   "Cantagalo",
@@ -441,28 +268,6 @@ export const AREAS = [
   },
 ] as const;
 
-export function useServicos() {
-  const [areas, setAreas] = useState<any[]>(AREAS as any);
-
-  useEffect(() => {
-    async function fetchServicos() {
-      const { data, error } = await supabase.from('servicos_municipais').select('*');
-      if (data && !error) {
-        setAreas(data.map(d => ({
-          id: d.slug,
-          nome: d.nome,
-          cor: d.cor_classe,
-          servicos: d.servicos,
-          unidades: d.unidades,
-        })) as any);
-      }
-    }
-    fetchServicos();
-  }, []);
-
-  return areas;
-}
-
 export const HORARIOS = [
   "08:00",
   "08:40",
@@ -476,7 +281,6 @@ export const HORARIOS = [
   "15:40",
   "16:20",
 ];
-
 
 /* ---------- Medicamentos (dados simulados) ---------- */
 
@@ -493,44 +297,36 @@ export function statusMedicamento(qtd: number) {
 }
 
 export const MEDICAMENTOS: Medicamento[] = [
+  // Dados oficiais de referência (Quedas do Iguaçu - 08/12/2025)
   { nome: "Albendazol 400 mg", unidade: "Farmácia Municipal", quantidade: 2163 },
   { nome: "Carvedilol 3,125 mg", unidade: "Farmácia Municipal", quantidade: 27450 },
   { nome: "Amoxicilina 250 mg/5 ml", unidade: "Farmácia Municipal", quantidade: 923 },
   { nome: "Levotiroxina 100 mcg", unidade: "Farmácia Municipal", quantidade: 6390 },
   { nome: "Levotiroxina 50 mcg", unidade: "Farmácia Municipal", quantidade: 16850 },
   { nome: "Rivaroxabana 20 mg", unidade: "Farmácia Municipal", quantidade: 3810 },
+  
+  // Dados de acompanhamento simulados para outras unidades
   { nome: "Dipirona 500mg", unidade: "UBS Central", quantidade: 420 },
+  { nome: "Dipirona 500mg", unidade: "UBS Bela Vista", quantidade: 18 },
   { nome: "Paracetamol 750mg", unidade: "UBS Central", quantidade: 260 },
+  { nome: "Paracetamol 750mg", unidade: "UBS São Francisco", quantidade: 0 },
+  { nome: "Amoxicilina 500mg", unidade: "UBS Central", quantidade: 75 },
+  { nome: "Amoxicilina 500mg", unidade: "UBS Bela Vista", quantidade: 12 },
+  { nome: "Ibuprofeno 600mg", unidade: "UBS São Francisco", quantidade: 145 },
+  { nome: "Omeprazol 20mg", unidade: "UBS Central", quantidade: 310 },
+  { nome: "Omeprazol 20mg", unidade: "UBS Bela Vista", quantidade: 0 },
+  { nome: "Losartana 50mg", unidade: "UBS Central", quantidade: 520 },
+  { nome: "Losartana 50mg", unidade: "UBS São Francisco", quantidade: 24 },
+  { nome: "Metformina 850mg", unidade: "UBS Bela Vista", quantidade: 180 },
+  { nome: "Captopril 25mg", unidade: "UBS São Francisco", quantidade: 96 },
+  { nome: "Insulina NPH", unidade: "UBS Central", quantidade: 28 },
+  { nome: "Salbutamol spray", unidade: "UBS Bela Vista", quantidade: 0 },
+  { nome: "Soro fisiológico", unidade: "UBS Central", quantidade: 640 },
+  { nome: "Anticoncepcional oral", unidade: "UBS São Francisco", quantidade: 210 },
+  { nome: "Ácido fólico", unidade: "UBS Central", quantidade: 22 },
+  { nome: "Sinvastatina 20mg", unidade: "UBS Bela Vista", quantidade: 155 },
+  { nome: "Prednisona 20mg", unidade: "UBS São Francisco", quantidade: 8 },
 ];
-
-export function useMedicamentos() {
-  const [medicamentos, setMedicamentos] = useState<Medicamento[]>(MEDICAMENTOS);
-
-  useEffect(() => {
-    async function fetchMedicamentos() {
-      // Fazemos um join entre medicamentos e estoque para ter o formato correto
-      const { data, error } = await supabase
-        .from('estoque_medicamentos')
-        .select(`
-          quantidade,
-          medicamentos (nome),
-          unidades_saude (nome)
-        `);
-      
-      if (data && !error) {
-        setMedicamentos(data.map((d: any) => ({
-          nome: d.medicamentos.nome,
-          unidade: d.unidades_saude.nome,
-          quantidade: d.quantidade
-        })));
-      }
-    }
-    fetchMedicamentos();
-  }, []);
-
-  return medicamentos;
-}
-
 
 /* ---------- Comunicar problema (ocorrências) ---------- */
 
@@ -545,56 +341,7 @@ export const CATEGORIAS_OCORRENCIA = [
   "Outro",
 ] as const;
 
-export type StatusOcorrencia = "recebido" | "analise" | "execucao" | "resolvido";
-
-export type Ocorrencia = {
-  protocolo: string;
-  categoria: string;
-  descricao: string;
-  foto?: string | null;
-  local?: { lat: number; lng: number } | null;
-  endereco?: string | null;
-  criadoEm: string;
-  status: StatusOcorrencia;
-  prioridade?: string;
-  responsavel?: string;
-};
-
-export type Animal = {
-  id: string;
-  nome: string;
-  especie: string;
-  raca: string | null;
-  idade: string | null;
-  porte: string | null;
-  sexo: string | null;
-  localizacao: string | null;
-  vacinado: boolean;
-  castrado: boolean;
-  descricao: string | null;
-  status: "disponivel" | "adotado" | "pendente";
-  fotos: string[];
-};
-
-export type OcorrenciaAnimal = {
-  protocolo: string;
-  categoria: string;
-  descricao: string;
-  foto?: string | null;
-  local?: { lat: number; lng: number } | null;
-  endereco?: string | null;
-  criadoEm: string;
-  status: string;
-};
-
-export const CATEGORIAS_OCORRENCIA_ANIMAL = [
-  "Animal perdido",
-  "Animal encontrado",
-  "Animal ferido",
-  "Abandono",
-  "Maus-tratos",
-  "Outro",
-] as const;
+export type StatusOcorrencia = "recebido" | "analise" | "encaminhado" | "andamento" | "resolvido";
 
 export const STATUS_OCORRENCIA: {
   id: StatusOcorrencia;
@@ -603,232 +350,56 @@ export const STATUS_OCORRENCIA: {
   classe: string;
   gravidade: number; // 1 (Normal) a 4 (Emergência)
 }[] = [
-  { id: "recebido", rotulo: "RECEBIDA", emoji: "📥", classe: "bg-secondary text-muted-foreground", gravidade: 1 },
-  { id: "analise", rotulo: "EM ANÁLISE", emoji: "🔍", classe: "bg-accent-soft text-accent-foreground", gravidade: 2 },
-  { id: "execucao", rotulo: "EM EXECUÇÃO", emoji: "🛠️", classe: "bg-info text-white", gravidade: 3 },
-  { id: "resolvido", rotulo: "RESOLVIDA", emoji: "🟢", classe: "bg-success/15 text-success", gravidade: 0 },
+  { id: "recebido", rotulo: "Recebido", emoji: "📥", classe: "bg-secondary text-muted-foreground", gravidade: 1 },
+  { id: "analise", rotulo: "Em análise", emoji: "🟡", classe: "bg-accent-soft text-accent-foreground", gravidade: 2 },
+  { id: "encaminhado", rotulo: "Encaminhado", emoji: "📤", classe: "bg-primary-soft text-primary", gravidade: 2 },
+  { id: "andamento", rotulo: "Em andamento", emoji: "🔵", classe: "bg-info text-white", gravidade: 3 },
+  { id: "resolvido", rotulo: "Resolvido", emoji: "🟢", classe: "bg-success/15 text-success", gravidade: 0 },
 ];
+
+export type Ocorrencia = {
+  protocolo: string;
+  categoria: string;
+  descricao: string;
+  foto?: string;
+  local?: { lat: number; lng: number } | undefined;
+  endereco?: string;
+  criadoEm: string;
+  status: StatusOcorrencia;
+};
 
 export function useOcorrencias() {
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
-  const { session } = useCidadao();
 
   useEffect(() => {
-    // Sincronizar local
-    const syncLocal = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
-    syncLocal();
-    window.addEventListener("cantu-store", syncLocal);
+    const sync = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
+    sync();
+    window.addEventListener("cantu-store", sync);
+    return () => window.removeEventListener("cantu-store", sync);
+  }, []);
 
-    // Sincronizar remoto se logado
-    if (session?.user) {
-      const fetchRemoto = async () => {
-        // Verificar se é gestor
-        const { data: isGestor } = await supabase.rpc('has_role', {
-          _user_id: session.user.id,
-          _role: 'gestor'
-        });
-        const { data: isAdmin } = await supabase.rpc('has_role', {
-          _user_id: session.user.id,
-          _role: 'admin'
-        });
-
-        let query = supabase.from('ocorrencias').select('*');
-        
-        // Se não for gestor/admin, filtra apenas os próprios
-        if (!isGestor && !isAdmin) {
-          query = query.eq('user_id', session.user.id);
-        }
-
-        const { data, error } = await query.order('criado_em', { ascending: false });
-
-        if (data && !error) {
-          const remoteOcor: Ocorrencia[] = await Promise.all(data.map(async d => ({
-            protocolo: d.protocolo,
-            categoria: d.categoria,
-            descricao: d.descricao,
-            foto: await resolverFoto(d.foto_url),
-            local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
-            endereco: d.endereco || null,
-            criadoEm: d.criado_em || new Date().toISOString(),
-            status: d.status as StatusOcorrencia,
-          })));
-          setOcorrencias(remoteOcor);
-          // Só salva no local se for o próprio usuário
-          if (!isGestor && !isAdmin) {
-            write(KEY_OCOR, remoteOcor);
-          }
-        }
-      };
-      fetchRemoto();
-    }
-
-
-    return () => window.removeEventListener("cantu-store", syncLocal);
-  }, [session]);
-
-  const criar = useCallback(async (o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {
+  const criar = useCallback((o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {
     const atual = read<Ocorrencia[]>(KEY_OCOR, []);
     const ano = new Date().getFullYear();
-    const protocolo = `CANTU-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
-    
     const nova: Ocorrencia = {
       ...o,
-      protocolo: protocolo,
+      protocolo: `CANTU-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
       criadoEm: new Date().toISOString(),
       status: "recebido",
     };
-
-    // Salvar local
     write(KEY_OCOR, [nova, ...atual]);
-
-    // Salvar remoto se logado
-    const { data: { session: currentSession } } = await supabase.auth.getSession();
-    if (currentSession?.user) {
-      const { error } = await supabase.from('ocorrencias').insert({
-        user_id: currentSession.user.id,
-        protocolo: protocolo,
-        categoria: o.categoria,
-        descricao: o.descricao,
-        foto_url: o.foto ?? null,
-        lat: o.local?.lat ?? null,
-        lng: o.local?.lng ?? null,
-        endereco: o.endereco ?? null,
-        status: "recebido"
-      });
-      if (error) console.error("Erro ao salvar ocorrência no Supabase:", error);
-    }
-
     return nova;
   }, []);
 
-
-  const atualizarStatus = useCallback(async (protocolo: string, status: StatusOcorrencia) => {
+  const atualizarStatus = useCallback((protocolo: string, status: StatusOcorrencia) => {
     const atual = read<Ocorrencia[]>(KEY_OCOR, []);
     write(
       KEY_OCOR,
       atual.map((o) => (o.protocolo === protocolo ? { ...o, status } : o)),
     );
-
-    // Atualizar remoto se logado
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      await supabase.from('ocorrencias').update({ status }).eq('protocolo', protocolo);
-    }
   }, []);
 
   return { ocorrencias, criar, atualizarStatus };
-}
-
-export function useAnimais() {
-  const [animais, setAnimais] = useState<Animal[]>([]);
-
-  useEffect(() => {
-    async function fetchAnimais() {
-      const { data, error } = await supabase
-        .from('animais')
-        .select('*')
-        .eq('status', 'disponivel')
-        .order('criado_em', { ascending: false });
-      
-      if (data && !error) {
-        setAnimais(data.map(d => ({
-          id: d.id,
-          nome: d.nome,
-          especie: d.especie,
-          raca: d.raca,
-          idade: d.idade,
-          porte: d.porte,
-          sexo: d.sexo,
-          localizacao: d.localizacao,
-          vacinado: !!d.vacinado,
-          castrado: !!d.castrado,
-          descricao: d.descricao,
-          status: d.status as any,
-          fotos: d.fotos || [],
-        })));
-      }
-    }
-    fetchAnimais();
-  }, []);
-
-  return animais;
-}
-
-export function useOcorrenciasAnimais() {
-  const [ocorrencias, setOcorrencias] = useState<OcorrenciaAnimal[]>([]);
-  const { session } = useCidadao();
-
-  useEffect(() => {
-    const syncLocal = () => setOcorrencias(read<OcorrenciaAnimal[]>(KEY_OCOR_ANIMAL, []));
-    syncLocal();
-    window.addEventListener("cantu-store", syncLocal);
-
-    if (session?.user) {
-      const fetchRemoto = async () => {
-        const { data: isGestor } = await supabase.rpc('has_role', { _user_id: session.user.id, _role: 'gestor' });
-        const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: session.user.id, _role: 'admin' });
-
-        let query = supabase.from('ocorrencias_animais').select('*');
-        if (!isGestor && !isAdmin) {
-          query = query.eq('user_id', session.user.id);
-        }
-
-        const { data, error } = await query.order('criado_em', { ascending: false });
-        if (data && !error) {
-          const remote: OcorrenciaAnimal[] = await Promise.all(data.map(async d => ({
-            protocolo: d.protocolo,
-            categoria: d.categoria,
-            descricao: d.descricao,
-            foto: await resolverFoto(d.foto_url),
-            local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : null,
-            endereco: d.endereco,
-            criadoEm: d.criado_em || new Date().toISOString(),
-            status: d.status || "recebido",
-          })));
-          setOcorrencias(remote);
-          if (!isGestor && !isAdmin) {
-            write(KEY_OCOR_ANIMAL, remote);
-          }
-        }
-      };
-      fetchRemoto();
-    }
-
-    return () => window.removeEventListener("cantu-store", syncLocal);
-  }, [session]);
-
-  const criar = useCallback(async (o: Omit<OcorrenciaAnimal, "protocolo" | "criadoEm" | "status">) => {
-    const atual = read<OcorrenciaAnimal[]>(KEY_OCOR_ANIMAL, []);
-    const protocolo = `PET-${new Date().getFullYear()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
-    
-    const nova: OcorrenciaAnimal = {
-      ...o,
-      protocolo,
-      criadoEm: new Date().toISOString(),
-      status: "recebido",
-    };
-
-    write(KEY_OCOR_ANIMAL, [nova, ...atual]);
-
-    const { data: { session: currentSession } } = await supabase.auth.getSession();
-    if (currentSession?.user) {
-      await supabase.from('ocorrencias_animais').insert({
-        user_id: currentSession.user.id,
-        protocolo,
-        categoria: o.categoria,
-        descricao: o.descricao,
-        foto_url: o.foto ?? null,
-        lat: o.local?.lat ?? null,
-        lng: o.local?.lng ?? null,
-        endereco: o.endereco ?? null,
-        status: "recebido"
-      });
-    }
-
-    return nova;
-  }, []);
-
-  return { ocorrencias, criar };
 }
 
 export function lerOcorrencias(): Ocorrencia[] {

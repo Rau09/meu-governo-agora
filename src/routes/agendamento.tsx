@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { CalendarCheck, CheckCircle2, Trash2, MapPin, Clock, Eye } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 
-import { AREAS, HORARIOS, useAgendamentos, useCidadao, useServicos } from "@/lib/cantu-store";
+import { AREAS, HORARIOS, useAgendamentos, useCidadao } from "@/lib/cantu-store";
 
 
 type Busca = { servico?: string };
@@ -28,73 +28,44 @@ export const Route = createFileRoute("/agendamento")({
 function Agendamento() {
   const { servico: servicoInicial } = Route.useSearch();
   const { cidadao } = useCidadao();
-  const AREAS_REAL = useServicos();
   
   const { agendamentos, criar, cancelar } = useAgendamentos();
 
-  const areaInicial = useMemo(() => {
-    if (!AREAS_REAL || AREAS_REAL.length === 0) return "";
-    const encontrada = AREAS_REAL.find((a: any) =>
-      a.servicos.some((s: string) => s === servicoInicial)
-    );
-    return encontrada?.id ?? AREAS_REAL[0].id;
-  }, [servicoInicial, AREAS_REAL]);
 
+  const areaInicial = useMemo(
+    () => AREAS.find((a) => a.servicos.some((s) => s === servicoInicial))?.id ?? AREAS[0].id,
+    [servicoInicial],
+  );
 
   const [areaId, setAreaId] = useState<string>(areaInicial);
-  const area = useMemo(() => {
-    if (!AREAS_REAL || AREAS_REAL.length === 0) return null;
-    return AREAS_REAL.find((a) => a.id === areaId) ?? AREAS_REAL[0];
-  }, [areaId, AREAS_REAL]);
-
-  const [servico, setServico] = useState<string>(servicoInicial ?? area?.servicos[0] ?? "");
+  const area = AREAS.find((a) => a.id === areaId) ?? AREAS[0];
+  const [servico, setServico] = useState<string>(servicoInicial ?? area.servicos[0]);
   const [unidade, setUnidade] = useState<string>(
-    cidadao?.municipio ? `${area?.unidades[0] ?? ""} (${cidadao.municipio})` : (area?.unidades[0] ?? "")
+    cidadao?.municipio ? `${area.unidades[0]} (${cidadao.municipio})` : area.unidades[0]
   );
   const [data, setData] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10));
   const [hora, setHora] = useState<string>("");
   const [feito, setFeito] = useState<string | null>(null);
-  const [enviando, setEnviando] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
-
-  // Efeito para sincronizar serviço e unidade quando a área muda
-  useEffect(() => {
-    if (!area) return;
-    if (servicoInicial && area.servicos.includes(servicoInicial)) {
-      return;
-    }
-    setServico(area.servicos[0]);
-    setUnidade(area.unidades[0]);
-  }, [areaId, area, servicoInicial]);
 
   function trocarArea(id: string) {
+    const nova = AREAS.find((a) => a.id === id) ?? AREAS[0];
     setAreaId(id);
+    setServico(nova.servicos[0]);
+    setUnidade(nova.unidades[0]);
   }
 
-
-  async function confirmar() {
+  function confirmar() {
     if (!hora) return;
-    setEnviando(true);
-    setErro(null);
-    setFeito(null);
-    
-    try {
-      if (!area) throw new Error("Área não selecionada.");
-      const novo = await criar({
-        area: area.nome,
-        servico,
-        unidade,
-        data,
-        hora,
-        nome: cidadao?.nome ?? "Cidadão",
-      });
-      setFeito(novo.id);
-      setHora("");
-    } catch (err: any) {
-      setErro(err.message || "Ocorreu um erro ao realizar o agendamento.");
-    } finally {
-      setEnviando(false);
-    }
+    const novo = criar({
+      area: area.nome,
+      servico,
+      unidade,
+      data,
+      hora,
+      nome: cidadao?.nome ?? "Cidadão",
+    });
+    setFeito(novo.id);
+    setHora("");
   }
 
   return (
@@ -120,7 +91,7 @@ function Agendamento() {
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            {AREAS_REAL?.map((a) => (
+            {AREAS.map((a) => (
               <button
                 key={a.id}
                 type="button"
@@ -142,12 +113,11 @@ function Agendamento() {
             onChange={(e) => setServico(e.target.value)}
             className="mt-2 min-h-11 w-full rounded-2xl border border-input bg-background px-3 text-sm"
           >
-            {area?.servicos.map((s: string) => (
+            {area.servicos.map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
             ))}
-
           </select>
 
           <h2 className="mt-5 flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-muted-foreground">
@@ -158,12 +128,11 @@ function Agendamento() {
             onChange={(e) => setUnidade(e.target.value)}
             className="mt-2 min-h-11 w-full rounded-2xl border border-input bg-background px-3 text-sm"
           >
-            {area?.unidades.map((u: string) => (
+            {area.unidades.map((u) => (
               <option key={u} value={u}>
                 {u}
               </option>
             ))}
-
           </select>
         </section>
 
@@ -204,24 +173,14 @@ function Agendamento() {
           </p>
         )}
 
-        {erro && (
-          <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-xs font-bold text-destructive">
-            {erro}
-          </div>
-        )}
-
         <button
           type="button"
           onClick={confirmar}
-          disabled={!hora || enviando || !area}
+          disabled={!hora}
           className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-card transition-opacity disabled:opacity-40"
         >
-          {enviando ? (
-            <span className="size-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-          ) : (
-            <CalendarCheck className="size-5" />
-          )}
-          {enviando ? "Confirmando..." : "Confirmar agendamento"}
+          <CalendarCheck className="size-5" />
+          Confirmar agendamento
         </button>
 
         {agendamentos.length > 0 && (

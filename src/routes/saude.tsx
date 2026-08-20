@@ -35,20 +35,15 @@ function SaudePage() {
             {agendamentos.length > 0 ? (
               agendamentos.map((a) => (
                 <div key={a.id} className="p-4 rounded-2xl border border-border bg-card flex items-center gap-4">
-                  <div className={`size-10 rounded-xl flex items-center justify-center ${a.status === 'concluido' ? 'bg-muted text-muted-foreground' : 'bg-success/10 text-success'}`}>
-                    {a.status === 'concluido' ? <ClipboardList className="size-5" /> : <Clock className="size-5" />}
+                  <div className="size-10 rounded-xl bg-success/10 flex items-center justify-center text-success">
+                    <Clock className="size-5" />
                   </div>
                   <div className="flex-1">
                     <p className="font-bold text-sm">{a.servico}</p>
-                    <p className="text-xs text-muted-foreground">{a.unidade} · {a.hora} · {new Date(a.data).toLocaleDateString('pt-BR')}</p>
+                    <p className="text-xs text-muted-foreground">{a.unidade} · {a.hora}</p>
                   </div>
-                  <div className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase ${
-                    a.status === 'concluido' ? 'bg-muted text-muted-foreground' : 'bg-success/10 text-success'
-                  }`}>
-                    {a.status}
-                  </div>
+                  <div className="text-[10px] font-bold px-2 py-1 rounded-full bg-success/10 text-success uppercase">Confirmado</div>
                 </div>
-
               ))
             ) : (
               <div className="text-center py-10 rounded-3xl border border-dashed border-border">
