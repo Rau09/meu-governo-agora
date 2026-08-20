@@ -462,7 +462,7 @@ function Painel({ onSair }: { onSair: () => void }) {
           </div>
 
           <ul className="grid grid-cols-2 gap-4">
-            {indices.map((ind, i) => (
+            {indices.map((ind: any, i: number) => (
               <motion.li 
                 key={ind.grupo}
                 initial={{ opacity: 0, scale: 0.95 }}
