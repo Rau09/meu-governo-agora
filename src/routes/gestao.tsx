@@ -243,9 +243,11 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 }
 
 function Painel({ onSair }: { onSair: () => void }) {
+  const AREAS_REAL = useServicos();
   const { agendamentos } = useAgendamentos();
   const { ocorrencias, atualizarStatus } = useOcorrencias();
   const [filtro, setFiltro] = useState<string>("todas");
+
   const [animar, setAnimar] = useState(false);
   const [detalhe, setDetalhe] = useState<{ titulo: string; nota?: string; itens: OcorrenciaGestao[] } | null>(null);
   const [mapaFiltro, setMapaFiltro] = useState("todos");
