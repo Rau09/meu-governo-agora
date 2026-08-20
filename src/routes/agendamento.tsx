@@ -33,9 +33,10 @@ function Agendamento() {
   const { agendamentos, criar, cancelar } = useAgendamentos();
 
   const areaInicial = useMemo(
-    () => AREAS_REAL.find((a) => a.servicos.some((s) => s === servicoInicial))?.id ?? AREAS_REAL[0].id,
+    () => AREAS_REAL.find((a: any) => a.servicos.some((s: string) => s === servicoInicial))?.id ?? AREAS_REAL[0].id,
     [servicoInicial, AREAS_REAL],
   );
+
 
   const [areaId, setAreaId] = useState<string>(areaInicial);
   const area = useMemo(() => AREAS_REAL.find((a) => a.id === areaId) ?? AREAS_REAL[0], [areaId, AREAS_REAL]);
