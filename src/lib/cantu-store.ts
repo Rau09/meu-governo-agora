@@ -408,6 +408,28 @@ export const AREAS = [
   },
 ] as const;
 
+export function useServicos() {
+  const [areas, setAreas] = useState<typeof AREAS>(AREAS);
+
+  useEffect(() => {
+    async function fetchServicos() {
+      const { data, error } = await supabase.from('servicos_municipais').select('*');
+      if (data && !error) {
+        setAreas(data.map(d => ({
+          id: d.slug,
+          nome: d.nome,
+          cor: d.cor_classe,
+          servicos: d.servicos,
+          unidades: d.unidades,
+        })) as any);
+      }
+    }
+    fetchServicos();
+  }, []);
+
+  return areas;
+}
+
 export const HORARIOS = [
   "08:00",
   "08:40",
@@ -421,6 +443,7 @@ export const HORARIOS = [
   "15:40",
   "16:20",
 ];
+
 
 /* ---------- Medicamentos (dados simulados) ---------- */
 
