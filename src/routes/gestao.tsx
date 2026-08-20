@@ -161,8 +161,6 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
     // Hardcoded credentials fallback for demo/immediate access
     if (email === USUARIO && senha === SENHA) {
-      // In a real scenario, we'd sign in a specific service account
-      // For this audit fix, we attempt to sign in the gestor account we just created
       const { error: legacyError } = await supabase.auth.signInWithPassword({
         email: "gestor@cantu.gov.br",
         password: "password123",
@@ -220,7 +218,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
               </label>
               <input
                 id="email"
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
