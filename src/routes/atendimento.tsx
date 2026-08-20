@@ -80,7 +80,8 @@ function Atendimento() {
     setTexto("");
 
     const r = responder(pergunta);
-    if (!r.generico) {
+    // Só usamos a resposta local quando ela traz uma ação concreta de serviço.
+    if (!r.generico && r.acao) {
       setTimeout(() => {
         setMsgs((m) => [...m, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
       }, 400);
