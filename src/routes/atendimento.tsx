@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight, Eye } from "lucide-react";
+import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, GraduationCap, Ambulance, Pill, Camera, ArrowRight, Eye, HandMetal } from "lucide-react";
 import { AppShell, TopBar } from "@/components/AppShell";
 
 import { responder } from "@/lib/cantu-ia";
@@ -47,6 +47,7 @@ const atalhos = [
 
 function Atendimento() {
   const { protocolo } = Route.useSearch();
+  const { translate } = useLibras();
   
   const [msgs, setMsgs] = useState<Msg[]>([
 
@@ -155,6 +156,14 @@ function Atendimento() {
                 {m.texto}
               </p>
               <div className="flex flex-wrap gap-2">
+                {m.de === "bot" && (
+                  <button
+                    onClick={() => translate(m.texto)}
+                    className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-secondary/80 px-3 text-[10px] font-black text-primary hover:bg-secondary transition-colors shadow-sm"
+                  >
+                    <HandMetal className="size-3" /> VER EM LIBRAS
+                  </button>
+                )}
                 {m.acao && (
                   <Link
                     to={m.acao.para}
