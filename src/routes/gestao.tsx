@@ -226,9 +226,10 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
           <button
             type="submit"
-            className="mt-8 w-full rounded-2xl bg-primary py-4 text-sm font-bold text-primary-foreground shadow-float transition-all hover:bg-primary/90 active:scale-[0.98]"
+            disabled={carregando}
+            className="mt-8 w-full rounded-2xl bg-primary py-4 text-sm font-bold text-primary-foreground shadow-float transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
           >
-            Entrar no Sistema
+            {carregando ? "Autenticando..." : "Entrar no Sistema"}
           </button>
           <p className="mt-5 text-center text-[11px] font-medium text-muted-foreground/60 italic">
             Acesso restrito a servidores autorizados da Cantuquiriguaçu.
