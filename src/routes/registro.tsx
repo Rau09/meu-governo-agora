@@ -534,7 +534,7 @@ function Registro() {
               }}
               className="flex-1 min-h-14 rounded-2xl bg-primary text-primary-foreground font-bold shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
             >
-              {passo < 4 ? (
+              {passo < 5 ? (
                 <>Próximo Passo <ArrowRight className="size-5" /></>
               ) : (
                 enviando ? "Processando..." : "Concluir Cadastro"
