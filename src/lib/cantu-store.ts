@@ -493,33 +493,89 @@ export type Ocorrencia = {
 
 export function useOcorrencias() {
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
+  const { session } = useCidadao();
 
   useEffect(() => {
-    const sync = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
-    sync();
-    window.addEventListener("cantu-store", sync);
-    return () => window.removeEventListener("cantu-store", sync);
-  }, []);
+    // Sincronizar local
+    const syncLocal = () => setOcorrencias(read<Ocorrencia[]>(KEY_OCOR, []));
+    syncLocal();
+    window.addEventListener("cantu-store", syncLocal);
 
-  const criar = useCallback((o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {
+    // Sincronizar remoto se logado
+    if (session?.user) {
+      const fetchRemoto = async () => {
+        const { data, error } = await supabase
+          .from('ocorrencias')
+          .select('*')
+          .order('criado_em', { ascending: false });
+
+        if (data && !error) {
+          const remoteOcor: Ocorrencia[] = data.map(d => ({
+            protocolo: d.protocolo,
+            categoria: d.categoria,
+            descricao: d.descricao,
+            foto: d.foto_url || undefined,
+            local: d.lat && d.lng ? { lat: d.lat, lng: d.lng } : undefined,
+            endereco: d.endereco || undefined,
+            criadoEm: d.criado_em || new Date().toISOString(),
+            status: d.status as StatusOcorrencia,
+          }));
+          setOcorrencias(remoteOcor);
+          write(KEY_OCOR, remoteOcor);
+        }
+      };
+      fetchRemoto();
+    }
+
+    return () => window.removeEventListener("cantu-store", syncLocal);
+  }, [session]);
+
+  const criar = useCallback(async (o: Omit<Ocorrencia, "protocolo" | "criadoEm" | "status">) => {
     const atual = read<Ocorrencia[]>(KEY_OCOR, []);
     const ano = new Date().getFullYear();
+    const protocolo = `CANTU-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+    
     const nova: Ocorrencia = {
       ...o,
-      protocolo: `CANTU-${ano}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+      protocolo: protocolo,
       criadoEm: new Date().toISOString(),
       status: "recebido",
     };
+
+    // Salvar local
     write(KEY_OCOR, [nova, ...atual]);
+
+    // Salvar remoto se logado
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('ocorrencias').insert({
+        user_id: session.user.id,
+        protocolo: protocolo,
+        categoria: o.categoria,
+        descricao: o.descricao,
+        foto_url: o.foto,
+        lat: o.local?.lat,
+        lng: o.local?.lng,
+        endereco: o.endereco,
+        status: "recebido"
+      });
+    }
+
     return nova;
   }, []);
 
-  const atualizarStatus = useCallback((protocolo: string, status: StatusOcorrencia) => {
+  const atualizarStatus = useCallback(async (protocolo: string, status: StatusOcorrencia) => {
     const atual = read<Ocorrencia[]>(KEY_OCOR, []);
     write(
       KEY_OCOR,
       atual.map((o) => (o.protocolo === protocolo ? { ...o, status } : o)),
     );
+
+    // Atualizar remoto se logado
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await supabase.from('ocorrencias').update({ status }).eq('protocolo', protocolo);
+    }
   }, []);
 
   return { ocorrencias, criar, atualizarStatus };
