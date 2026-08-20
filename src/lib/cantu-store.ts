@@ -512,7 +512,7 @@ export const CATEGORIAS_OCORRENCIA = [
   "Outro",
 ] as const;
 
-export type StatusOcorrencia = "recebido" | "analise" | "encaminhado" | "andamento" | "resolvido";
+export type StatusOcorrencia = "recebido" | "analise" | "execucao" | "resolvido";
 
 export type Ocorrencia = {
   protocolo: string;
@@ -523,6 +523,8 @@ export type Ocorrencia = {
   endereco?: string | null;
   criadoEm: string;
   status: StatusOcorrencia;
+  prioridade?: string;
+  responsavel?: string;
 };
 
 export const STATUS_OCORRENCIA: {
@@ -532,11 +534,10 @@ export const STATUS_OCORRENCIA: {
   classe: string;
   gravidade: number; // 1 (Normal) a 4 (Emergência)
 }[] = [
-  { id: "recebido", rotulo: "Recebido", emoji: "📥", classe: "bg-secondary text-muted-foreground", gravidade: 1 },
-  { id: "analise", rotulo: "Em análise", emoji: "🟡", classe: "bg-accent-soft text-accent-foreground", gravidade: 2 },
-  { id: "encaminhado", rotulo: "Encaminhado", emoji: "📤", classe: "bg-primary-soft text-primary", gravidade: 2 },
-  { id: "andamento", rotulo: "Em andamento", emoji: "🔵", classe: "bg-info text-white", gravidade: 3 },
-  { id: "resolvido", rotulo: "Resolvido", emoji: "🟢", classe: "bg-success/15 text-success", gravidade: 0 },
+  { id: "recebido", rotulo: "RECEBIDA", emoji: "📥", classe: "bg-secondary text-muted-foreground", gravidade: 1 },
+  { id: "analise", rotulo: "EM ANÁLISE", emoji: "🔍", classe: "bg-accent-soft text-accent-foreground", gravidade: 2 },
+  { id: "execucao", rotulo: "EM EXECUÇÃO", emoji: "🛠️", classe: "bg-info text-white", gravidade: 3 },
+  { id: "resolvido", rotulo: "RESOLVIDA", emoji: "🟢", classe: "bg-success/15 text-success", gravidade: 0 },
 ];
 
 export function useOcorrencias() {
@@ -612,10 +613,10 @@ export function useOcorrencias() {
     write(KEY_OCOR, [nova, ...atual]);
 
     // Salvar remoto se logado
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      await supabase.from('ocorrencias').insert({
-        user_id: session.user.id,
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+    if (currentSession?.user) {
+      const { error } = await supabase.from('ocorrencias').insert({
+        user_id: currentSession.user.id,
         protocolo: protocolo,
         categoria: o.categoria,
         descricao: o.descricao,
@@ -625,10 +626,12 @@ export function useOcorrencias() {
         endereco: o.endereco ?? null,
         status: "recebido"
       });
+      if (error) console.error("Erro ao salvar ocorrência no Supabase:", error);
     }
 
     return nova;
   }, []);
+
 
   const atualizarStatus = useCallback(async (protocolo: string, status: StatusOcorrencia) => {
     const atual = read<Ocorrencia[]>(KEY_OCOR, []);

@@ -314,7 +314,7 @@ function Painel({ onSair }: { onSair: () => void }) {
       label: "Em execução",
       nota: "equipes em campo",
       tom: "text-primary",
-      itens: ativos.filter((o) => o.status === "andamento"),
+      itens: ativos.filter((o) => o.status === "execucao"),
     },
     {
       icon: Clock3,
