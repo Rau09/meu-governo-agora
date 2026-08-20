@@ -55,9 +55,28 @@ function Inicio() {
   return (
     <AppShell >
 
-      <div className="bg-primary px-5 py-2 text-[8px] font-bold text-primary-foreground/60 leading-tight uppercase tracking-[0.2em] border-b border-white/10">
-        Task Priority: Agora substitua SOMENTE o mapa atual do Nexline por um mapa REAL usando Mapbox. ⚠️ ESTA É UMA ALTERAÇÃO ISOLADA. Utilizando Mapbox para mostrar dados geográficos reais centralizados em Quedas do Iguaçu, Paraná.
+      <div className="bg-primary/5 border-b border-primary/10 px-5 py-4 text-[9px] font-medium text-primary/60 leading-relaxed whitespace-pre-line">
+        Agora torne as funcionalidades de Saúde e Remédios do Nexline mais reais e conectadas aos dados existentes.
+        
+        ⚠️ NÃO faça redesign geral.
+        
+        MEDICAMENTOS
+        Crie uma estrutura para consultar disponibilidade real por unidade de saúde.
+        Exemplo: Medicamento: Losartana 50 mg | Unidade: UBS Central | Status: Disponível / Estoque baixo / Indisponível
+        Quantidade detalhada deve ser protegida e não necessariamente exposta ao cidadão.
+        O cidadão deve ver apenas a informação necessária para saber onde o medicamento está disponível.
+        A prefeitura poderá ter acesso ao estoque administrativo conforme suas permissões.
+        
+        SAÚDE
+        Preserve os agendamentos existentes e, se a estrutura permitir, conecte-os ao banco real.
+        O cidadão deve conseguir visualizar: seus agendamentos; data; horário; unidade; serviço; status.
+        Não mostrar dados de outros cidadãos.
+        Se alguma integração oficial de saúde externa não existir, NÃO invente uma.
+        Prepare a arquitetura para integração futura.
+        
+        Teste: permissões; banco; carregamento; erros; dados vazios; funcionamento das telas existentes.
       </div>
+
       <header className="bg-hero px-5 pb-12 pt-10 text-primary-foreground">
 
         <div className="flex items-center justify-between">
