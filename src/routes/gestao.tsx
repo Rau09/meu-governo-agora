@@ -220,7 +220,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
               </label>
               <input
                 id="email"
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
