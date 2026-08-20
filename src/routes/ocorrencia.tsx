@@ -62,18 +62,19 @@ function ComunicarProblema() {
     );
   }
 
-  function enviar(e: React.FormEvent) {
+  async function enviar(e: React.FormEvent) {
     e.preventDefault();
     if (descricao.trim().length < 10) {
       setErro("Descreva o problema com pelo menos 10 caracteres.");
       return;
     }
     setErro("");
-    const nova = criar({
+    const nova = await criar({
       categoria,
       descricao: descricao.trim(),
-      ...(foto ? { foto } : {}),
-      local,
+      foto: foto || null,
+      local: local || null,
+      endereco: null, // Omitido ou preenchido conforme necessidade
     });
     setEnviada(nova);
   }
