@@ -191,7 +191,8 @@ export function responder(pergunta: string): Resposta {
       "Oi! Tudo bem? Sou sua assistente NexLine. Em que posso te ajudar agora?",
       "Olá! Estou aqui para facilitar sua vida. O que você precisa resolver hoje?"
     ];
-    return { texto: cumprimentos[Math.floor(Math.random() * cumprimentos.length)] };
+    const selecionado = cumprimentos[Math.floor(Math.random() * cumprimentos.length)];
+    return { texto: selecionado || cumprimentos[0]! };
   }
 
   if (pLower.includes("tudo bem") || pLower.includes("como vai") || pLower.includes("tudo certo")) {
