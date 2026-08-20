@@ -128,14 +128,14 @@ function consultarProtocolo(pergunta: string): Resposta | null {
     const o = ocorrencias.find((x) => x.protocolo.toUpperCase() === codigo);
     if (!o) {
       return {
-        texto: `Não encontrei o protocolo ${codigo} neste aparelho. Confira o número ou consulte a Central da Cantuquiriguaçu.`,
+        texto: `O sistema de rastreamento não localizou o protocolo ${codigo} neste dispositivo. Por favor, verifique se o código está correto ou se a sincronização com a Central de Atendimento foi concluída.`,
       };
     }
     const st = STATUS_OCORRENCIA.find((s) => s.id === o.status)!;
     return {
-      texto: `Protocolo ${o.protocolo} — ${o.categoria}. Status: ${st.emoji} ${st.rotulo}. Aberto em ${new Date(
+      texto: `Análise do Protocolo ${o.protocolo}:\n• Categoria: ${o.categoria}\n• Status Atual: ${st.emoji} ${st.rotulo}\n• Data de Abertura: ${new Date(
         o.criadoEm,
-      ).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}.`,
+      ).toLocaleString("pt-BR", { dateStyle: "long", timeStyle: "short" })}\n\nA equipe técnica está processando sua solicitação de acordo com o nível de prioridade estabelecido.`,
     };
   }
 
@@ -144,19 +144,19 @@ function consultarProtocolo(pergunta: string): Resposta | null {
   if (ocorrencias.length === 0) {
     return {
       texto:
-        "Não tenho nenhuma solicitação registrada neste aparelho ainda. Assim que você comunicar um problema, o protocolo aparece aqui.",
-      acao: { rotulo: "Comunicar problema", para: "/ocorrencia" },
+        "Não identifiquei registros de solicitações ou ocorrências vinculadas a este perfil no momento. Se você deseja reportar um novo incidente, utilize o botão abaixo.",
+      acao: { rotulo: "Abrir Novo Chamado", para: "/ocorrencia" },
     };
   }
 
   const linhas = ocorrencias.slice(0, 3).map((o) => {
     const st = STATUS_OCORRENCIA.find((s) => s.id === o.status)!;
-    return `${st.emoji} ${o.protocolo} — ${o.categoria}: ${st.rotulo}`;
+    return `• ${o.protocolo} [${o.categoria}]: ${st.rotulo}`;
   });
 
   return {
-    texto: `Suas solicitações mais recentes:\n${linhas.join("\n")}`,
-    acao: { rotulo: "Comunicar problema", para: "/ocorrencia" },
+    texto: `Encontrei as seguintes interações recentes no seu histórico:\n\n${linhas.join("\n")}\n\nDeseja detalhar alguma dessas solicitações ou registrar um novo evento?`,
+    acao: { rotulo: "Nova Ocorrência", para: "/ocorrencia" },
   };
 }
 
