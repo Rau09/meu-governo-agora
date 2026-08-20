@@ -50,17 +50,34 @@ const atalhos = [
 function Atendimento() {
   const { protocolo, assunto } = Route.useSearch();
   const { translate } = useLibras();
+  const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+  const p = searchParams.get('protocolo');
+  const a = searchParams.get('assunto');
   
-  const [msgs, setMsgs] = useState<Msg[]>([
-
+  const initialMsgs: Msg[] = [
     {
       de: "bot",
-      texto:
-        "Olá! Sou a assistente do NexLine. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
+      texto: "Olá! Sou a assistente do NexLine. Estou disponível 24 horas para ajudar você com serviços da região Cantuquiriguaçu.",
     },
-  ]);
+  ];
+
+  if (p || a) {
+    const txt = p 
+      ? `Andamento do protocolo ${p}`
+      : decodeURIComponent(a!).startsWith('adoção-')
+        ? `Quero saber mais sobre a adoção do ${decodeURIComponent(a!).replace('adoção-', '')}`
+        : decodeURIComponent(a!);
+    
+    initialMsgs.push({ de: "eu", texto: txt });
+    const r = responder(txt);
+    initialMsgs.push({ de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) });
+  }
+
+  const [msgs, setMsgs] = useState<Msg[]>(initialMsgs);
 
   useEffect(() => {
+    // A lógica de inicialização agora é feita no useState inicial.
+  }, []);
     const sp = new URLSearchParams(window.location.search);
     const p = sp.get('protocolo');
     const a = sp.get('assunto');
