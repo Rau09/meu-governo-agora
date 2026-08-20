@@ -487,7 +487,7 @@ function DetalheLista({
   onMapa,
 }: {
   titulo: string;
-  nota?: string;
+  nota?: string | null;
   itens: OcorrenciaGestao[];
   onFechar: () => void;
   onMapa: (itens: OcorrenciaGestao[]) => void;
