@@ -8,7 +8,7 @@ import { MEDICAMENTOS, STATUS_OCORRENCIA, lerOcorrencias, statusMedicamento, use
  * gestão de causa animal, serviços urbanos e suporte ao cidadão.
  */
 
-export type Resposta = { texto: string; acao?: { rotulo: string; para: string }; generico?: boolean };
+export type Resposta = { texto: string; acao?: { rotulo: string; para: string } };
 
 function normalizar(p: string) {
   return p
@@ -120,9 +120,7 @@ function buscarMedicamento(pergunta: string): Resposta | null {
   const p = normalizar(pergunta);
   const nomes = [...new Set(MEDICAMENTOS.map((m) => m.nome))];
   const achado = nomes.find((n) => {
-    const firstWord = n.split(" ")[0];
-    if (!firstWord) return false;
-    const base = normalizar(firstWord);
+    const base = normalizar(n.split(" ")[0]!);
     return base.length > 3 && p.includes(base);
   });
 
@@ -184,36 +182,18 @@ export function responder(pergunta: string): Resposta {
   const t = tokens(pergunta);
   const pLower = pergunta.toLowerCase();
   
-  // Respostas de conversação fluida e natural
-  if (t.some(x => ["oi", "ola", "bom", "dia", "tarde", "noite", "saudacoes"].includes(x)) && t.length <= 3) {
-    const cumprimentos = [
-      "Olá! É um prazer falar com você. Como posso tornar seu dia na Cantuquiriguaçu melhor hoje?",
-      "Oi! Tudo bem? Sou sua assistente NexLine. Em que posso te ajudar agora?",
-      "Olá! Estou aqui para facilitar sua vida. O que você precisa resolver hoje?"
-    ];
-    const selecionado = cumprimentos[Math.floor(Math.random() * cumprimentos.length)];
-    return { texto: selecionado || cumprimentos[0]! };
+  // Tentar responder de forma mais direta a saudações e conversa básica
+  if (t.some(x => ["oi", "ola", "hey"].includes(x)) && t.length <= 2) {
+    return { texto: "Olá! Como posso ajudar você hoje?" };
   }
 
-  if (pLower.includes("tudo bem") || pLower.includes("como vai") || pLower.includes("tudo certo")) {
-    return { 
-      texto: "Por aqui está tudo ótimo, trabalhando para deixar nossa cidade cada vez mais conectada! E com você, como está sendo o seu dia?" 
-    };
-  }
-
-  if (pLower.includes("quem e voce") || pLower.includes("o que voce faz") || pLower.includes("ajuda")) {
-    return {
-      texto: "Eu sou a inteligência artificial da NexLine, focada em ajudar a comunidade da Cantuquiriguaçu. Posso te ajudar com agendamentos de saúde, informações sobre medicamentos, registro de ocorrências urbanas e suporte na causa animal. O que gostaria de explorar?"
-    };
-  }
-
-  if (pLower.includes("legal") || pLower.includes("entendi") || pLower.includes("bacana") || pLower.includes("show")) {
-    return { texto: "Fico feliz que tenha entendido! Há algo mais específico que você gostaria de saber ou fazer agora?" };
+  if (pLower.includes("tudo bem") || pLower.includes("como vai")) {
+    return { texto: "Tudo ótimo por aqui! Trabalhando para facilitar o acesso aos serviços da nossa cidade. E com você, como estão as coisas?" };
   }
 
   if (t.length === 0) {
     return { 
-      texto: "Estou te ouvindo! Poderia me contar um pouco mais sobre sua dúvida ou o que você está procurando? Assim consigo te dar uma resposta bem precisa." 
+      texto: "Entendi. Poderia fornecer mais detalhes sobre como posso ajudar você hoje? Estou pronto para auxiliar com agendamentos, medicamentos ou serviços urbanos." 
     };
   }
 
@@ -227,7 +207,7 @@ export function responder(pergunta: string): Resposta {
     if (especifico) return especifico;
     return {
       texto:
-        "Entendi que você tem interesse em medicamentos. Posso verificar o estoque das nossas unidades de saúde agora mesmo. Qual medicamento você gostaria de consultar?",
+        "Entendi que você procura por medicamentos. Você pode consultar o estoque em tempo real de todas as unidades de saúde em nossa Central de Medicamentos. Qual fármaco específico você está procurando?",
       acao: { rotulo: "Consultar Medicamentos", para: "/medicamentos" },
     };
   }
@@ -239,7 +219,7 @@ export function responder(pergunta: string): Resposta {
   if (t.some((x) => CHAVES_PROBLEMA.includes(x))) {
     return {
       texto:
-        "Sinto muito pelo transtorno na sua região. Para que possamos resolver isso o quanto antes, você pode registrar uma ocorrência com fotos e localização exata. Quer fazer isso agora?",
+        "Compreendo o problema relatado. Para que a Secretaria de Obras possa intervir, o ideal é registrar uma ocorrência formal com foto e localização. Posso te levar para a tela de registro agora?",
       acao: { rotulo: "Relatar Ocorrência", para: "/ocorrencia" },
     };
   }
@@ -255,10 +235,9 @@ export function responder(pergunta: string): Resposta {
   
   if (melhor) return melhor.regra.resposta;
 
-  // Resposta de fallback fluida (será substituída pela IA avançada quando disponível)
+  // Resposta de fallback mais "humana"
   return {
-    generico: true,
     texto:
-      "Ainda estou aprendendo a conversar sobre alguns assuntos, mas conheço tudo sobre os serviços da NexLine na nossa região! Posso te ajudar com saúde, zeladoria urbana ou causa animal. O que acha de começarmos por um desses?",
+      "Ainda estou aprimorando minhas habilidades de conversação, mas conheço muito sobre a Cantuquiriguaçu! Posso te ajudar com saúde, agendamentos, remédios ou infraestrutura. O que gostaria de ver primeiro?",
   };
 }
