@@ -184,39 +184,7 @@ export function responder(pergunta: string): Resposta {
   const t = tokens(pergunta);
   const pLower = pergunta.toLowerCase();
   
-  // Respostas de conversação fluida e natural
-  if (t.some(x => ["oi", "ola", "bom", "dia", "tarde", "noite", "saudacoes"].includes(x)) && t.length <= 3) {
-    const cumprimentos = [
-      "Olá! É um prazer falar com você. Como posso tornar seu dia na Cantuquiriguaçu melhor hoje?",
-      "Oi! Tudo bem? Sou sua assistente NexLine. Em que posso te ajudar agora?",
-      "Olá! Estou aqui para facilitar sua vida. O que você precisa resolver hoje?"
-    ];
-    const selecionado = cumprimentos[Math.floor(Math.random() * cumprimentos.length)];
-    return { texto: selecionado || cumprimentos[0]! };
-  }
-
-  if (pLower.includes("tudo bem") || pLower.includes("como vai") || pLower.includes("tudo certo")) {
-    return { 
-      texto: "Por aqui está tudo ótimo, trabalhando para deixar nossa cidade cada vez mais conectada! E com você, como está sendo o seu dia?" 
-    };
-  }
-
-  if (pLower.includes("quem e voce") || pLower.includes("o que voce faz") || pLower.includes("ajuda")) {
-    return {
-      texto: "Eu sou a inteligência artificial da NexLine, focada em ajudar a comunidade da Cantuquiriguaçu. Posso te ajudar com agendamentos de saúde, informações sobre medicamentos, registro de ocorrências urbanas e suporte na causa animal. O que gostaria de explorar?"
-    };
-  }
-
-  if (pLower.includes("legal") || pLower.includes("entendi") || pLower.includes("bacana") || pLower.includes("show")) {
-    return { texto: "Fico feliz que tenha entendido! Há algo mais específico que você gostaria de saber ou fazer agora?" };
-  }
-
-  if (t.length === 0) {
-    return { 
-      texto: "Estou te ouvindo! Poderia me contar um pouco mais sobre sua dúvida ou o que você está procurando? Assim consigo te dar uma resposta bem precisa." 
-    };
-  }
-
+  // Detecção de intenções específicas de serviço (para respostas rápidas com botões de ação)
   // Lógica de Prioridade: Protocolos e Solicitações
   const protocolo = consultarProtocolo(pergunta);
   if (protocolo) return protocolo;
@@ -226,8 +194,7 @@ export function responder(pergunta: string): Resposta {
     const especifico = buscarMedicamento(pergunta);
     if (especifico) return especifico;
     return {
-      texto:
-        "Entendi que você tem interesse em medicamentos. Posso verificar o estoque das nossas unidades de saúde agora mesmo. Qual medicamento você gostaria de consultar?",
+      texto: "Entendi que você precisa de informações sobre medicamentos. Posso verificar o estoque das nossas unidades de saúde agora mesmo. Qual medicamento você gostaria de consultar?",
       acao: { rotulo: "Consultar Medicamentos", para: "/medicamentos" },
     };
   }
@@ -238,13 +205,20 @@ export function responder(pergunta: string): Resposta {
   // Lógica de Ocorrências e Zeladoria Urbana
   if (t.some((x) => CHAVES_PROBLEMA.includes(x))) {
     return {
-      texto:
-        "Sinto muito pelo transtorno na sua região. Para que possamos resolver isso o quanto antes, você pode registrar uma ocorrência com fotos e localização exata. Quer fazer isso agora?",
+      texto: "Sinto muito pelo problema na sua região. Para que possamos resolver isso, você pode registrar uma ocorrência com fotos e localização exata no NexLine. Vamos fazer isso agora?",
       acao: { rotulo: "Relatar Ocorrência", para: "/ocorrencia" },
     };
   }
 
-  // Motor de Busca por Contexto (NLP Simplificado)
+  // Lógica de Agendamento
+  if (t.some(x => ["consulta", "medico", "agendar", "marcar"].includes(x))) {
+    return {
+      texto: "Você pode realizar o agendamento de consultas médicas e exames diretamente pelo NexLine de forma rápida e segura.",
+      acao: { rotulo: "Abrir Agendamento", para: "/agendamento" },
+    };
+  }
+
+  // Motor de Busca por Contexto (NLP Simplificado) para outros serviços
   let melhor: { regra: Regra; pontos: number } | null = null;
   for (const regra of REGRAS) {
     const pontos = t.filter((x) => 
@@ -253,12 +227,12 @@ export function responder(pergunta: string): Resposta {
     if (pontos > 0 && (!melhor || pontos > melhor.pontos)) melhor = { regra, pontos };
   }
   
-  if (melhor) return melhor.regra.resposta;
+  if (melhor && melhor.regra.resposta.acao) return melhor.regra.resposta;
 
-  // Resposta de fallback fluida (será substituída pela IA avançada quando disponível)
+  // Se não for um comando de serviço com ação clara, devolvemos como genérico
+  // para que a IA avançada (Gemini) assuma a conversa e forneça fluidez.
   return {
     generico: true,
-    texto:
-      "Ainda estou aprendendo a conversar sobre alguns assuntos, mas conheço tudo sobre os serviços da NexLine na nossa região! Posso te ajudar com saúde, zeladoria urbana ou causa animal. O que acha de começarmos por um desses?",
+    texto: "Estou processando sua solicitação..."
   };
 }

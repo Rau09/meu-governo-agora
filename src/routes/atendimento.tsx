@@ -80,20 +80,21 @@ function Atendimento() {
     setTexto("");
 
     const r = responder(pergunta);
-    // Só usamos a resposta local quando ela traz uma ação concreta de serviço.
+    // Se a resposta local tem uma AÇÃO (botão), usamos ela imediatamente para utilidade.
     if (!r.generico && r.acao) {
       setTimeout(() => {
-        setMsgs((m) => [...m, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
-      }, 400);
+        setMsgs((m) => [...m, { de: "bot", texto: r.texto, acao: r.acao }]);
+      }, 300);
       return;
     }
 
+    // Caso contrário, usamos a IA avançada para uma conversa fluida e inteligente.
     setPensando(true);
     try {
       const ia = await perguntarIA({ data: { pergunta, historico } });
-      setMsgs((m) => [...m, { de: "bot", texto: ia.texto || r.texto }]);
+      setMsgs((m) => [...m, { de: "bot", texto: ia.texto || "Desculpe, tive um pequeno problema técnico. Como posso ajudar?" }]);
     } catch {
-      setMsgs((m) => [...m, { de: "bot", texto: r.texto }]);
+      setMsgs((m) => [...m, { de: "bot", texto: "Estou com dificuldade de conexão, mas posso te ajudar com os serviços abaixo." }]);
     } finally {
       setPensando(false);
     }
