@@ -82,8 +82,9 @@ function Atendimento() {
     const r = responder(pergunta);
     // Se a resposta local tem uma AÇÃO (botão), usamos ela imediatamente para utilidade.
     if (!r.generico && r.acao) {
+      const acaoDefinida = r.acao;
       setTimeout(() => {
-        setMsgs((m) => [...m, { de: "bot", texto: r.texto, acao: r.acao }]);
+        setMsgs((m) => [...m, { de: "bot", texto: r.texto, acao: acaoDefinida }]);
       }, 300);
       return;
     }
