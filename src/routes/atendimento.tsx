@@ -4,6 +4,7 @@ import { Send, Bot, Phone, MessageCircle, CalendarPlus, FileText, Construction, 
 import { AppShell, TopBar } from "@/components/AppShell";
 
 import { responder } from "@/lib/cantu-ia";
+import { perguntarIA } from "@/lib/ia.functions";
 import { useLibras } from "@/lib/libras-translator";
 
 
@@ -64,21 +65,38 @@ function Atendimento() {
     }
   }, [protocolo]);
   const [texto, setTexto] = useState("");
+  const [pensando, setPensando] = useState(false);
   const fim = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fim.current?.scrollIntoView({ behavior: "smooth" });
-  }, [msgs]);
+  }, [msgs, pensando]);
 
-  function enviar(valor: string) {
+  async function enviar(valor: string) {
     const pergunta = valor.trim();
     if (!pergunta) return;
+    const historico = msgs.slice(-8).map((m) => ({ de: m.de, texto: m.texto }));
     setMsgs((m) => [...m, { de: "eu", texto: pergunta }]);
     setTexto("");
-    setTimeout(() => {
-      const r = responder(pergunta);
-      setMsgs((m) => [...m, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
-    }, 450);
+
+    const r = responder(pergunta);
+    // Só usamos a resposta local quando ela traz uma ação concreta de serviço.
+    if (!r.generico && r.acao) {
+      setTimeout(() => {
+        setMsgs((m) => [...m, { de: "bot", texto: r.texto, ...(r.acao ? { acao: r.acao } : {}) }]);
+      }, 400);
+      return;
+    }
+
+    setPensando(true);
+    try {
+      const ia = await perguntarIA({ data: { pergunta, historico } });
+      setMsgs((m) => [...m, { de: "bot", texto: ia.texto || r.texto }]);
+    } catch {
+      setMsgs((m) => [...m, { de: "bot", texto: r.texto }]);
+    } finally {
+      setPensando(false);
+    }
   }
 
   return (
@@ -177,6 +195,12 @@ function Atendimento() {
             </div>
           </div>
         ))}
+        {pensando && (
+          <div className="flex items-center gap-2 px-1 text-xs font-semibold text-muted-foreground">
+            <Bot className="size-4 animate-pulse" />
+            <span>Pensando...</span>
+          </div>
+        )}
         <div ref={fim} />
       </div>
 
